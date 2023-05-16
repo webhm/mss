@@ -1,9 +1,15 @@
+import Admisiones from "../views/admisiones/admisiones";
 import Inicio from "../views/inicio/inicio";
+import Login from "../views/login/login";
 
 // Routes here
 const Routes = {
-  "/": {},
-  "/inicio": Inicio
+  "/": Login,
+  "/inicio": Inicio,
+  "/admisiones": Admisiones,
+
+
+
 };
 
 const DefaultRoute = "/";
