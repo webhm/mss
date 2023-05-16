@@ -24,8 +24,6 @@ class App {
           this.getInicio();
         }
       } else {
-
-
         throw "NO AUTH";
       }
     } catch (error) {
