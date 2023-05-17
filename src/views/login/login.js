@@ -7,7 +7,6 @@ class Login extends App {
     constructor() {
         super();
         this.title = "Inicia Sesión";
-        this.view = this.page;
     }
 
     page() {
