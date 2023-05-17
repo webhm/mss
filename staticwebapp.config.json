@@ -2,6 +2,7 @@
   "navigationFallback": {
     "rewrite": "index.html",
     "exclude": [
+      "/assets/*.{png,jpg,gif,ico}",
       "/*.{png,jpg,gif,ico}",
       "/*.{css,scss,js}",
       "/pdfjs/*.{js}"
