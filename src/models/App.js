@@ -2,32 +2,36 @@ import m from "mithril";
 
 // App
 class App {
-
   static title;
   static name;
   static version;
-  static auth;
+  static auth = false;
   static offline;
   static public;
 
   constructor() {
     this.name = " | MetroPlus";
-    this.version = " v1.0.0";
+    this.version = " v2.0.0";
     this.view = this.loader;
-    this.isAuth();
+    App.isAuth();
   }
 
-  isAuth() {
+
+  static isAuth() {
     try {
-      if (window.localStorage.getItem('accessToken') !== undefined && window.localStorage.getItem('accessToken')) {
-        if (m.route.get() === '/') {
-          this.getInicio();
+      if (
+        window.localStorage.getItem("accessToken") !== undefined &&
+        window.localStorage.getItem("accessToken")
+      ) {
+        App.auth = true;
+        if (m.route.get() === "/") {
+          App.getInicio();
         }
       } else {
         throw "NO AUTH";
       }
     } catch (error) {
-      this.logout();
+      App.logout();
     }
   }
 
@@ -41,26 +45,31 @@ class App {
     return this.public;
   }
 
-  logout() {
+  static logout() {
     this.auth = false;
-    window.localStorage.removeItem('accessToken');
-    m.route.set('/');
+    window.localStorage.removeItem("accessToken");
+    m.route.set("/");
   }
 
-  getInicio() {
-    this.auth = true;
-    m.route.set('/inicio');
+  static getInicio() {
+    App.auth = true;
+    m.route.set("/inicio");
+  }
+
+  static login() {
+    window.localStorage.accessToken = "hola";
+    App.getInicio();
   }
 
   loader() {
     return [
-      m("div.text-center.mg-t-300",
-        m(".spinner-grow.text-dark[role='status']",
-          m("span.sr-only",
-            "Cargando..."
-          )
+      m(
+        "div.text-center.mg-t-300",
+        m(
+          ".spinner-grow.text-dark[role='status']",
+          m("span.sr-only", "Cargando...")
         )
-      )
+      ),
     ];
   }
 
@@ -68,7 +77,7 @@ class App {
     document.title = this.title + this.name + this.version;
   }
 
-  view() { }
+  view() {}
 }
 
 export default App;

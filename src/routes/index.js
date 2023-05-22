@@ -7,9 +7,6 @@ const Routes = {
   "/": Login,
   "/inicio": Inicio,
   "/admisiones": Admisiones,
-
-
-
 };
 
 const DefaultRoute = "/";
