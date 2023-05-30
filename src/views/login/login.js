@@ -121,7 +121,7 @@ class Login extends App {
                     },
                     "Entrar"
                   ),
-                  m("div.text-center.tx-gray-500.mg-t-20", App.name),
+                  m("div.text-center.tx-gray-500.mg-t-20", App.name + App.version),
                   m(
                     "div.text-center.tx-gray-500",
                     "Created by Hospital Metropolitano"

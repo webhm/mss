@@ -10,12 +10,11 @@ class App {
   static public;
 
   constructor() {
-    App.name = " | MetroPlus";
+    App.name = "MetroPlus";
     App.version = " v2.0.0";
     App.view = App.loader();
     App.isAuth();
   }
-
 
   static isAuth() {
     try {
@@ -74,10 +73,10 @@ class App {
   }
 
   oncreate() {
-    document.title = this.title + this.name + this.version;
+    document.title = App.title + " | " + App.name + App.version;
   }
 
-  view() { }
+  view() {}
 }
 
 export default App;
