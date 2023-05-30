@@ -7,15 +7,29 @@ class Inicio extends App {
   constructor() {
     super();
     // Is Private
-    this.title = "Inicio";
+    App.title = "Inicio";
     if (App.auth) {
       this.view = this.page;
     }
   }
 
-  page() {
-    return [m(HeaderPublic), m("h1.mg-t-150.tx-center", "AAAAAAAA")];
+  vHeader() {
+    return m(HeaderPublic);
   }
+
+  vMain() {
+    return m("h1.mg-t-150.tx-center", "AAAAAAAA");
+  }
+
+  page() {
+    return [
+      this.vHeader(),
+      this.vMain()
+    ];
+  }
+
+
+
 }
 
 export default Inicio;

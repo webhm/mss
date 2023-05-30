@@ -12,8 +12,8 @@ class Admisiones extends App {
     }
 
     page() {
-        return m("h1", this.title + " Hospital Metropolitano"); 
+        return m("h1", this.title + " Hospital Metropolitano");
     }
 }
- 
+
 export default Admisiones;

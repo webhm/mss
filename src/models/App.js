@@ -10,9 +10,9 @@ class App {
   static public;
 
   constructor() {
-    this.name = " | MetroPlus";
-    this.version = " v2.0.0";
-    this.view = this.loader;
+    App.name = " | MetroPlus";
+    App.version = " v2.0.0";
+    App.view = App.loader();
     App.isAuth();
   }
 
@@ -35,18 +35,18 @@ class App {
     }
   }
 
-  isOffline() {
-    this.offline = true;
-    return this.offline;
+  static isOffline() {
+    App.offline = true;
+    return App.offline;
   }
 
-  isPublic() {
-    this.public = true;
-    return this.public;
+  static isPublic() {
+    App.public = true;
+    return App.public;
   }
 
   static logout() {
-    this.auth = false;
+    App.auth = false;
     window.localStorage.removeItem("accessToken");
     m.route.set("/");
   }
@@ -61,7 +61,7 @@ class App {
     App.getInicio();
   }
 
-  loader() {
+  static loader() {
     return [
       m(
         "div.text-center.mg-t-300",
@@ -77,7 +77,7 @@ class App {
     document.title = this.title + this.name + this.version;
   }
 
-  view() {}
+  view() { }
 }
 
 export default App;

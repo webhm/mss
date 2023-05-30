@@ -2,13 +2,24 @@ import m from "mithril";
 import App from "../../models/App";
 import HeaderPublic from "../layout/headerPublic";
 
-class FormLogin {
-  view() {
+// Login
+class Login extends App {
+
+  constructor() {
+    super();
+    // Is Public
+    if (!App.auth) {
+      App.title = "Inicia Sesión";
+      this.view = this.page;
+    }
+  }
+
+  vForm() {
     return [
       m(
         "div.content.content-fixed.content-auth",
         m(
-          "div.container",
+          "div.container.animated.bounceInUp",
           m(
             "div.media.align-items-stretch.justify-content-center.ht-100p.pos-relative",
             [
@@ -110,7 +121,7 @@ class FormLogin {
                     },
                     "Entrar"
                   ),
-                  m("div.text-center.tx-gray-500.mg-t-20", "Dirección de TI"),
+                  m("div.text-center.tx-gray-500.mg-t-20", App.name),
                   m(
                     "div.text-center.tx-gray-500",
                     "Created by Hospital Metropolitano"
@@ -124,23 +135,19 @@ class FormLogin {
       ),
     ];
   }
-}
 
-// Login
-class Login extends App {
-  constructor(props) {
-    super();
-    // Is Public
-    if (!this.getAuth) {
-      this.title = "Inicia Sesión";
-      this.view = this.page;
-    }
+  vHeader() {
+    return m(HeaderPublic);
   }
-
 
   page() {
-    return [m(HeaderPublic), m(FormLogin)];
+    return [
+      this.vHeader(),
+      this.vForm()
+    ];
   }
+
+
 }
 
 export default Login;
