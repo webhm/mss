@@ -2,19 +2,8 @@ import m from "mithril";
 import App from "../../models/App";
 import HeaderPublic from "../layout/headerPublic";
 
-// Login
-class Login extends App {
-
-  constructor() {
-    super();
-    // Is Public
-    if (!App.auth) {
-      App.title = "Inicia Sesión";
-      this.view = this.page;
-    }
-  }
-
-  vForm() {
+class FormLogin {
+  view(){
     return [
       m(
         "div.content.content-fixed.content-auth",
@@ -134,6 +123,24 @@ class Login extends App {
         )
       ),
     ];
+  }
+}
+
+// Login
+class Login extends App {
+
+  constructor() {
+    super();
+    // Is Public
+    if (!App.auth) {
+      App.title = "Inicia Sesión";
+      this.view = this.page;
+    }
+  }
+
+  vForm() {
+    return m(FormLogin);
+
   }
 
   vHeader() {

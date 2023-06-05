@@ -10,7 +10,7 @@ class HeaderPublic  {
                     m(m.route.Link, { href: "/", class: "df-logo" }, [
                         "Metro",
                         m("span",
-                            "Plus+ v2.0"
+                            "Plus+"
                         ),
                     ]),
                 ),

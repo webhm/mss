@@ -9,8 +9,14 @@ class Inicio extends App {
     // Is Private
     App.title = "Inicio";
     if (App.auth) {
-      this.view = this.page;
+      this.getMenu().then(()=> {
+        this.view = this.page;
+      });
     }
+  }
+
+  getMenu(){
+    return m.request("https://jsonplaceholder.typicode.com/todos/1");
   }
 
   vHeader() {
