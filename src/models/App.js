@@ -2,6 +2,7 @@ import m from "mithril";
 
 // App
 class App {
+
   static title;
   static name;
   static version;
@@ -10,57 +11,57 @@ class App {
   static public;
 
   constructor() {
-    App.name = "MetroPlus";
-    App.version = " v2.0.0";
-    App.view = App.loader();
-    App.isAuth();
-  }
-
-  static isAuth() {
-    try {
-      if (
-        window.localStorage.getItem("accessToken") !== undefined &&
-        window.localStorage.getItem("accessToken")
-      ) {
-        App.auth = true;
-        if (m.route.get() === "/") {
-          App.getInicio();
-        }
-      } else {
-        throw "NO AUTH";
+    this.name = "MetroPlus";
+    this.version = " v2.0.0";
+    this.public = true;
+    this.offline = false;
+    this.view = this.loader;
+    // Is Auth
+    if (
+      window.localStorage.getItem("accessToken") !== undefined &&
+      window.localStorage.getItem("accessToken")
+    ) {
+      this.auth = true;
+      if (m.route.get() === "/") {
+        this.getInicio();
       }
-    } catch (error) {
-      App.logout();
+    } else {
+      this.logout();
     }
   }
 
-  static isOffline() {
-    App.offline = true;
-    return App.offline;
+
+
+  isOffline() {
+    this.offline = true;
+    return this.offline;
   }
 
-  static isPublic() {
-    App.public = true;
-    return App.public;
+
+  isPublic() {
+    this.public = true;
+    return this.public;
   }
 
-  static logout() {
-    App.auth = false;
+
+  logout() {
+    this.auth = false;
     window.localStorage.removeItem("accessToken");
     m.route.set("/");
   }
 
-  static getInicio() {
-    App.auth = true;
+  getInicio() {
+    this.auth = true;
     m.route.set("/inicio");
   }
 
-  static login() {
+
+  login() {
     window.localStorage.accessToken = "hola";
-    App.getInicio();
+    this.getInicio();
   }
 
-  static loader() {
+  loader() {
     return [
       m(
         "div.text-center.mg-t-300",
@@ -73,10 +74,11 @@ class App {
   }
 
   oncreate() {
-    document.title = App.title + " | " + App.name + App.version;
+    document.title = this.title + " | " + this.name + this.version;
   }
 
   view() { }
+
 }
 
 export default App;

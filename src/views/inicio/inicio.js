@@ -8,15 +8,12 @@ import HeaderPublic from "../layout/headerPublic";
 class Inicio extends App {
   constructor() {
     super();
-    // Is Private
-    App.title = "Inicio";
-    this.view = App.loader;
-    if (App.auth) {
-      this.getMenu().then(() => {
-        this.view = this.page;
-        m.redraw();
-      });
-    }
+    this.title = "Inicio";
+    this.getMenu().then(() => {
+      this.view = this.page;
+      m.redraw();
+      console.log(this)
+    });
   }
 
   getMenu() {
