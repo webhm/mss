@@ -3,7 +3,7 @@ import App from "../../models/App";
 import HeaderPublic from "../layout/headerPublic";
 
 class FormLogin {
-  view(){
+  view() {
     return [
       m(
         "div.content.content-fixed.content-auth",

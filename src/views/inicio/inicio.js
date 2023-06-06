@@ -2,21 +2,29 @@ import m from "mithril";
 import App from "../../models/App";
 import HeaderPublic from "../layout/headerPublic";
 
+
+
 // Inicio
 class Inicio extends App {
   constructor() {
     super();
     // Is Private
     App.title = "Inicio";
+    this.view = App.loader;
     if (App.auth) {
-      this.getMenu().then(()=> {
+      this.getMenu().then(() => {
         this.view = this.page;
+        m.redraw();
       });
     }
   }
 
-  getMenu(){
-    return m.request("https://jsonplaceholder.typicode.com/todos/1");
+  getMenu() {
+    return new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        resolve("hello")
+      }, 1000)
+    });
   }
 
   vHeader() {

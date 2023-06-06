@@ -68,7 +68,7 @@ class App {
           ".spinner-grow.text-dark[role='status']",
           m("span.sr-only", "Cargando...")
         )
-      ),
+      )
     ];
   }
 
@@ -76,7 +76,7 @@ class App {
     document.title = App.title + " | " + App.name + App.version;
   }
 
-  view() {}
+  view() { }
 }
 
 export default App;
