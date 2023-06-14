@@ -8,7 +8,9 @@ class Login extends App {
 
   constructor() {
     super();
-    this.view = this.page;
+    if(!this.auth){
+      this.view = this.page;
+    }
   }
 
   vForm() {

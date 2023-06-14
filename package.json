@@ -7,10 +7,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "mithril": "^2.0.4",
     "@pusher/push-notifications-web": "^1.1.0",
     "crypto-js": "^4.1.1",
+    "is-online": "^10.0.0",
     "localstorage-slim": "^2.3.0",
+    "mithril": "^2.0.4",
+    "offline-js": "^0.7.19",
     "pdfobject": "^2.2.8",
     "pretty-print-json": "^2.0.0",
     "qrcode": "^1.5.1",

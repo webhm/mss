@@ -6,7 +6,6 @@ class FormLogin extends App {
         super();
         this.title = "Inicia Sesión";
         this.view = this.page;
-        console.log(this)
     }
     page() {
         return [
