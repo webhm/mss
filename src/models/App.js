@@ -13,7 +13,6 @@ class App {
     this.name = "MetroPlus";
     this.version = " v2.0.0";
     this.public = true;
-    this.isOffline();
     this.view = this.loader;
     // Is Auth
     if (
@@ -28,28 +27,9 @@ class App {
       this.logout();
     }
   }
-  
 
-  isOffline() {
-    let _app = this;
-    window.addEventListener("offline", function (e) {
-      console.log("offline");
-      _app.offline = !_app.offline;
-      console.log("Ud esta desconectado.");
-      document.body.classList.add("control");
-      document.querySelector('#alertConnect').classList.remove('d-none');
-    });
-    window.addEventListener("online", function (e) {
-      console.log("online");
-      _app.offline = !_app.offline;
-      document.body.classList.remove("control");
-      document.querySelector('#alertConnect').classList.add('d-none');
-      console.log(1,_app)
-    });
-    _app.offline = navigator.onLine;
-    _app.offline = !_app.offline;
-    return _app.offline;
-  }
+
+
 
   isPublic() {
     this.public = true;
@@ -84,13 +64,13 @@ class App {
     ];
   }
 
- 
+
 
   oncreate() {
     document.title = this.title + " | " + this.name + this.version;
   }
 
-  view() {}
+  view() { }
 }
 
 export default App;

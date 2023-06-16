@@ -28,7 +28,7 @@ class Inicio extends App {
     return m(HeaderPublic);
   }
 
-  
+
 
   vMain() {
     return [
