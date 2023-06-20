@@ -1,4 +1,5 @@
 import m from "mithril";
+import RTCMessenger from "./PDFViewer";
 
 
 // HeaderPublic
@@ -29,7 +30,8 @@ class HeaderPublic {
     const channel = new BroadcastChannel('tab');
     channel.postMessage('another-tab');
 
-
+    const MsgChannel = new RTCMessenger;
+    console.log('MsgChannel', MsgChannel)
 
   }
 
@@ -79,6 +81,10 @@ class HeaderPublic {
   }
 
   view() {
+
+
+
+
     return [
       m("header.navbar.navbar-header.navbar-header-fixed", {
         onclick: (el) => {

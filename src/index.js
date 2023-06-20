@@ -4,3 +4,4 @@ import { Routes, DefaultRoute } from './routes'
 m.route.prefix = '';
 m.route(document.body.querySelector('#app'), DefaultRoute, Routes);
 
+
