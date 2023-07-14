@@ -8,7 +8,7 @@ class WebRTCConnection {
             path: "/myapp",
         });
 
-        // Almacena el estado de la conexión (abierta o cerrada)
+        // Almacena el estado de la conexión (abierta o cerrada) para determinar
         this.connected = false;
 
         // Almacena la referencia a la conexión de datos con el otro peer
