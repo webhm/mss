@@ -10,8 +10,8 @@ class App {
   static public;
 
   constructor() {
-    this.name = "MetroPlus";
-    this.version = " v2.0.0";
+    this.name = "MetroPlus Flebotomista";
+    this.version = " v1.0.0";
     this.public = true;
     this.view = this.loader;
     // Is Auth

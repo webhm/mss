@@ -49,20 +49,25 @@ class Inicio extends App {
 
         }
       }, 'Imprimir'),
-      m('div.pd-0.mg-0.w-100[id="pdf"]', {
-        style: {
-          "width": "100%",
-          "height": "500px",
-          "overflow-y": "scroll",
-        },
-        oncreate: () => {
+
+      m('div.col-12.tx-center', [
+        m('div.pd-0.mg-0.w-100[id="pdf"]', {
+          style: {
+            "width": "100%",
+            "height": "500px",
+            "overflow-y": "scroll",
+          },
+          oncreate: () => {
 
 
-          this.pdfViewer = new PDFViewer("https://api.hospitalmetropolitano.org/v2/pacientes/d/MUNyQ05jNDNrT2lwQWlJTmJqaTdSUT09.pdf", "pdf");
-          this.pdfViewer.load();
+            this.pdfViewer = new PDFViewer("https://api.hospitalmetropolitano.org/v2/pacientes/d/MUNyQ05jNDNrT2lwQWlJTmJqaTdSUT09.pdf", "pdf");
+            this.pdfViewer.load();
 
-        }
-      }),
+          }
+        }),
+      ]),
+
+
 
     ];
   }

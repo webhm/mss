@@ -21,17 +21,14 @@ class HeaderPublic {
     window.addEventListener("user:data-message", (event) => {
       console.log(event)
       console.log(this)
+      localStorage.setItem('user:data-message', JSON.stringify(this));
+
 
     });
     window.addEventListener("storage", (event) => {
-      console.log(event)
+      console.log('storage', event)
     });
 
-    const channel = new BroadcastChannel('tab');
-    channel.postMessage('another-tab');
-
-    const MsgChannel = new RTCMessenger;
-    console.log('MsgChannel', MsgChannel)
 
   }
 
@@ -62,21 +59,12 @@ class HeaderPublic {
   }
 
   oncreate(el) {
-    const channel = new BroadcastChannel('tab');
-    channel.addEventListener('message', (msg) => {
-      if (msg.data === 'another-tab') {
-        // message received from 2nd tab
-        alert('Cannot open multiple instances');
 
-
-      }
-    });
 
     if (localStorage.getItem('user:data-message') == undefined) {
       localStorage.setItem('user:data-message', JSON.stringify(this));
     } else {
-      alert('Ud No puede iniciar otra instancia de usuario.');
-
+      localStorage.setItem('user:data-message', JSON.stringify(this));
     }
   }
 

@@ -1,5 +1,4 @@
 
-import Hammer from 'hammerjs';
 
 class PDFViewer {
     constructor(pdfUrl, containerId) {
@@ -23,6 +22,7 @@ class PDFViewer {
             const page = await pdf.getPage(i);
             const canvas = document.createElement("canvas");
             canvas.style.display = "block";
+            canvas.style.padding = "4px";
             const container = document.getElementById(this.containerId);
             container.appendChild(canvas);
 
@@ -46,7 +46,7 @@ class PDFViewer {
         for (let i = 0; i < canvasList.length; i++) {
             const canvas = canvasList[i];
             const imgData = canvas.toDataURL("image/png");
-            printWindow.document.write("<img src='" + imgData + "'>");
+            printWindow.document.write("<img src='" + imgData + "' style='width:100%'>");
         }
         printWindow.document.write("</body></html>");
         printWindow.document.close();
