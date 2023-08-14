@@ -1,40 +1,72 @@
-import HeaderPrivate from '../layout/header-private';
-import App from '../app';
-import SidebarRight from '../layout/sidebarRight';
 import m from 'mithril';
-import Encrypt from '../../models/encrypt';
+import App from '../../models/App';
+
+class MenuInicio {
+
+    isContent = false;
+    view() {
+        return [
+            m("li.bg-primary.wd-100p.nav-item.d-none",
+
+                m(m.route.Link, { href: "/inicio", class: "nav-link" }, [
+                    m("i[data-feather='layout']"),
+                    " Inicio "
+                ])
 
 
-const MenuInicio = {
-    view: () => {
+            ),
 
-        let _data = Encrypt.getDataUser();
+        ]
+    }
+}
 
+class ModulesAccess {
+
+    view() {
 
         if (_data !== null && _data.length !== 0) {
+
             return [
-                m("li.bg-primary.wd-100p.nav-item.d-none",
 
-                    m(m.route.Link, { href: "/inicio", class: "nav-link" }, [
-                        m("i[data-feather='layout']"),
-                        " Inicio "
-                    ])
+                Object.keys(_data.modulesAccess).map(function(_v, _i, _contentData) {
+
+                    if (_data.modulesAccess[_v].length !== 0) {
+
+                        MenuInicio.isContent = true;
+
+                        return m(iMdodule, _data.modulesAccess[_v]);
+
+                    }
+
+                    if (Object.keys(_data.modulesAccess).length == (_i + 1)) {
+                        if (!MenuInicio.isContent) {
+                            return [
+                                m("p.df-lead.pd-15",
+                                    "Todavía no tienes acceso a ningún Módulo disponible. Comunícate a CONCAS Ext: 2020 y solicita activación. Att: Metrovirtual Plus."
+                                )
+                            ]
+                        }
+
+                    }
 
 
-                ),
+
+
+                })
 
             ]
+
         }
 
 
-    },
 
-};
+    }
+
+
+}
 
 const iMdodule = {
     view: (_data) => {
-
-
         if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'farmacia') {
             _data.children[0].modulo = 'Farmacia';
             _data.children[0].icon = "fas fa-pills";
@@ -126,67 +158,13 @@ const iMdodule = {
 };
 
 
-const ModulesAccess = {
-    isContent: false,
-    view: () => {
-
-        MenuInicio.isContent = false;
-
-        let _data = Encrypt.getDataUser();
-
-
-        if (_data !== null && _data.length !== 0) {
-
-
-            return [
-
-                Object.keys(_data.modulesAccess).map(function(_v, _i, _contentData) {
-
-                    if (_data.modulesAccess[_v].length !== 0) {
-
-                        MenuInicio.isContent = true;
-
-                        return m(iMdodule, _data.modulesAccess[_v]);
-
-                    }
-
-                    if (Object.keys(_data.modulesAccess).length == (_i + 1)) {
-                        if (!MenuInicio.isContent) {
-                            return [
-                                m("p.df-lead.pd-15",
-                                    "Todavía no tienes acceso a ningún Módulo disponible. Comunícate a CONCAS Ext: 2020 y solicita activación. Att: Metrovirtual Plus."
-                                )
-                            ]
-                        }
-
-                    }
-
-
-
-
-                })
-
-            ]
-
-        }
-
-
-
-    },
-
-};
-
-
-
-const Inicio = {
-    oninit: () => {
-        HeaderPrivate.page = "";
-        App.isAuth();
-    },
-    oncreate: () => {
-        document.title = "Inicio | " + App.title;
-    },
-    view: () => {
+class Inicio extends App {
+    constructor() {
+        super();
+        this.isAuthenticated();
+        this.title = "Inicio";
+    }
+    view() {
         return [
             m("header.navbar.navbar-header.navbar-header-fixed", [
 
@@ -218,11 +196,11 @@ const Inicio = {
                         m("li.nav-label.pd-l-20.pd-lg-l-25.d-lg-none",
                             "Menu"
                         ),
-                        m(MenuInicio),
+                        //  m(MenuInicio),
 
                     ])
                 ]),
-                m(SidebarRight)
+                // m(SidebarRight)
             ]),
             m("div.content.content-components", {
 
@@ -248,7 +226,7 @@ const Inicio = {
 
                     m("div.row.tx-14", [
 
-                        m(ModulesAccess),
+                        //m(ModulesAccess),
 
 
                     ]),
@@ -256,16 +234,8 @@ const Inicio = {
                 ])
             ),
         ];
-    },
-
-};
-
-
-class Inicio {
-    constructor(){
 
     }
-    view
 }
 
 

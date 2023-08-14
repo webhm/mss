@@ -1,5 +1,3 @@
-
-
 // Crea una clase de JavaScript para administrar en una SPA la autenticación en JWT y un sistema de control de accesos, roles y perfiles y un ejemplo de su funcionamiento.
 
 
@@ -46,6 +44,7 @@ class AuthManager {
             return false;
         }
     }
+
 
     logout() {
         // Borrar el token y el usuario de los atributos

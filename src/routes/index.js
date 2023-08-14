@@ -1,6 +1,6 @@
-import m from "mithril";
 import Admisiones from "../views/admisiones/admisiones";
 import Login from "../views/login/login";
+import Inicio from "../views/inicio/inicio";
 
 // Crear una instancia de la clase
 // const authManager = new AuthManager();
@@ -32,9 +32,9 @@ console.log("Logout exitoso");
 
 // Routes here
 const Routes = {
-  "/": Login,
-  "/inicio": Admisiones,
-  "/admisiones": Admisiones,
+    "/": Login,
+    "/inicio": Inicio,
+    "/admisiones": Admisiones,
 
 };
 

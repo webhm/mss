@@ -1,75 +1,82 @@
 import m from "mithril";
 import AuthManager from "./Auth";
+import AuthMSA from "./AuthMSA";
+
+
 
 // App
 class App {
-  static title;
-  static name;
-  static version;
-  static offline;
-  static public;
-  static auth = null;
+    static title;
+    static name;
+    static version;
+    static offline;
+    static public;
+    static auth = null;
 
-  constructor() {
-    this.auth = new AuthManager();
-    this.name = "MetroPlus Flebotomista";
-    this.version = " v1.0.0";
-  }
-
-  isAuthenticated() {
-    if (!this.auth.isAuthenticated()) {
-      this.logout();
+    constructor() {
+        this.auth = new AuthManager();
+        this.name = "MetroPlus";
+        this.version = " v2.0.0";
     }
-    return this.auth.isAuthenticated();
-  }
 
-  isPublic() {
-    if (this.auth.isAuthenticated()) {
-      this.getInicio();
+    isAuthenticated() {
+        if (!this.auth.isAuthenticated()) {
+            this.logout();
+        }
+        return this.auth.isAuthenticated();
     }
-    return !this.auth.isAuthenticated();
 
-  }
+    isPublic() {
+        if (this.auth.isAuthenticated()) {
+            this.getInicio();
+        }
+        return !this.auth.isAuthenticated();
 
-  logout() {
-    this.auth.logout();
-    m.route.set("/");
-  }
+    }
 
-  getInicio() {
-    m.route.set("/inicio");
-  }
+    logout() {
+        this.auth.logout();
+        m.route.set("/");
+    }
 
-  login() {
-    this.auth.login({ email: "user@example.com", password: "123456" }).then((result) => {
-      if (result) {
-        console.log("Login exitoso");
-        console.log("Token:", this.auth.token);
-        console.log("Usuario:", this.auth.user);
-        this.getInicio();
-      } else {
-        console.log("Login fallido");
-      }
-    });
-  }
+    getInicio() {
+        m.route.set("/inicio");
+    }
 
-  loader() {
-    return [
-      m(
-        "div.text-center.mg-t-300",
-        m(
-          ".spinner-grow.text-dark[role='status']",
-          m("span.sr-only", "Cargando...")
-        )
-      ),
-    ];
-  }
+    login() {
+        this.auth.login({ email: "user@example.com", password: "123456" }).then((result) => {
+            if (result) {
+                console.log("Login exitoso");
+                console.log("Token:", this.auth.token);
+                console.log("Usuario:", this.auth.user);
+                this.getInicio();
+            } else {
+                console.log("Login fallido");
+            }
+        });
+    }
 
-  oncreate() {
-    document.title = this.title + " | " + this.name + this.version;
-  }
+    loginMSA() {
+        return AuthMSA.login();
+    }
 
-  view() { }
+    loader() {
+        return [
+            m(
+                "div.text-center.mg-t-300",
+                m(
+                    ".spinner-grow.text-dark[role='status']",
+                    m("span.sr-only", "Cargando...")
+                )
+            ),
+        ];
+    }
+
+    oncreate() {
+        document.title = this.title + " | " + this.name + this.version;
+    }
+
+    view() {}
 
 }
 
