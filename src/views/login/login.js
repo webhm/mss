@@ -8,10 +8,12 @@ class Login extends App {
 
   constructor() {
     super();
-    if(!this.auth){
+    if (this.isPublic()) {
       this.view = this.page;
     }
+
   }
+
 
   vForm() {
     return m(FormLogin);

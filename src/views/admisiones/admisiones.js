@@ -7,12 +7,16 @@ class Admisiones extends App {
 
     constructor() {
         super();
+        this.isAuthenticated();
         this.title = "Admisiones";
-        this.view = this.page;
     }
 
     page() {
         return m("h1", this.title + " Hospital Metropolitano");
+    }
+
+    view() {
+        return [this.page()];
     }
 }
 
