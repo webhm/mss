@@ -1,5 +1,6 @@
 import m from 'mithril';
 import App from '../../models/App';
+import SidebarRight from '../layout/sidebarRight';
 
 class MenuInicio {
 
@@ -28,7 +29,7 @@ class ModulesAccess {
 
             return [
 
-                Object.keys(_data.modulesAccess).map(function(_v, _i, _contentData) {
+                Object.keys(_data.modulesAccess).map(function (_v, _i, _contentData) {
 
                     if (_data.modulesAccess[_v].length !== 0) {
 
@@ -161,8 +162,8 @@ const iMdodule = {
 class Inicio extends App {
     constructor() {
         super();
-        this.isAuthenticated();
         this.title = "Inicio";
+        this.isAuthenticated();
     }
     view() {
         return [
@@ -200,11 +201,11 @@ class Inicio extends App {
 
                     ])
                 ]),
-                // m(SidebarRight)
+                m(SidebarRight, { userName: this.userName })
             ]),
             m("div.content.content-components", {
 
-                },
+            },
                 m("div.container.mg-l-0.mg-r-0", {
                     style: { "max-width": "100%" }
                 }, [

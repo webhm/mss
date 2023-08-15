@@ -1,3 +1,4 @@
+import m from 'mithril';
 import Admisiones from "../views/admisiones/admisiones";
 import Login from "../views/login/login";
 import Inicio from "../views/inicio/inicio";
@@ -32,9 +33,14 @@ console.log("Logout exitoso");
 
 // Routes here
 const Routes = {
-    "/": Login,
-    "/inicio": Inicio,
-    "/admisiones": Admisiones,
+  "/": Login,
+  "/inicio": Inicio,
+  "/admisiones": Admisiones,
+  "/salir": () => {
+    localStorage.clear();
+    m.route.set('/');
+  },
+
 
 };
 

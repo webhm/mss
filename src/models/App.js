@@ -11,18 +11,28 @@ class App {
     static version;
     static offline;
     static public;
+    static userName;
     static auth = null;
 
     constructor() {
         this.auth = new AuthManager();
         this.name = "MetroPlus";
         this.version = " v2.0.0";
+        if (this.auth.isAuthenticated()) {
+            this.userName = JSON.parse(this.auth.user);
+            let name = this.userName.userName.split("@");
+            this.userName = name[0];
+        }
+
     }
+
+
 
     isAuthenticated() {
         if (!this.auth.isAuthenticated()) {
             this.logout();
         }
+
         return this.auth.isAuthenticated();
     }
 
@@ -74,9 +84,12 @@ class App {
 
     oncreate() {
         document.title = this.title + " | " + this.name + this.version;
+
     }
 
-    view() {}
+
+
+    view() { }
 
 }
 

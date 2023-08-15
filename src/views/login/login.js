@@ -9,6 +9,7 @@ class Login extends App {
   constructor() {
     super();
     if (this.isPublic()) {
+      this.title = "Inicia Sesión";
       this.view = this.page;
     }
 
