@@ -5,7 +5,7 @@ class AuthMSA {
     static msalConfig;
     static myMSALObj;
 
-    constructor() {}
+    constructor() { }
 
 
     static login() {
@@ -16,6 +16,7 @@ class AuthMSA {
 
         this.myMSALObj = null;
 
+        // Objeto Configuración 
         this.msalConfig = {
             auth: {
                 clientId: "a29bcf0f-e889-4181-b2d5-62d630d502ee", // this is a fake id
@@ -28,20 +29,39 @@ class AuthMSA {
             },
         };
 
+        // Inicializa el Objeto MSAL
         this.myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
 
-
+        // Crea Objeto para el Login de MSA
         this.myMSALObj.loginPopup(this.loginRequest)
             .then((loginResponse) => {
                 console.log(loginResponse)
                 localStorage.setItem("token", localStorage.getItem('msal.idtoken'));
                 localStorage.setItem("user", JSON.stringify({
                     userName: loginResponse.account.userName,
-                    rol: 1
-                }));
+                    role: 1,
+                    profile: [
+                        'ADM_USUARIOS_METROPLUS',
+                        'ADMISIONES_METROPLUS',
+                        'EMERGENCIA_METROPLUS',
+                        'FARMACIA_METROPLUS',
+                        'IMAGEN_METROPLUS',
+                        'LABORATORIO_METROPLUS',
+                        'HOSPITALIZACION_METROPLUS',
+                        'TR_METROPLUS',
+                        'NEURO_METROPLUS',
+                        'BCO_SANGRE_METROPLUS',
+                        'ENDOSCOPIA_METROPLUS',
+                        'CONTA_METROPLUS',
+                        'TF_METROPLUS',
+                        'CARDIO_METROPLUS',
 
+
+                    ]
+                }));
+                // Se recarga la pagina un avez hecho el Inicio de Sesion se redirige al Inicio
                 window.location.reload();
-            }).catch(function(error) {
+            }).catch(function (error) {
                 console.log(error);
             });
 

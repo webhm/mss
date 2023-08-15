@@ -61,6 +61,7 @@ class HeaderPublic {
         this.offline = false;
     }
 
+
     oncreate(el) {
 
         /*
@@ -71,6 +72,7 @@ class HeaderPublic {
           }
 
           */
+
     }
 
     view() {
@@ -104,27 +106,29 @@ class HeaderPublic {
                 ] : [
                     m(
                         "div.wd-100p.alert.alert-solid.alert-warning.pd-15.mg-0.bd-0.rounded-0[id='alertConnect'][role='alert']", [
-                            m(
-                                "div",
-                                m(m.route.Link, { href: "/", class: "df-logo" }, [
-                                    "Metro",
-                                    m("span", "Plus+"),
-                                ])
-                            ), ,
-                            m(
-                                ".spinner-grow.spinner-grow-sm[role='status']",
-                                m("span.sr-only", "Procesando...")
-                            ),
-                            m(
-                                "b",
-                                "Tu conexión a Internet es deficiente. Intentaremos conectarnos en unos minutos."
-                            ),
-                        ]
+                        m(
+                            "div",
+                            m(m.route.Link, { href: "/", class: "df-logo" }, [
+                                "Metro",
+                                m("span", "Plus+"),
+                            ])
+                        ), ,
+                        m(
+                            ".spinner-grow.spinner-grow-sm[role='status']",
+                            m("span.sr-only", "Procesando...")
+                        ),
+                        m(
+                            "b",
+                            "Tu conexión a Internet es deficiente. Intentaremos conectarnos en unos minutos."
+                        ),
+                    ]
                     )
                 ])
             ]),
         ];
     }
 }
+
+
 
 export default HeaderPublic;

@@ -1,7 +1,8 @@
-import m from 'mithril';
 import Admisiones from "../views/admisiones/admisiones";
 import Login from "../views/login/login";
 import Inicio from "../views/inicio/inicio";
+import Administracion from '../views/admin/admin';
+import Salir from "../views/layout/salir";
 
 // Crear una instancia de la clase
 // const authManager = new AuthManager();
@@ -36,12 +37,8 @@ const Routes = {
   "/": Login,
   "/inicio": Inicio,
   "/admisiones": Admisiones,
-  "/salir": () => {
-    localStorage.clear();
-    m.route.set('/');
-  },
-
-
+  "/administracion": Administracion,
+  "/salir": Salir,
 };
 
 const DefaultRoute = "/";

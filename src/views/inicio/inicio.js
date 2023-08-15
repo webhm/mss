@@ -23,42 +23,257 @@ class MenuInicio {
 
 class ModulesAccess {
 
-    view() {
+    view(_data) {
 
-        if (_data !== null && _data.length !== 0) {
+        console.log(_data)
 
-            return [
+        return [
 
-                Object.keys(_data.modulesAccess).map(function (_v, _i, _contentData) {
-
-                    if (_data.modulesAccess[_v].length !== 0) {
-
-                        MenuInicio.isContent = true;
-
-                        return m(iMdodule, _data.modulesAccess[_v]);
-
-                    }
-
-                    if (Object.keys(_data.modulesAccess).length == (_i + 1)) {
-                        if (!MenuInicio.isContent) {
-                            return [
-                                m("p.df-lead.pd-15",
-                                    "Todavía no tienes acceso a ningún Módulo disponible. Comunícate a CONCAS Ext: 2020 y solicita activación. Att: Metrovirtual Plus."
+            (_data.attrs.profiles.includes('ADMISIONES_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-folder-open.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/admisiones']",
+                                    "Admisiones"
                                 )
-                            ]
-                        }
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Admisiones"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Admisiones"
+                            ),
+                            m("a.tx-18.lh-0[href='/admisiones']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('EMERGENCIA_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-first-aid.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/emergencia']",
+                                    "Emergencia"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Emergencia"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Emergencia"
+                            ),
+                            m("a.tx-18.lh-0[href='/emergencia']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('FARMACIA_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-pills.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/farmacia']",
+                                    "Farmacia"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Farmacia"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Farmacia"
+                            ),
+                            m("a.tx-18.lh-0[href='/farmacia']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('IMAGEN_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-file-prescription.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/imagen']",
+                                    "Imagen"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Imagen"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Imagen"
+                            ),
+                            m("a.tx-18.lh-0[href='/imagen']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('LABORATORIO_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-microscope.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/laboratorio']",
+                                    "Laboratorio"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Laboratorio"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Laboratorio"
+                            ),
+                            m("a.tx-18.lh-0[href='/laboratorio']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('HOSPITALIZACION_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-procedures.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/hospitalizacion']",
+                                    "Hospitalizacion"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Hospitalizacion"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Hospitalizacion"
+                            ),
+                            m("a.tx-18.lh-0[href='/hospitalizacion']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('TR_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-user-md.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/terapia-respiratoria']",
+                                    "Terapia Respiratoria"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Terapia Respiratoria"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Terapia Respiratoria"
+                            ),
+                            m("a.tx-18.lh-0[href='/terapia-respiratoria']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('BCO_SANGRE_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-burn.tx-55")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/bco-sangre']",
+                                    "Banco de Sangre"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Banco de Sangre"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Banco de Sangre"
+                            ),
+                            m("a.tx-18.lh-0[href='/bco-sangre']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
+            (_data.attrs.profiles.includes('ADM_USUARIOS_METROPLUS') ? [
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.fas.fa-cog")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='/administracion']",
+                                    "Administraciòn"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Control de Acceso"
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "Ir a Administración"
+                            ),
+                            m("a.tx-18.lh-0[href='/administracion']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+            ] : []),
 
-                    }
-
-
-
-
-                })
-
-            ]
-
-        }
-
+        ];
 
 
     }
@@ -66,92 +281,112 @@ class ModulesAccess {
 
 }
 
-const iMdodule = {
-    view: (_data) => {
-        if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'farmacia') {
-            _data.children[0].modulo = 'Farmacia';
-            _data.children[0].icon = "fas fa-pills";
-            _data.children[0].href = 'farmacia';
-
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'laboratorio') {
-            _data.children[0].modulo = 'Laboratorio';
-            _data.children[0].icon = "fas fa-microscope";
-            _data.children[0].href = 'laboratorio';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'imagen') {
-            _data.children[0].modulo = 'Imagen';
-            _data.children[0].icon = "fas fa-file-prescription";
-            _data.children[0].href = 'imagen';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'emergencia') {
-            _data.children[0].modulo = 'Emergencia';
-            _data.children[0].icon = "fas fa-first-aid";
-            _data.children[0].href = 'emergencia';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'bco-sangre') {
-            _data.children[0].icon = "fas fa-burn";
-            _data.children[0].modulo = 'Bco. de Sangre';
-            _data.children[0].href = 'bco-sangre';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'terapia-respiratoria') {
-            _data.children[0].icon = "fas fa-user-md";
-            _data.children[0].modulo = 'Terapia Respiratoria';
-            _data.children[0].href = 'terapia-respiratoria';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'neurofisiologia') {
-            _data.children[0].icon = "fas fa-user-md";
-            _data.children[0].modulo = 'Neurofisiología';
-            _data.children[0].href = 'neurofisiologia';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'hospitalizacion') {
-            _data.children[0].icon = "fas fa-procedures";
-            _data.children[0].modulo = 'Hospitalizacion';
-            _data.children[0].href = 'hospitalizacion';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'admisiones') {
-            _data.children[0].icon = "fas fa-folder-open";
-            _data.children[0].modulo = 'Adimisones';
-            _data.children[0].href = 'admisiones';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'mantenimiento') {
-            _data.children[0].icon = "fas fa-h-square ";
-            _data.children[0].modulo = 'Mantenimento';
-            _data.children[0].href = 'mantenimiento';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'endoscopia') {
-            _data.children[0].icon = "fas fa-compact-disc";
-            _data.children[0].modulo = 'Endoscopìa';
-            _data.children[0].href = 'endoscopia';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'patologia') {
-            _data.children[0].icon = "fas fa-microscope";
-            _data.children[0].modulo = 'Patología';
-            _data.children[0].href = 'patologia';
-        } else if (_data.children[0].modulo !== undefined && _data.children[0].modulo == 'contabilidad') {
-            _data.children[0].icon = "fas fa-book";
-            _data.children[0].modulo = 'Contabilidad';
-            _data.children[0].href = 'contabilidad';
-        } else {
-            _data.children[0].icon = "fas fa-hospital";
-            _data.children[0].href = _data.children[0].modulo.charAt(0).toUpperCase();
-            _data.children[0].modulo = _data.children[0].modulo.charAt(0).toUpperCase() + _data.children[0].modulo.slice(1)
-        }
-
+class iMdodule {
+    view() {
         return [
-            m("li", {
-                "class": "list-item bg-white wd-50p",
-                "style": { "cursor": "pointer" },
-                onclick: () => {
-
-                    m.route.set(_data.children[0].href, {});
-
-
-                }
-            }, [
-                m("div", { "class": "media" }, [
-                    m("div.wd-60.tx-center", { "class": "pd-10 bg-litecoin" },
-                        m("i", { "class": _data.children[0].icon + " tx-30 tx-white" })
-                    ),
-                    m("div", { "class": "media-body mg-l-15" }, [
-                        m("p", { "class": "tx-18 mg-b-0" },
-                            _data.children[0].modulo
-                        ),
-                        m("p", { "class": "mg-b-0 tx-11 tx-color-03 tx-medium tx-spacing-1 tx-sans" },
-                            "Ir a " + _data.children[0].modulo
-                        )
+            m("div.row", [
+                m("div.col-sm-6.col-lg-3",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.icon.ion-ios-cog")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='']",
+                                    "Integrations"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molesti..."
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "18 Topics"
+                            ),
+                            m("a.tx-18.lh-0[href='']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
                     ])
-                ]),
-
+                ),
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-0",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.icon.ion-ios-laptop")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='']",
+                                    "Supported Devices"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molesti..."
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "22 Topics"
+                            ),
+                            m("a.tx-18.lh-0[href='']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.icon.ion-ios-cart")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='']", [
+                                    "Pricing ",
+                                    m.trust("&amp;"),
+                                    " Billing"
+                                ])
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molesti..."
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "11 Topics"
+                            ),
+                            m("a.tx-18.lh-0[href='']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                ),
+                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0",
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-25",
+                                m("i.icon.ion-ios-filing")
+                            ),
+                            m("h5",
+                                m("a.link-01[href='']",
+                                    "Features"
+                                )
+                            ),
+                            m("p.tx-color-03.mg-b-0",
+                                "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molesti..."
+                            )
+                        ]),
+                        m("div.card-footer.tx-13", [
+                            m("span",
+                                "15 Topics"
+                            ),
+                            m("a.tx-18.lh-0[href='']",
+                                m("i.icon.ion-md-arrow-forward")
+                            )
+                        ])
+                    ])
+                )
             ])
 
         ]
@@ -197,7 +432,7 @@ class Inicio extends App {
                         m("li.nav-label.pd-l-20.pd-lg-l-25.d-lg-none",
                             "Menu"
                         ),
-                        //  m(MenuInicio),
+                        m(MenuInicio),
 
                     ])
                 ]),
@@ -218,18 +453,15 @@ class Inicio extends App {
 
                         ),
                         m("li.breadcrumb-item.active[aria-current='page']",
-                            "Inicio"
+                            this.title
                         )
                     ]),
                     m("h1.df-title.mg-t-20.mg-b-10",
-                        "Inicio:"
+                        this.title + ":"
                     ),
 
                     m("div.row.tx-14", [
-
-                        //m(ModulesAccess),
-
-
+                        m(ModulesAccess, { profiles: this.auth.user.profile }),
                     ]),
 
                 ])

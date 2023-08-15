@@ -14,7 +14,7 @@
 class AuthManager {
     constructor() {
         this.token = (localStorage.getItem('token') == undefined ? null : localStorage.getItem('token'));
-        this.user = (localStorage.getItem('user') == undefined ? null : localStorage.getItem('user'));
+        this.user = (localStorage.getItem('user') == undefined ? null : JSON.parse(localStorage.getItem('user')));
     }
 
     async login(credentials) {
@@ -33,7 +33,9 @@ class AuthManager {
                 this.token = data.jwt;
                 this.user = data.data.user.user;
                 // Guardar el token y el usuario en el almacenamiento local
+                // Objeto Token del User 
                 localStorage.setItem("token", this.token);
+                // Objeto User Info de la App
                 localStorage.setItem("user", JSON.stringify(this.user));
                 return true;
             } else {
@@ -85,7 +87,7 @@ class AuthManager {
 
     hasProfile(profile) {
         // Comprobar si el usuario tiene el perfil indicado
-        if (this.user && this.user.profile === profile) {
+        if (this.user && this.user.profile.includes(profile)) {
             return true;
         } else {
             return false;
