@@ -3,6 +3,7 @@ import Login from "../views/login/login";
 import Inicio from "../views/inicio/inicio";
 import Administracion from '../views/admin/admin';
 import Salir from "../views/layout/salir";
+import usrMV from "../views/admin/metrovirtual/usrMV";
 
 // Crear una instancia de la clase
 // const authManager = new AuthManager();
@@ -38,6 +39,7 @@ const Routes = {
   "/inicio": Inicio,
   "/admisiones": Admisiones,
   "/administracion": Administracion,
+  "/administracion/metrovirtual": usrMV,
   "/salir": Salir,
 };
 

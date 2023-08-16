@@ -1,17 +1,31 @@
 import m from "mithril";
 
+class MenuAdmin {
+    static modulos = [{
+        page: 'administracion/metrovirtual',
+        label: 'Usuarios MetroVirtual',
+    }, {
+        page: 'administracion/metroplus',
+        label: 'Usuarios MetroPlus',
+    }];
+}
+
 
 class MenuSidebar {
     view() {
+        if (MenuAdmin.modulos.length !== 0) {
+            return [
+                MenuAdmin.modulos.map(function (_v, _i, _contentData) {
+                    return [
+                        m(m.route.Link, { href: "/" + _v.page, class: ((SidebarAdmin.page == _v.page) ? "active" : "") }, [
+                            _v.label
+                        ])
 
-        return [
-            m(m.route.Link, { href: "/administracion/metrovirtual", class: ((SidebarAdmin.page == "/administracion/metrovirtual") ? "active" : "") }, [
-                'MetroVirtual'
-            ])
+                    ]
 
-        ]
-
-
+                })
+            ]
+        }
 
     }
 
@@ -21,9 +35,8 @@ class MenuSidebar {
 
 
 class SidebarAdmin {
-    page = "";
-    setPage(page) {
-        SidebarAdmin.page = page;
+    oninit(_data) {
+        SidebarAdmin.page = _data.attrs.page;
     }
     view() {
         return [

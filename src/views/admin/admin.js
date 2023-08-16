@@ -45,7 +45,26 @@ class Administracion extends App {
                         this.title + ":"
                     ),
 
-                    m("div.row.tx-14", [
+                    m("div.row", [
+
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                            m("div.card.card-help", [
+                                m("div.card-body.tx-13", [
+                                    m("div.tx-60.lh-0.mg-b-10",
+                                        m("i.fas.fa-users")
+                                    ),
+                                    m("h5",
+                                        m("a.link-01[href='/administracion/metrovirtual']",
+                                            "Usuarios MetroVirtual"
+                                        )
+                                    ),
+                                    m("p.tx-color-03.mg-b-0",
+                                        "Usuarios MetroVirtual"
+                                    )
+                                ])
+
+                            ])
+                        ),
 
 
 
