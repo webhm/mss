@@ -83,6 +83,7 @@ class HeaderPublic {
         return [
             m("header.navbar.navbar-header.navbar-header-fixed", {
                 onclick: (el) => {
+                    /*
                     const messageEvent = new CustomEvent("user:data-message", {
                         detail: { from: "Manz", message: "Hello!" },
                         bubbles: true,
@@ -90,6 +91,7 @@ class HeaderPublic {
                     });
                     this.mas.push(messageEvent.detail);
                     el.target.dispatchEvent(messageEvent);
+                    */
                 }
             }, [
                 (!this.offline ? [

@@ -1,3 +1,6 @@
+import m from "mithril";
+
+
 class MenuSidebar {
     view() {
 
@@ -39,13 +42,13 @@ class SidebarAdmin {
                 m("div.sidebar-body",
                     m("ul.sidebar-nav", [
                         m("li.nav-label.mg-b-15",
-                            "Farmacia"
+                            "Administración"
                         ),
                         m("li.nav-item.show", [
 
-                            m(m.route.Link, { href: "/farmacia", class: "nav-link with-sub" }, [
+                            m(m.route.Link, { href: "/administracion", class: "nav-link with-sub" }, [
                                 m("i[data-feather='layout']"),
-                                " Farmacia"
+                                " Administración"
                             ]),
                             m("nav.nav", [
 

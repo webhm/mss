@@ -1,6 +1,7 @@
 import m from "mithril";
 import App from "../../models/App";
-import HeaderPublic from "../layout/headerPublic";
+import HeaderPrivate from "../layout/headerPrivate";
+import SidebarAdmin from "./sidebarAdmin";
 
 // Administración
 
@@ -15,10 +16,8 @@ class Administracion extends App {
         }
     }
 
-
-
     vHeader() {
-        return m(HeaderPublic);
+        return m(HeaderPrivate, { userName: this.userName });
     }
 
     vMain() {
@@ -57,9 +56,14 @@ class Administracion extends App {
         ];
     }
 
+    vMenu() {
+        return m(SidebarAdmin);
+    }
+
     page() {
         return [
             this.vHeader(),
+            this.vMenu(),
             this.vMain()
         ];
     }
