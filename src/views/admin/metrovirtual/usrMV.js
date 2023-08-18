@@ -3,6 +3,7 @@ import App from "../../../models/App";
 import HeaderPrivate from "../../layout/headerPrivate";
 import SidebarAdmin from "../sidebarAdmin";
 import Table from "../../utils/table";
+import Loader from "../../utils/loader";
 
 // Administración MV
 
@@ -43,15 +44,18 @@ class usrMV extends App {
                     m("h1.df-title.mg-t-20.mg-b-10",
                         this.title + ":"
                     ),
-                    m("div.row", {
+                    m("div", {
                         oncreate: () => {
-                            this.fetchData();
+                            this.fetchData().then((_data) => {
+                                this.usuarios = _data;
+                            });
                         }
                     }, [
-
-                        this.vTableUsuarios()
-
-
+                        (this.usuarios !== null ? [
+                            this.vTableUsuarios('table-usr', this.usuarios)
+                        ] : [
+                            m(Loader)
+                        ])
                     ]),
 
                 ])
@@ -63,8 +67,7 @@ class usrMV extends App {
     }
     fetchData() {
 
-
-        m.request({
+        return m.request({
             method: "GET",
             url: "https://api.hospitalmetropolitano.org/t/v1/terapia-respiratoria/pedidos?idFiltro=1",
             headers: {
@@ -72,22 +75,18 @@ class usrMV extends App {
             },
         })
             .then(function (result) {
-                this.usuarios = result.data;
+                return result.data;
             })
             .catch(function (e) {
                 // setTimeout(function () { PedidosTR.fetchPedidos(); }, 2000);
             });
 
     }
-
-
-    vTableUsuarios() {
-        if (this.usuarios.length !== 0) {
-            return m(Table, { idTable: '#table-usr', dataTable: this.usuarios });
-        }
-
+    vTableUsuarios(idTable, dataTable) {
+        return [
+            m(Table, { idTable: idTable, dataTable: dataTable })
+        ]
     }
-
     page() {
         return [
             this.vHeader(),

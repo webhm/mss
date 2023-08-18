@@ -1,3 +1,5 @@
+import m from "mithril";
+
 import Admisiones from "../views/admisiones/admisiones";
 import Login from "../views/login/login";
 import Inicio from "../views/inicio/inicio";
