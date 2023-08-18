@@ -25,8 +25,6 @@ class ModulesAccess {
 
     view(_data) {
 
-        console.log(_data)
-
         return [
 
             (_data.attrs.profiles.includes('ADMISIONES_METROPLUS') ? [

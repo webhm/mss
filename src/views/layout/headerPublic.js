@@ -82,6 +82,7 @@ class HeaderPublic {
 
         return [
             m("header.navbar.navbar-header.navbar-header-fixed", {
+
                 onclick: (el) => {
                     /*
                     const messageEvent = new CustomEvent("user:data-message", {

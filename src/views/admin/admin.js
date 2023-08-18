@@ -9,9 +9,9 @@ class Administracion extends App {
 
     constructor() {
         super();
+        this.title = "Administración";
         this.isAuthenticated();
         if (this.hasProfile('ADM_USUARIOS_METROPLUS')) {
-            this.title = "Administración";
             this.view = this.page;
         }
     }

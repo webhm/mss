@@ -6,21 +6,21 @@ import Loader from "../../utils/loader";
 import Errors from "../../utils/errors";
 import Table from "../../utils/table";
 import { Stopwatch } from "../../utils/stopWatch";
-import usrMPLUS from "./usrMPlus";
 
 // Administración MV
 
-class usrMV extends App {
+class usrMPLUS extends App {
     usuarios = null;
-    idFiltro = 1;
+    idFiltro = 3;
     constructor(_data) {
         super();
-        this.title = "Usuarios MetroVirtual";
+        this.title = "Usuarios MetroPlus";
         this.isAuthenticated();
         if (this.hasProfile('ADM_USUARIOS_METROPLUS')) {
             this.view = this.page;
         }
     }
+
     oncreate(_data) {
         if (_data.attrs.idFiltro !== undefined) {
             this.idFiltro = _data.attrs.idFiltro;
@@ -29,6 +29,7 @@ class usrMV extends App {
             this.usuarios = _data;
         });
     }
+
     vHeader() {
         return m(HeaderPrivate, { userName: this.userName });
     }
@@ -81,50 +82,8 @@ class usrMV extends App {
 
                                 )
 
-                            ),
-                            m("div.d-flex.tx-14", [
+                            )
 
-                                m("div.dropdown.dropleft", [
-
-                                    m("div.link-03.lh-0.mg-l-5[id='dropdownMenuButton'][data-toggle='dropdown'][aria-haspopup='true'][aria-expanded='false']", {
-                                        style: { "cursor": "pointer" },
-                                        title: "Filtrar"
-                                    },
-                                        m("i.fas.fa-filter.tx-18.pd-5")
-                                    ),
-                                    m(".dropdown-menu.tx-13[aria-labelledby='dropdownMenuButton']", [
-                                        m("h6.dropdown-header.tx-uppercase.tx-12.tx-bold.tx-inverse",
-                                            "FILTROS:"
-                                        ),
-                                        m(m.route.Link, {
-                                            class: 'dropdown-item',
-                                            href: "/administracion/metrovirtual/?idFiltro=1",
-                                            onclick: (e) => {
-                                                this.reloadData(1);
-                                                this.fetchData().then((_data) => {
-                                                    this.usuarios = _data;
-                                                });
-                                            }
-                                        }, [
-                                            "Grp-radius-Medicos"
-                                        ]),
-                                        m(m.route.Link, {
-                                            class: 'dropdown-item',
-                                            href: "/administracion/metrovirtual/?idFiltro=2",
-                                            onclick: (e) => {
-                                                this.reloadData(2);
-                                                this.fetchData().then((_data) => {
-                                                    this.usuarios = _data;
-                                                });
-                                            }
-                                        }, [
-                                            "Grp-radius-Residentes"
-                                        ]),
-
-
-                                    ])
-                                ])
-                            ])
                         ]),
 
                     ]),
@@ -177,12 +136,15 @@ class usrMV extends App {
         ];
     }
     vMenu() {
-        return m(SidebarAdmin, { page: 'administracion/metrovirtual' });
+        return m(SidebarAdmin, { page: 'administracion/metroplus' });
     }
+
     reloadData(idFiltro) {
         this.usuarios = null;
         this.idFiltro = idFiltro;
     }
+
+
     fetchData() {
 
         let _queryString = '?idFiltro=' + this.idFiltro;
@@ -204,10 +166,6 @@ class usrMV extends App {
                 };
             });
 
-    }
-
-    _alert() {
-        alert('ddddd');
     }
 
     arqTable() {
@@ -267,9 +225,6 @@ class usrMV extends App {
             },
             {
                 title: "Último Acceso:",
-            },
-            {
-                title: "Opciones:",
             }
             ],
             aoColumnDefs: [{
@@ -354,16 +309,6 @@ class usrMV extends App {
                 aTargets: [8],
                 orderable: true,
 
-            },
-            {
-                mRender: function (data, type, full) {
-                    return '<button class="btn btn-primary" onclick="_alert_();" >Editar</button>'
-
-                },
-                visible: true,
-                aTargets: [9],
-                orderable: true,
-
             }
 
 
@@ -390,8 +335,4 @@ class usrMV extends App {
 
 }
 
-function _alert_() {
-    return usrMV._alert();
-}
-
-export default usrMV;
+export default usrMPLUS;
