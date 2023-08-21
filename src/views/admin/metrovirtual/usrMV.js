@@ -6,12 +6,14 @@ import Loader from "../../utils/loader";
 import Errors from "../../utils/errors";
 import Table from "../../utils/table";
 import { Stopwatch } from "../../utils/stopWatch";
-import usrMPLUS from "./usrMPlus";
+import { LOADER } from "construct-ui/lib/esm/components/icon/generated/IconNames";
 
 // Administración MV
 
 class usrMV extends App {
     usuarios = null;
+    dataUser = null;
+    idUsr = null;
     idFiltro = 1;
     constructor(_data) {
         super();
@@ -20,6 +22,7 @@ class usrMV extends App {
         if (this.hasProfile('ADM_USUARIOS_METROPLUS')) {
             this.view = this.page;
         }
+
     }
     oncreate(_data) {
         if (_data.attrs.idFiltro !== undefined) {
@@ -28,6 +31,15 @@ class usrMV extends App {
         this.fetchData().then((_data) => {
             this.usuarios = _data;
         });
+    }
+    onupdate(_data) {
+
+        if (_data.attrs.idUsr !== undefined) {
+            this.idUsr = _data.attrs.idUsr;
+        } else {
+            this.idUsr = null;
+        }
+        m.redraw();
     }
     vHeader() {
         return m(HeaderPrivate, { userName: this.userName });
@@ -53,84 +65,85 @@ class usrMV extends App {
                             this.title
                         )
                     ]),
-                    m("h1.df-title.mg-t-20.mg-b-10",
+                    m("h1.df-title.mg-t-20.mg-b-20",
                         this.title + ":"
                     ),
-                    m("div.table-content.col-12.pd-r-0.pd-l-0", [
-                        m("div.d-flex.align-items-center.justify-content-between.mg-t-10", [
-                            m("h5.mg-b-0",
-                                "Todos los Usuarios:",
-                                m("span.badge.badge-primary.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-15", {
-                                    oncreate: (el) => {
-                                        if (this.idFiltro == 1) {
-                                            el.dom.innerHTML = 'Grp-radius-Medicos';
-                                        }
-                                        if (this.idFiltro == 2) {
-                                            el.dom.innerHTML = 'Grp-radius-Residentes';
-                                        }
-                                    },
-                                    onupdate: (el) => {
-                                        if (this.idFiltro == 1) {
-                                            el.dom.innerHTML = 'Grp-radius-Medicos';
-                                        }
-                                        if (this.idFiltro == 2) {
-                                            el.dom.innerHTML = 'Grp-radius-Residentes';
-                                        }
-                                    }
-                                }
-
-                                )
-
-                            ),
-                            m("div.d-flex.tx-14", [
-
-                                m("div.dropdown.dropleft", [
-
-                                    m("div.link-03.lh-0.mg-l-5[id='dropdownMenuButton'][data-toggle='dropdown'][aria-haspopup='true'][aria-expanded='false']", {
-                                        style: { "cursor": "pointer" },
-                                        title: "Filtrar"
-                                    },
-                                        m("i.fas.fa-filter.tx-18.pd-5")
-                                    ),
-                                    m(".dropdown-menu.tx-13[aria-labelledby='dropdownMenuButton']", [
-                                        m("h6.dropdown-header.tx-uppercase.tx-12.tx-bold.tx-inverse",
-                                            "FILTROS:"
-                                        ),
-                                        m(m.route.Link, {
-                                            class: 'dropdown-item',
-                                            href: "/administracion/metrovirtual/?idFiltro=1",
-                                            onclick: (e) => {
-                                                this.reloadData(1);
-                                                this.fetchData().then((_data) => {
-                                                    this.usuarios = _data;
-                                                });
-                                            }
-                                        }, [
-                                            "Grp-radius-Medicos"
-                                        ]),
-                                        m(m.route.Link, {
-                                            class: 'dropdown-item',
-                                            href: "/administracion/metrovirtual/?idFiltro=2",
-                                            onclick: (e) => {
-                                                this.reloadData(2);
-                                                this.fetchData().then((_data) => {
-                                                    this.usuarios = _data;
-                                                });
-                                            }
-                                        }, [
-                                            "Grp-radius-Residentes"
-                                        ]),
-
-
-                                    ])
-                                ])
-                            ])
-                        ]),
-
-                    ]),
 
                     m("div", [
+
                         (this.usuarios !== null && this.usuarios.status) ? [
+                            m("div.table-content.col-12.pd-r-0.pd-l-0", [
+                                m("div.d-flex.align-items-center.justify-content-between.mg-t-10", [
+                                    m("h5.mg-b-0",
+                                        "Todos los Usuarios:",
+                                        m("span.badge.badge-primary.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-15", {
+                                            oncreate: (el) => {
+                                                if (this.idFiltro == 1) {
+                                                    el.dom.innerHTML = 'Grp-radius-Medicos';
+                                                }
+                                                if (this.idFiltro == 2) {
+                                                    el.dom.innerHTML = 'Grp-radius-Residentes';
+                                                }
+                                            },
+                                            onupdate: (el) => {
+                                                if (this.idFiltro == 1) {
+                                                    el.dom.innerHTML = 'Grp-radius-Medicos';
+                                                }
+                                                if (this.idFiltro == 2) {
+                                                    el.dom.innerHTML = 'Grp-radius-Residentes';
+                                                }
+                                            }
+                                        }
+
+                                        )
+
+                                    ),
+                                    m("div.d-flex.tx-14", [
+
+                                        m("div.dropdown.dropleft", [
+
+                                            m("div.link-03.lh-0.mg-l-5[id='dropdownMenuButton'][data-toggle='dropdown'][aria-haspopup='true'][aria-expanded='false']", {
+                                                style: { "cursor": "pointer" },
+                                                title: "Filtrar"
+                                            },
+                                                m("i.fas.fa-filter.tx-18.pd-5")
+                                            ),
+                                            m(".dropdown-menu.tx-13[aria-labelledby='dropdownMenuButton']", [
+                                                m("h6.dropdown-header.tx-uppercase.tx-12.tx-bold.tx-inverse",
+                                                    "FILTROS:"
+                                                ),
+                                                m(m.route.Link, {
+                                                    class: 'dropdown-item',
+                                                    href: "/administracion/metrovirtual/?idFiltro=1",
+                                                    onclick: (e) => {
+                                                        this.reloadData(1);
+                                                        this.fetchData().then((_data) => {
+                                                            this.usuarios = _data;
+                                                        });
+                                                    }
+                                                }, [
+                                                    "Grp-radius-Medicos"
+                                                ]),
+                                                m(m.route.Link, {
+                                                    class: 'dropdown-item',
+                                                    href: "/administracion/metrovirtual/?idFiltro=2",
+                                                    onclick: (e) => {
+                                                        this.reloadData(2);
+                                                        this.fetchData().then((_data) => {
+                                                            this.usuarios = _data;
+                                                        });
+                                                    }
+                                                }, [
+                                                    "Grp-radius-Residentes"
+                                                ]),
+
+
+                                            ])
+                                        ])
+                                    ])
+                                ]),
+
+                            ]),
                             this.vTableUsuarios('table-usr', this.usuarios.data, this.arqTable())
                         ] : (this.usuarios !== null && (!this.usuarios.status || this.usuarios.status == null)) ? [
                             m(Errors, { type: (!this.usuarios.status ? 1 : 0), error: this.usuarios })
@@ -139,9 +152,13 @@ class usrMV extends App {
                         ]
                     ]),
 
+
+
                 ])
             ),
-            m("div.section-nav", [
+            m("div.section-nav", {
+                class: (this.idUsr == null ? '' : 'd-none')
+            }, [
                 m("label.nav-label",
                     this.title + ":"
                 ),
@@ -176,12 +193,238 @@ class usrMV extends App {
             ])
         ];
     }
+    vMainProfile() {
+        this.fetchProfile();
+        return [
+            m("div.content.content-components",
+                m("div.container.mg-l-0.mg-r-0", {
+                    style: { "max-width": "100%" }
+                }, [
+                    m("ol.breadcrumb.df-breadcrumbs", [
+                        m("li.breadcrumb-item",
+                            m(m.route.Link, { href: "/", }, [
+                                "MetroPlus"
+                            ]),
+                        ),
+                        m("li.breadcrumb-item",
+                            m(m.route.Link, { href: "/administracion", }, [
+                                'Administración'
+                            ]),
+                        ),
+                        m("li.breadcrumb-item.active[aria-current='page']",
+                            this.title
+                        )
+                    ]),
+                    m("h1.df-title.mg-t-20.mg-b-10",
+                        this.title + ":"
+                    ),
+                    (this.dataUser !== null ? [
+                        m('div.table-responsive', [
+                            m("table.table.table-bordered.table-sm.tx-12", [
+                                m("thead",
+
+                                    m("tr.bg-litecoin.op-9.tx-white", [
+                                        m("th[scope='col'][colspan='10']",
+                                            "DATOS DEL USUARIO:"
+                                        ),
+
+                                    ])
+                                ),
+                                m("tbody", [
+                                    m("tr", [
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Nombres Completos:"
+                                        ),
+                                        m("td[colspan='4']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        }, this.dataUser.sn + ' ' + this.dataUser.cn),
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Origen:"
+                                        ),
+                                        m("td[colspan='3']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        },),
+
+                                    ]),
+
+                                    m("tr", [
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Médico Solicitante:"
+                                        ),
+                                        m("td[colspan='4']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        },
+
+                                        ),
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Médico Tratante:"
+                                        ),
+                                        m("td[colspan='4']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        },
+
+                                        ),
+
+
+
+                                    ]),
+                                ]),
+
+                                m("tbody", [
+
+
+                                    m("tr.d-print-none.bg-litecoin.op-9.tx-white.", [
+                                        m("th[scope='col'][colspan='10']",
+                                            "OPCIONES DISPONIBLES:"
+                                        ),
+
+                                    ]),
+                                    m("tr.d-print-none", [
+
+                                        m("td[colspan='10']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        },
+                                            m("ul.nav.nav-tabs[id='myTab'][role='tablist']", {}, [
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-file-alt.pd-1.mg-r-2"),
+
+                                                        " HOJA 005"
+                                                    )
+                                                ),
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-muestra'][data-toggle='tab'][href='#muestra'][role='tab'][aria-controls='muestra']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-edit.pd-1.mg-r-2"),
+
+                                                        " TOMA DE MUESTRA "
+                                                    )
+                                                ),
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-recep'][data-toggle='tab'][href='#recep'][role='tab'][aria-controls='recep']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-inbox.pd-1.mg-r-2"),
+
+                                                        " RECEP. DE MUESTRA "
+                                                    )
+                                                ),
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-comment'][data-toggle='tab'][href='#comment'][role='tab'][aria-controls='comment']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-inbox.pd-1.mg-r-2"),
+
+                                                        " COMENTARIOS "
+                                                    )
+                                                ),
+
+
+
+                                            ]),
+                                        ),
+
+
+                                    ]),
+                                    m("tr.d-print-none", [
+
+                                        m("td[colspan='10']",
+                                            m(".tab-content.bd.bd-gray-300.bd-t-0[id='myTab']", [
+                                                m(".tab-pane.fade[id='home'][role='tabpanel'][aria-labelledby='home-tab']", [
+
+                                                ]),
+                                                m(".tab-pane.fade[id='muestra'][role='tabpanel'][aria-labelledby='home-muestra']", [
+
+                                                ]),
+
+                                                m(".tab-pane.fade[id='recep'][role='tabpanel'][aria-labelledby='home-recep']", [
+
+                                                ]),
+                                                m(".tab-pane.fade[id='comment'][role='tabpanel'][aria-labelledby='home-comment']", [
+                                                    m("p.mg-5", [
+                                                        m("span.badge.badge-light.wd-100p.tx-14",
+                                                            "Observaciones",
+                                                        ),
+                                                        m("textarea.form-control.mg-t-5[rows='5'][placeholder='Observaciones']", {
+                                                            //oninput: function (e) { Observaciones.observaciones = e.target.value; },
+                                                            // value: Observaciones.observaciones,
+                                                        }),
+                                                        m("div.mg-0.mg-t-5.text-right", [
+
+                                                            m("button.btn.btn-xs.btn-primary.mg-l-2.tx-semibold[type='button']", {
+                                                                onclick: function () {
+
+                                                                },
+                                                            }, [
+                                                                m("i.fas.fa-paper-plane.mg-r-5",)
+                                                            ], "Guardar"),
+
+
+                                                        ]),
+                                                        m("hr.wd-100p.mg-t-5.mg-b-5"),
+
+                                                    ]),
+                                                    m("p.mg-5", [
+                                                        m("span.badge.badge-light.wd-100p.tx-14",
+                                                            "Historial de Observaciones",
+                                                        ),
+                                                        m("table.table.table-sm[id='table-observaciones'][width='100%']")
+                                                    ]),
+                                                ]),
+
+                                            ])
+                                        ),
+
+
+                                    ])
+
+
+                                ])
+                            ])
+                        ])
+                    ] : [
+                        m(Loader)
+                    ])
+                ])
+            ),
+        ];
+    }
     vMenu() {
         return m(SidebarAdmin, { page: 'administracion/metrovirtual' });
     }
     reloadData(idFiltro) {
         this.usuarios = null;
         this.idFiltro = idFiltro;
+    }
+    fetchProfile() {
+
+        let __this = this;
+
+        if (__this.usuarios !== null && __this.usuarios.status) {
+            return __this.usuarios.data.map(function (_val, _i, _contentData) {
+                if (__this.idUsr == _val.samaccountname) {
+                    __this.dataUser = _val;
+                }
+            })
+        }
+
+
     }
     fetchData() {
 
@@ -205,11 +448,6 @@ class usrMV extends App {
             });
 
     }
-
-    _alert() {
-        alert('ddddd');
-    }
-
     arqTable() {
         return {
             data: null,
@@ -278,7 +516,7 @@ class usrMV extends App {
                 },
                 visible: true,
                 aTargets: [0],
-                orderable: true,
+                orderable: false,
             },
             {
                 mRender: function (data, type, full) {
@@ -357,7 +595,7 @@ class usrMV extends App {
             },
             {
                 mRender: function (data, type, full) {
-                    return '<button class="btn btn-primary" onclick="_alert_();" >Editar</button>'
+                    return ''
 
                 },
                 visible: true,
@@ -370,11 +608,61 @@ class usrMV extends App {
             ],
             fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
+                m.mount(nRow, {
+                    view: () => {
+                        return [
+                            m("td", [
+                                (iDisplayIndexFull + 1)
+                            ]),
+                            m("td", [
+                                aData.samaccountname
+                            ]),
+                            m("td", [
+                                aData.sn
+                            ]),
+                            m("td", [
+                                aData.cn
+                            ]),
+                            m("td", [
+                                aData.mail
+                            ]),
+                            m("td", [
+                                aData.whencreated
+                            ]),
+                            m("td", [
+                                aData.whenchanged
+                            ]),
+                            m("td", [
+                                aData.pwdlastset
+                            ]),
+                            m("td", [
+                                aData.lastlogontimestamp
+                            ]),
+                            m("td", [
+                                m('button.btn.btn-primary.tx-semibold', {
+                                    onclick: () => {
+                                        m.route.set('/administracion/metrovirtual/', {
+                                            idUsr: aData.samaccountname
+                                        });
+                                        m.redraw();
+                                    }
+                                }, 'Ver')
+                            ])
+
+
+
+
+
+
+                        ];
+                    },
+                });
+
+
 
             },
         };
     }
-
     vTableUsuarios(idTable, dataTable, arqTable) {
         return [
             m(Table, { idTable: idTable, dataTable: dataTable, arqTable: arqTable })
@@ -384,14 +672,14 @@ class usrMV extends App {
         return [
             this.vHeader(),
             this.vMenu(),
-            this.vMain()
+            (this.idUsr == null ? [
+                this.vMain()
+            ] : [
+                this.vMainProfile()
+            ])
         ];
     }
-
 }
 
-function _alert_() {
-    return usrMV._alert();
-}
 
 export default usrMV;

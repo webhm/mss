@@ -39,7 +39,7 @@ class Table {
                             m("input.form-control[type='search'][placeholder=' Buscar'][id='searchField']")
                         ),
                     ]),
-                    m("table.table.table-sm.tx-11[width='100%']", {
+                    m("table.table.table-sm.tx-12[width='100%']", {
                         id: this.idTable
 
                     })
