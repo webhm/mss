@@ -495,18 +495,6 @@ class usrMV extends App {
                 title: "E-mail:",
             },
             {
-                title: "Fecha Creación:",
-            },
-            {
-                title: "Última Actualización:",
-            },
-            {
-                title: "Cambio Contraseña:",
-            },
-            {
-                title: "Último Acceso:",
-            },
-            {
                 title: "Opciones:",
             }
             ],
@@ -554,44 +542,6 @@ class usrMV extends App {
                 aTargets: [4],
                 orderable: true,
 
-            }, {
-                mRender: function (data, type, full) {
-                    return full.whencreated
-
-                },
-                visible: true,
-                aTargets: [5],
-                orderable: true,
-
-            }, {
-                mRender: function (data, type, full) {
-                    return full.whenchanged
-
-                },
-                visible: true,
-                aTargets: [6],
-                orderable: true,
-
-            },
-            {
-                mRender: function (data, type, full) {
-                    return full.pwdlastset
-
-                },
-                visible: true,
-                aTargets: [7],
-                orderable: true,
-
-            },
-            {
-                mRender: function (data, type, full) {
-                    return full.lastlogontimestamp
-
-                },
-                visible: true,
-                aTargets: [8],
-                orderable: true,
-
             },
             {
                 mRender: function (data, type, full) {
@@ -599,7 +549,7 @@ class usrMV extends App {
 
                 },
                 visible: true,
-                aTargets: [9],
+                aTargets: [5],
                 orderable: true,
 
             }
@@ -626,25 +576,14 @@ class usrMV extends App {
                             m("td", [
                                 aData.mail
                             ]),
+
+
                             m("td", [
-                                aData.whencreated
-                            ]),
-                            m("td", [
-                                aData.whenchanged
-                            ]),
-                            m("td", [
-                                aData.pwdlastset
-                            ]),
-                            m("td", [
-                                aData.lastlogontimestamp
-                            ]),
-                            m("td", [
-                                m('button.btn.btn-primary.tx-semibold', {
+                                m('button.btn.btn-sm.btn-block.btn-primary.tx-semibold', {
                                     onclick: () => {
                                         m.route.set('/administracion/metrovirtual/', {
                                             idUsr: aData.samaccountname
                                         });
-                                        m.redraw();
                                     }
                                 }, 'Ver')
                             ])

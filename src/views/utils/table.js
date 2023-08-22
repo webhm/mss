@@ -29,21 +29,28 @@ class Table {
     view() {
         if (this.dataTable.length !== null) {
             return [
-                m("div.table-content.col-12.pd-r-0.pd-l-0.pd-b-20.mg-t-10", [
-                    m("div.d-flex.align-items-center.justify-content-between.mg-b-75.mg-t-10", [
-                        m('div.d-none')
-                    ]),
-                    m("div.wd-100p.filemgr-content-header", [
-                        m("i.fas.fa-search.tx-color-03.mg-r-15"),
-                        m("div.search-form",
-                            m("input.form-control[type='search'][placeholder=' Buscar'][id='searchField']")
-                        ),
-                    ]),
-                    m("table.table.table-sm.tx-12[width='100%']", {
-                        id: this.idTable
 
-                    })
+                m('div.row.animated.fadeInUp', [
+                    m('div.col-12', [
+                        m("div.table-content.col-12.pd-r-0.pd-l-0.pd-b-20.mg-t-10", [
+                            m("div.d-flex.align-items-center.justify-content-between.mg-b-75.mg-t-10", [
+                                m('div.d-none')
+                            ]),
+                            m("div.wd-100p.filemgr-content-header", [
+                                m("i.fas.fa-search.tx-color-03.mg-r-15"),
+                                m("div.search-form",
+                                    m("input.form-control[type='search'][placeholder=' Buscar'][id='searchField']")
+                                ),
+                            ]),
+                            m("table.table.table-sm[width='100%']", {
+                                id: this.idTable
+
+                            })
+                        ])
+                    ])
                 ])
+
+
             ]
         }
 
