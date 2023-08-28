@@ -1,5 +1,7 @@
 // Crea una clase de JavaScript para administrar en una SPA la autenticación en JWT y un sistema de control de accesos, roles y perfiles y un ejemplo de su funcionamiento.
 
+import ApiHTTP from "./ApiHTTP";
+
 
 // La clase se llama AuthManager y tiene los siguientes atributos y métodos:
 
@@ -13,30 +15,28 @@
 
 class AuthManager {
     constructor() {
-        this.token = (localStorage.getItem('token') == undefined ? null : localStorage.getItem('token'));
-        this.user = (localStorage.getItem('user') == undefined ? null : JSON.parse(localStorage.getItem('user')));
+        this.token = (localStorage.getItem('userToken') == undefined ? null : localStorage.getItem('userToken'));
+        this.user = (localStorage.getItem('userToken') == undefined ? null : JSON.parse(atob(localStorage.getItem('userToken').split(".")[1])).data);
     }
 
     async login(credentials) {
         try {
             // Hacer la petición al servidor con las credenciales
-            let response = await fetch("https://api.hospitalmetropolitano.org/t/v1/auth", {
+            let response = await fetch(ApiHTTP.apiUrl + "/v2/auth", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': credentials.usrToken
                 },
-                body: JSON.stringify({ user: 'mchang', pass: 'Mmch!!@@11' }),
             });
             // Si la respuesta es exitosa, extraer el token y el usuario
             if (response.ok) {
-                let data = await response.json();
-                this.token = data.jwt;
-                this.user = data.data.user.user;
+                let res = await response.json();
+                this.token = res.data.jwt;
                 // Guardar el token y el usuario en el almacenamiento local
                 // Objeto Token del User 
-                localStorage.setItem("token", this.token);
-                // Objeto User Info de la App
-                localStorage.setItem("user", JSON.stringify(this.user));
+                localStorage.setItem("userToken", this.token);
                 return true;
             } else {
                 return false;
@@ -53,8 +53,7 @@ class AuthManager {
         this.token = null;
         this.user = null;
         // Borrar el token y el usuario del almacenamiento local
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.removeItem("userToken");
     }
 
     isAuthenticated() {

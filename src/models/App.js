@@ -13,15 +13,14 @@ class App {
     static public;
     static userName;
     static auth = null;
+    static usrToken = null;
 
     constructor() {
         this.auth = new AuthManager();
         this.name = "MetroPlus";
         this.version = " v2.0.0";
         if (this.auth.isAuthenticated()) {
-            this.userName = this.auth.user;
-            let name = this.userName.userName.split("@");
-            this.userName = name[0];
+            this.userName = this.auth.user.user;
         }
 
     }
@@ -56,12 +55,11 @@ class App {
         m.route.set("/inicio");
     }
 
-    login() {
-        this.auth.login({ email: "user@example.com", password: "123456" }).then((result) => {
+    login(usrToken) {
+
+        this.auth.login({ usrToken: usrToken }).then((result) => {
             if (result) {
                 console.log("Login exitoso");
-                console.log("Token:", this.auth.token);
-                console.log("Usuario:", this.auth.user);
                 this.getInicio();
             } else {
                 console.log("Login fallido");
@@ -70,7 +68,18 @@ class App {
     }
 
     loginMSA() {
-        return AuthMSA.login();
+
+        let _this = this;
+        let _msa = new AuthMSA();
+
+        // Crea Objeto para el Login de MSA
+        _msa.myMSALObj.loginPopup(_msa.loginRequest)
+            .then((loginResponse) => {
+                console.log(1, loginResponse);
+                _this.login(loginResponse.idToken.rawIdToken);
+            }).catch(function (error) {
+                console.log(error);
+            });
     }
 
     loader() {
