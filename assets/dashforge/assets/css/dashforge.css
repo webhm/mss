@@ -2704,7 +2704,7 @@ textarea.form-control {
     .btn, .ui-datepicker-buttonpane button, .sp-container button {
       transition: none; } }
   .btn:hover, .ui-datepicker-buttonpane button:hover, .sp-container button:hover {
-    color: #001737;
+    color: #ffffff;
     text-decoration: none; }
   .btn:focus, .ui-datepicker-buttonpane button:focus, .sp-container button:focus, .btn.focus, .ui-datepicker-buttonpane button.focus, .sp-container button.focus {
     outline: 0;

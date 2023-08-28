@@ -22,59 +22,132 @@ class FormLogin extends App {
                         "div.media.align-items-stretch.justify-content-center.ht-100p.pos-relative", [
                         m(
                             "div.mg-t-55.pd-50.media-body.align-items-center.d-none.d-lg-flex", [
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2 " },
-                                m("i", { class: "fas fa-first-aid tx-30 tx-white" })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-pills tx-30 tx-white" })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-file-prescription tx-30 tx-white" })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-microscope  tx-30 tx-white" })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-procedures   tx-30 tx-white" })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-h-square tx-30 tx-white" })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-user-md tx-30 tx-white" })
-                            ),
 
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-heartbeat      tx-30 tx-white" })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", {
-                                    class: "fas fa-notes-medical      tx-30 tx-white",
-                                })
-                            ),
-                            m(
-                                "div.wd-60.tx-center", { class: "pd-10 bg-litecoin mg-r-2" },
-                                m("i", { class: "fas fa-hospital tx-30 tx-white" })
-                            ),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-first-aid")
+                                    ),
+
+
+                                ])
+
+                            ]),
+
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-user-md")
+                                    ),
+
+
+                                ])
+
+                            ]),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-file-prescription")
+                                    ),
+
+
+                                ])
+
+                            ]),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-microscope")
+                                    ),
+
+
+                                ])
+
+                            ]),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-procedures")
+                                    ),
+
+
+                                ])
+
+                            ]),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-h-square")
+                                    ),
+
+
+                                ])
+
+                            ]),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-heartbeat")
+                                    ),
+
+
+                                ])
+
+                            ]),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-notes-medical")
+                                    ),
+
+
+                                ])
+
+                            ]),
+                            m("div.card.card-help.mg-2", [
+                                m("div.card-body", [
+                                    m("div.tx-20.lh-0", {
+                                        style: { 'color': "#325a98" }
+                                    },
+                                        m("i.fas.fa-hospital")
+                                    ),
+
+
+                                ])
+
+                            ]),
+
+
+
+
+
                         ]
                         ),
 
                         m(
-                            "div.sign-wrapper.mg-lg-l-50.mg-xl-l-60",
+                            "div.sign-wrapper.mg-lg-l-50.mg-xl-l-60.mg-t-10",
                             m("div.wd-100p", [
-                                m("h3.tx-color-01.mg-b-5.mg-t-100", "Entrar"),
+                                m('br'),
+                                m("h3.tx-color-01.mg-t-100", this.name + this.version.substring(0, this.version.length - 2)),
                                 m(
-                                    "p.tx-color-03.tx-16",
-                                    "¡Bienvenido! Por favor, inicie sesión para continuar."
+                                    "p.tx-color-03.tx-15.mg-t-10.mg-b-10",
+                                    "¡Bienvenido! Por favor, inicia sesión para continuar."
                                 ),
                                 m(".tx-semibold.alert.alert-solid.alert-danger.d-none[role='alert']"),
                                 m("div.form-group.d-none", [

@@ -6,21 +6,24 @@ import Loader from "../../utils/loader";
 import Errors from "../../utils/errors";
 import Table from "../../utils/table";
 import { Stopwatch } from "../../utils/stopWatch";
+import ApiHTTP from "../../../models/ApiHTTP";
 
 // Administración MV
 
-class usrMPLUS extends App {
+class usrMPlus extends App {
     usuarios = null;
-    idFiltro = 3;
+    dataUser = null;
+    idUsr = null;
+    idFiltro = 1;
     constructor(_data) {
         super();
-        this.title = "Usuarios MetroPlus";
+        this.title = "Usuarios MetroVirtual";
         this.isAuthenticated();
         if (this.hasProfile('ADM_USUARIOS_METROPLUS')) {
             this.view = this.page;
         }
-    }
 
+    }
     oncreate(_data) {
         if (_data.attrs.idFiltro !== undefined) {
             this.idFiltro = _data.attrs.idFiltro;
@@ -29,7 +32,15 @@ class usrMPLUS extends App {
             this.usuarios = _data;
         });
     }
+    onupdate(_data) {
 
+        if (_data.attrs.idUsr !== undefined) {
+            this.idUsr = _data.attrs.idUsr;
+        } else {
+            this.idUsr = null;
+        }
+        m.redraw();
+    }
     vHeader() {
         return m(HeaderPrivate, { userName: this.userName });
     }
@@ -54,42 +65,85 @@ class usrMPLUS extends App {
                             this.title
                         )
                     ]),
-                    m("h1.df-title.mg-t-20.mg-b-10",
+                    m("h1.df-title.mg-t-20.mg-b-20",
                         this.title + ":"
                     ),
-                    m("div.table-content.col-12.pd-r-0.pd-l-0", [
-                        m("div.d-flex.align-items-center.justify-content-between.mg-t-10", [
-                            m("h5.mg-b-0",
-                                "Todos los Usuarios:",
-                                m("span.badge.badge-primary.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-15", {
-                                    oncreate: (el) => {
-                                        if (this.idFiltro == 1) {
-                                            el.dom.innerHTML = 'Grp-radius-Medicos';
-                                        }
-                                        if (this.idFiltro == 2) {
-                                            el.dom.innerHTML = 'Grp-radius-Residentes';
-                                        }
-                                    },
-                                    onupdate: (el) => {
-                                        if (this.idFiltro == 1) {
-                                            el.dom.innerHTML = 'Grp-radius-Medicos';
-                                        }
-                                        if (this.idFiltro == 2) {
-                                            el.dom.innerHTML = 'Grp-radius-Residentes';
-                                        }
-                                    }
-                                }
-
-                                )
-
-                            )
-
-                        ]),
-
-                    ]),
 
                     m("div", [
+
                         (this.usuarios !== null && this.usuarios.status) ? [
+                            m("div.table-content.col-12.pd-r-0.pd-l-0", [
+                                m("div.d-flex.align-items-center.justify-content-between.mg-t-10", [
+                                    m("h5.mg-b-0",
+                                        "Todos los Usuarios:",
+                                        m("span.badge.bg-litecoin.tx-white.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-15", {
+                                            oncreate: (el) => {
+                                                if (this.idFiltro == 1) {
+                                                    el.dom.innerHTML = 'Grp-radius-Medicos';
+                                                }
+                                                if (this.idFiltro == 2) {
+                                                    el.dom.innerHTML = 'Grp-radius-Residentes';
+                                                }
+                                            },
+                                            onupdate: (el) => {
+                                                if (this.idFiltro == 1) {
+                                                    el.dom.innerHTML = 'Grp-radius-Medicos';
+                                                }
+                                                if (this.idFiltro == 2) {
+                                                    el.dom.innerHTML = 'Grp-radius-Residentes';
+                                                }
+                                            }
+                                        }
+
+                                        )
+
+                                    ),
+                                    m("div.d-flex.tx-14", [
+
+                                        m("div.dropdown.dropleft", [
+
+                                            m("div.link-03.lh-0.mg-l-5[id='dropdownMenuButton'][data-toggle='dropdown'][aria-haspopup='true'][aria-expanded='false']", {
+                                                style: { "cursor": "pointer" },
+                                                title: "Filtrar"
+                                            },
+                                                m("i.fas.fa-filter.tx-18.pd-5")
+                                            ),
+                                            m(".dropdown-menu.tx-13[aria-labelledby='dropdownMenuButton']", [
+                                                m("h6.dropdown-header.tx-uppercase.tx-12.tx-bold.tx-inverse",
+                                                    "FILTROS:"
+                                                ),
+                                                m(m.route.Link, {
+                                                    class: 'dropdown-item',
+                                                    href: "/administracion/metrovirtual/?idFiltro=1",
+                                                    onclick: (e) => {
+                                                        this.reloadData(1);
+                                                        this.fetchData().then((_data) => {
+                                                            this.usuarios = _data;
+                                                        });
+                                                    }
+                                                }, [
+                                                    "Grp-radius-Medicos"
+                                                ]),
+                                                m(m.route.Link, {
+                                                    class: 'dropdown-item',
+                                                    href: "/administracion/metrovirtual/?idFiltro=2",
+                                                    onclick: (e) => {
+                                                        this.reloadData(2);
+                                                        this.fetchData().then((_data) => {
+                                                            this.usuarios = _data;
+                                                        });
+                                                    }
+                                                }, [
+                                                    "Grp-radius-Residentes"
+                                                ]),
+
+
+                                            ])
+                                        ])
+                                    ])
+                                ]),
+
+                            ]),
                             this.vTableUsuarios('table-usr', this.usuarios.data, this.arqTable())
                         ] : (this.usuarios !== null && (!this.usuarios.status || this.usuarios.status == null)) ? [
                             m(Errors, { type: (!this.usuarios.status ? 1 : 0), error: this.usuarios })
@@ -98,9 +152,13 @@ class usrMPLUS extends App {
                         ]
                     ]),
 
+
+
                 ])
             ),
-            m("div.section-nav", [
+            m("div.section-nav", {
+                class: (this.usuarios !== null ? '' : 'd-none')
+            }, [
                 m("label.nav-label",
                     this.title + ":"
                 ),
@@ -135,23 +193,249 @@ class usrMPLUS extends App {
             ])
         ];
     }
+    vMainProfile() {
+        this.fetchProfile();
+        return [
+            m("div.content.content-components",
+                m("div.container.mg-l-0.mg-r-0", {
+                    style: { "max-width": "100%" }
+                }, [
+                    m("ol.breadcrumb.df-breadcrumbs", [
+                        m("li.breadcrumb-item",
+                            m(m.route.Link, { href: "/", }, [
+                                "MetroPlus"
+                            ]),
+                        ),
+                        m("li.breadcrumb-item",
+                            m(m.route.Link, { href: "/administracion", }, [
+                                'Administración'
+                            ]),
+                        ),
+                        m("li.breadcrumb-item.active[aria-current='page']",
+                            this.title
+                        )
+                    ]),
+                    m("h1.df-title.mg-t-20.mg-b-10",
+                        this.title + ":"
+                    ),
+                    (this.dataUser !== null ? [
+                        m('div.table-responsive', [
+                            m("table.table.table-bordered.table-sm.tx-14", [
+                                m("thead",
+
+                                    m("tr.bg-litecoin.op-9.tx-white.tx-uppercase", [
+                                        m("th[scope='col'][colspan='10']",
+                                            "DATOS DEL USUARIO: " + this.dataUser.samaccountname
+                                        ),
+
+                                    ])
+                                ),
+                                m("tbody", [
+                                    m("tr", [
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Nombres Completos:"
+                                        ),
+                                        m("td[colspan='4']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        }, this.dataUser.sn + ' ' + this.dataUser.cn),
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Grupo:"
+                                        ),
+                                        m("td[colspan='4']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        }, this.dataUser.grupo),
+
+                                    ]),
+
+                                    m("tr", [
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Correo electrónico:"
+                                        ),
+                                        m("td[colspan='4']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        },
+                                            this.dataUser.mail
+                                        ),
+                                        m("th", {
+                                            style: { "background-color": "#a8bed6" }
+                                        },
+                                            "Historial de Actividad:"
+                                        ),
+                                        m("td[colspan='4']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        },
+                                            m('.tx-12.d-block', 'Creado: ' + this.dataUser.whencreated),
+                                            m('.tx-12.d-block', 'Actualizado: ' + this.dataUser.whenchanged),
+                                            m('.tx-12.d-block', 'Última Contraseña: ' + this.dataUser.pwdlastset),
+                                            m('.tx-12.d-block', 'Último Acceso: ' + this.dataUser.lastlogontimestamp),
+                                        ),
+
+
+
+                                    ]),
+                                ]),
+
+                                m("tbody", [
+
+
+                                    m("tr.d-print-none.bg-litecoin.op-9.tx-white.", [
+                                        m("th[scope='col'][colspan='10']",
+                                            "OPCIONES DISPONIBLES:"
+                                        ),
+
+                                    ]),
+                                    m("tr.d-print-none", [
+
+                                        m("td[colspan='10']", {
+                                            style: { "background-color": "#eaeff5" }
+
+                                        },
+                                            m("ul.nav.nav-tabs[id='myTab'][role='tablist']", {}, [
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-file-alt.pd-1.mg-r-2"),
+
+                                                        " HOJA 005"
+                                                    )
+                                                ),
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-muestra'][data-toggle='tab'][href='#muestra'][role='tab'][aria-controls='muestra']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-edit.pd-1.mg-r-2"),
+
+                                                        " TOMA DE MUESTRA "
+                                                    )
+                                                ),
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-recep'][data-toggle='tab'][href='#recep'][role='tab'][aria-controls='recep']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-inbox.pd-1.mg-r-2"),
+
+                                                        " RECEP. DE MUESTRA "
+                                                    )
+                                                ),
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-comment'][data-toggle='tab'][href='#comment'][role='tab'][aria-controls='comment']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-inbox.pd-1.mg-r-2"),
+
+                                                        " COMENTARIOS "
+                                                    )
+                                                ),
+
+
+
+                                            ]),
+                                        ),
+
+
+                                    ]),
+                                    m("tr.d-print-none", [
+
+                                        m("td[colspan='10']",
+                                            m(".tab-content.bd.bd-gray-300.bd-t-0[id='myTab']", [
+                                                m(".tab-pane.fade[id='home'][role='tabpanel'][aria-labelledby='home-tab']", [
+
+                                                ]),
+                                                m(".tab-pane.fade[id='muestra'][role='tabpanel'][aria-labelledby='home-muestra']", [
+
+                                                ]),
+
+                                                m(".tab-pane.fade[id='recep'][role='tabpanel'][aria-labelledby='home-recep']", [
+
+                                                ]),
+                                                m(".tab-pane.fade[id='comment'][role='tabpanel'][aria-labelledby='home-comment']", [
+                                                    m("p.mg-5", [
+                                                        m("span.badge.badge-light.wd-100p.tx-14",
+                                                            "Observaciones",
+                                                        ),
+                                                        m("textarea.form-control.mg-t-5[rows='5'][placeholder='Observaciones']", {
+                                                            //oninput: function (e) { Observaciones.observaciones = e.target.value; },
+                                                            // value: Observaciones.observaciones,
+                                                        }),
+                                                        m("div.mg-0.mg-t-5.text-right", [
+
+                                                            m("button.btn.btn-xs.btn-primary.mg-l-2.tx-semibold[type='button']", {
+                                                                onclick: function () {
+
+                                                                },
+                                                            }, [
+                                                                m("i.fas.fa-paper-plane.mg-r-5",)
+                                                            ], "Guardar"),
+
+
+                                                        ]),
+                                                        m("hr.wd-100p.mg-t-5.mg-b-5"),
+
+                                                    ]),
+                                                    m("p.mg-5", [
+                                                        m("span.badge.badge-light.wd-100p.tx-14",
+                                                            "Historial de Observaciones",
+                                                        ),
+                                                        m("table.table.table-sm[id='table-observaciones'][width='100%']")
+                                                    ]),
+                                                ]),
+
+                                            ])
+                                        ),
+
+
+                                    ])
+
+
+                                ])
+                            ])
+                        ])
+                    ] : [
+                        m(Loader)
+                    ])
+                ])
+            ),
+        ];
+    }
     vMenu() {
         return m(SidebarAdmin, { page: 'administracion/metroplus' });
     }
-
     reloadData(idFiltro) {
         this.usuarios = null;
         this.idFiltro = idFiltro;
     }
+    fetchProfile() {
+
+        let __this = this;
+
+        if (__this.usuarios !== null && __this.usuarios.status) {
+            return __this.usuarios.data.map(function (_val, _i, _contentData) {
+                if (__this.idUsr == _val.samaccountname) {
+                    __this.dataUser = _val;
+                }
+            })
+        }
 
 
+    }
     fetchData() {
 
         let _queryString = '?idFiltro=' + this.idFiltro;
 
         return m.request({
             method: "GET",
-            url: "https://api.hospitalmetropolitano.org/v2/medicos/auth2" + _queryString,
+            url: ApiHTTP.apiUrl + "/v2/usuarios/metroplus" + _queryString,
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
@@ -167,7 +451,6 @@ class usrMPLUS extends App {
             });
 
     }
-
     arqTable() {
         return {
             data: null,
@@ -215,16 +498,7 @@ class usrMPLUS extends App {
                 title: "E-mail:",
             },
             {
-                title: "Fecha Creación:",
-            },
-            {
-                title: "Última Actualización:",
-            },
-            {
-                title: "Cambio Contraseña:",
-            },
-            {
-                title: "Último Acceso:",
+                title: "Opciones:",
             }
             ],
             aoColumnDefs: [{
@@ -233,7 +507,7 @@ class usrMPLUS extends App {
                 },
                 visible: true,
                 aTargets: [0],
-                orderable: true,
+                orderable: false,
             },
             {
                 mRender: function (data, type, full) {
@@ -271,42 +545,14 @@ class usrMPLUS extends App {
                 aTargets: [4],
                 orderable: true,
 
-            }, {
+            },
+            {
                 mRender: function (data, type, full) {
-                    return full.whencreated
+                    return ''
 
                 },
                 visible: true,
                 aTargets: [5],
-                orderable: true,
-
-            }, {
-                mRender: function (data, type, full) {
-                    return full.whenchanged
-
-                },
-                visible: true,
-                aTargets: [6],
-                orderable: true,
-
-            },
-            {
-                mRender: function (data, type, full) {
-                    return full.pwdlastset
-
-                },
-                visible: true,
-                aTargets: [7],
-                orderable: true,
-
-            },
-            {
-                mRender: function (data, type, full) {
-                    return full.lastlogontimestamp
-
-                },
-                visible: true,
-                aTargets: [8],
                 orderable: true,
 
             }
@@ -315,11 +561,63 @@ class usrMPLUS extends App {
             ],
             fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
+                m.mount(nRow, {
+                    view: () => {
+                        return [
+                            m("td", [
+                                (iDisplayIndexFull + 1)
+                            ]),
+                            m("td", [
+                                aData.samaccountname
+                            ]),
+                            m("td", [
+                                aData.sn
+                            ]),
+                            m("td", [
+                                aData.cn
+                            ]),
+                            m("td", [
+                                aData.mail,
+                                m('br'),
+                                m("span.tx-12[data-toggle='collapse'][href='#collapseExample_" + aData.samaccountname + "'][role='button'][aria-expanded='false'][aria-controls='collapseExample_" + aData.samaccountname + "']", {
+                                    style: 'cursor:pointer;'
+                                },
+                                    'Creado: ' + aData.whencreated
+                                ),
+                                m(".collapse[id='collapseExample_" + aData.samaccountname + "']", [
+                                    m('.tx-12.d-block', 'Actualizado: ' + aData.whenchanged),
+                                    m('.tx-12.d-block', 'Última Contraseña: ' + aData.pwdlastset),
+                                    m('.tx-12.d-block', 'Último Acceso: ' + aData.lastlogontimestamp),
+                                ]
+                                )
+                            ]),
+
+
+                            m("td", [
+                                m('button.btn.btn-sm.btn-block.tx-semibold.tx-white', {
+                                    style: { "background-color": "#185b98" },
+                                    onclick: () => {
+                                        m.route.set('/administracion/metrovirtual/', {
+                                            idUsr: aData.samaccountname
+                                        });
+                                    }
+                                }, 'Ver')
+                            ])
+
+
+
+
+
+
+                        ];
+                    },
+                });
+
+
 
             },
         };
     }
-
     vTableUsuarios(idTable, dataTable, arqTable) {
         return [
             m(Table, { idTable: idTable, dataTable: dataTable, arqTable: arqTable })
@@ -329,10 +627,14 @@ class usrMPLUS extends App {
         return [
             this.vHeader(),
             this.vMenu(),
-            this.vMain()
+            (this.idUsr == null ? [
+                this.vMain()
+            ] : [
+                this.vMainProfile()
+            ])
         ];
     }
-
 }
 
-export default usrMPLUS;
+
+export default usrMPlus;

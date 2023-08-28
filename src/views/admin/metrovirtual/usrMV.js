@@ -6,7 +6,7 @@ import Loader from "../../utils/loader";
 import Errors from "../../utils/errors";
 import Table from "../../utils/table";
 import { Stopwatch } from "../../utils/stopWatch";
-import { LOADER } from "construct-ui/lib/esm/components/icon/generated/IconNames";
+import ApiHTTP from "../../../models/ApiHTTP";
 
 // Administración MV
 
@@ -76,7 +76,7 @@ class usrMV extends App {
                                 m("div.d-flex.align-items-center.justify-content-between.mg-t-10", [
                                     m("h5.mg-b-0",
                                         "Todos los Usuarios:",
-                                        m("span.badge.badge-primary.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-15", {
+                                        m("span.badge.bg-litecoin.tx-white.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-15", {
                                             oncreate: (el) => {
                                                 if (this.idFiltro == 1) {
                                                     el.dom.innerHTML = 'Grp-radius-Medicos';
@@ -157,7 +157,7 @@ class usrMV extends App {
                 ])
             ),
             m("div.section-nav", {
-                class: (this.idUsr == null ? '' : 'd-none')
+                class: (this.usuarios !== null ? '' : 'd-none')
             }, [
                 m("label.nav-label",
                     this.title + ":"
@@ -220,12 +220,12 @@ class usrMV extends App {
                     ),
                     (this.dataUser !== null ? [
                         m('div.table-responsive', [
-                            m("table.table.table-bordered.table-sm.tx-12", [
+                            m("table.table.table-bordered.table-sm.tx-14", [
                                 m("thead",
 
-                                    m("tr.bg-litecoin.op-9.tx-white", [
+                                    m("tr.bg-litecoin.op-9.tx-white.tx-uppercase", [
                                         m("th[scope='col'][colspan='10']",
-                                            "DATOS DEL USUARIO:"
+                                            "DATOS DEL USUARIO: " + this.dataUser.samaccountname
                                         ),
 
                                     ])
@@ -244,12 +244,12 @@ class usrMV extends App {
                                         m("th", {
                                             style: { "background-color": "#a8bed6" }
                                         },
-                                            "Origen:"
+                                            "Grupo:"
                                         ),
-                                        m("td[colspan='3']", {
+                                        m("td[colspan='4']", {
                                             style: { "background-color": "#eaeff5" }
 
-                                        },),
+                                        }, this.dataUser.grupo),
 
                                     ]),
 
@@ -257,24 +257,27 @@ class usrMV extends App {
                                         m("th", {
                                             style: { "background-color": "#a8bed6" }
                                         },
-                                            "Médico Solicitante:"
+                                            "Correo electrónico:"
                                         ),
                                         m("td[colspan='4']", {
                                             style: { "background-color": "#eaeff5" }
 
                                         },
-
+                                            this.dataUser.mail
                                         ),
                                         m("th", {
                                             style: { "background-color": "#a8bed6" }
                                         },
-                                            "Médico Tratante:"
+                                            "Historial de Actividad:"
                                         ),
                                         m("td[colspan='4']", {
                                             style: { "background-color": "#eaeff5" }
 
                                         },
-
+                                            m('.tx-12.d-block', 'Creado: ' + this.dataUser.whencreated),
+                                            m('.tx-12.d-block', 'Actualizado: ' + this.dataUser.whenchanged),
+                                            m('.tx-12.d-block', 'Última Contraseña: ' + this.dataUser.pwdlastset),
+                                            m('.tx-12.d-block', 'Último Acceso: ' + this.dataUser.lastlogontimestamp),
                                         ),
 
 
@@ -432,7 +435,7 @@ class usrMV extends App {
 
         return m.request({
             method: "GET",
-            url: "https://api.hospitalmetropolitano.org/v2/medicos/auth2" + _queryString,
+            url: ApiHTTP.apiUrl + "/v2/usuarios/metroplus" + _queryString,
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
@@ -574,12 +577,25 @@ class usrMV extends App {
                                 aData.cn
                             ]),
                             m("td", [
-                                aData.mail
+                                aData.mail,
+                                m('br'),
+                                m("span.tx-12[data-toggle='collapse'][href='#collapseExample_" + aData.samaccountname + "'][role='button'][aria-expanded='false'][aria-controls='collapseExample_" + aData.samaccountname + "']", {
+                                    style: 'cursor:pointer;'
+                                },
+                                    'Creado: ' + aData.whencreated
+                                ),
+                                m(".collapse[id='collapseExample_" + aData.samaccountname + "']", [
+                                    m('.tx-12.d-block', 'Actualizado: ' + aData.whenchanged),
+                                    m('.tx-12.d-block', 'Última Contraseña: ' + aData.pwdlastset),
+                                    m('.tx-12.d-block', 'Último Acceso: ' + aData.lastlogontimestamp),
+                                ]
+                                )
                             ]),
 
 
                             m("td", [
-                                m('button.btn.btn-sm.btn-block.btn-primary.tx-semibold', {
+                                m('button.btn.btn-sm.btn-block.tx-semibold.tx-white', {
+                                    style: { "background-color": "#185b98" },
                                     onclick: () => {
                                         m.route.set('/administracion/metrovirtual/', {
                                             idUsr: aData.samaccountname

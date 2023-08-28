@@ -28,6 +28,9 @@ class HeaderPrivate {
     view(_data) {
         return [
             m("header.navbar.navbar-header.navbar-header-fixed", [
+                m("a.burger-menu[href=''][id='sidebarMenuOpen']",
+                    m("i[data-feather='arrow-left']")
+                ),
 
                 m("div.navbar-brand",
                     m(m.route.Link, { href: "/", class: "df-logo" }, [
