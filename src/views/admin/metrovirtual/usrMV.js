@@ -438,6 +438,7 @@ class usrMV extends App {
             url: ApiHTTP.apiUrl + "/v2/usuarios/metroplus" + _queryString,
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
+                'Authorization': localStorage.getItem('userToken')
             },
         })
             .then(function (result) {
@@ -588,8 +589,7 @@ class usrMV extends App {
                                     m('.tx-12.d-block', 'Actualizado: ' + aData.whenchanged),
                                     m('.tx-12.d-block', 'Última Contraseña: ' + aData.pwdlastset),
                                     m('.tx-12.d-block', 'Último Acceso: ' + aData.lastlogontimestamp),
-                                ]
-                                )
+                                ])
                             ]),
 
 

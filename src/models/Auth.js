@@ -36,6 +36,7 @@ class AuthManager {
                 this.token = res.data.jwt;
                 // Guardar el token y el usuario en el almacenamiento local
                 // Objeto Token del User 
+                localStorage.clear();
                 localStorage.setItem("userToken", this.token);
                 return true;
             } else {
