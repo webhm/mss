@@ -6,6 +6,8 @@ import Salir from "../views/layout/salir";
 import usrMV from "../views/admin/metrovirtual/usrMV";
 import usrMPLUS from "../views/admin/metrovirtual/usrMPlus";
 import Hospital from "../views/hospital/hospital";
+import Pasaportes from "../views/hospital/pasaportes/pasaportes";
+import VerPasaporte from "../views/hospital/pasaportes/verPasaporte";
 
 // Crear una instancia de la clase
 // const authManager = new AuthManager();
@@ -44,6 +46,9 @@ const Routes = {
   "/administracion/metrovirtual": usrMV,
   "/administracion/metroplus": usrMPLUS,
   "/hospitalizacion": Hospital,
+  "/hospitalizacion/pasaportes": Pasaportes,
+  "/hospitalizacion/pasaporte": VerPasaporte,
+
   "/salir": Salir,
 };
 
