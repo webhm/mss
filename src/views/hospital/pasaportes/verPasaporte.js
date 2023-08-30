@@ -1,6 +1,5 @@
 import m from "mithril";
 import App from "../../../models/App";
-import SidebarHospital from "../sidebarHospital";
 import Loader from "../../utils/loader";
 import ApiHTTP from "../../../models/ApiHTTP";
 import HeaderPublic from "../../layout/headerPublic";
@@ -8,10 +7,11 @@ import HeaderPublic from "../../layout/headerPublic";
 // VerPasaporte MV
 
 class VerPasaporte extends App {
-    pasaportes = null;
+    usuarios = null;
     dataPasaporte = null;
     idPasaporte = null;
     idFiltro = 1;
+    usrAsignado = null;
     constructor(_data) {
         super();
         this.title = "Pasaporte de Paciente";
@@ -52,7 +52,11 @@ class VerPasaporte extends App {
                     m(".df-title.mg-t-20.mg-b-10.tx-30",
                         this.title + ": ",
                         m("span.badge.badge-warning.tx-30",
-                            "Pendiente"
+                            (this.dataPasaporte !== null ? [
+                                (this.dataPasaporte.STATUS == 0 ? "Pendiente" : ""),
+                                (this.dataPasaporte.STATUS == 1 ? "Asignado" : ""),
+                                (this.dataPasaporte.STATUS == 2 ? "Generado" : "")
+                            ] : [])
                         )
                     ),
                     (this.dataPasaporte !== null ? [
@@ -89,7 +93,7 @@ class VerPasaporte extends App {
                                     m("td", {
                                         style: { "background-color": "#eaeff5" }
 
-                                    }, this.dataPasaporte.NHC),
+                                    }, this.dataPasaporte.PTE),
 
                                 ]),
                                 m("tr", [
@@ -101,7 +105,7 @@ class VerPasaporte extends App {
                                     m("td", {
                                         style: { "background-color": "#eaeff5" }
 
-                                    }, this.dataPasaporte.NHC),
+                                    }, this.dataPasaporte.HAB),
 
                                 ]),
 
@@ -114,7 +118,7 @@ class VerPasaporte extends App {
                                     m("td", {
                                         style: { "background-color": "#eaeff5" }
 
-                                    }, this.dataPasaporte.NHC),
+                                    }, this.dataPasaporte.MED),
 
                                 ]),
 
@@ -127,14 +131,13 @@ class VerPasaporte extends App {
                                     m("td", {
                                         style: { "background-color": "#eaeff5" }
 
-                                    }, this.dataPasaporte.NHC),
+                                    }, this.dataPasaporte.ESP),
 
                                 ]),
                                 m("tr.d-print-none.bg-litecoin.op-9.tx-white.", [
                                     m("th[scope='col'][colspan='6']",
                                         "OPCIONES DISPONIBLES:"
                                     ),
-
                                 ]),
                                 m("tr.d-print-none", [
 
@@ -143,6 +146,19 @@ class VerPasaporte extends App {
 
                                     },
                                         m("ul.nav.nav-tabs[id='myTab'][role='tablist']", [
+                                            (this.dataPasaporte.STATUS == 0 ? [
+                                                m("li.nav-item",
+                                                    m("a.nav-link[id='home-asig'][data-toggle='tab'][href='#asig'][role='tab'][aria-controls='asig']", {
+                                                        style: { "color": "#476ba3" }
+                                                    },
+                                                        m("i.fas.fa-edit.pd-1.mg-r-2"),
+
+                                                        " Asignar Encuesta  "
+                                                    )
+                                                ),
+
+                                            ] : []),
+
                                             (this.dataPasaporte.STATUS == 1 ? [
                                                 m("li.nav-item",
                                                     m("a.nav-link[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']", {
@@ -154,18 +170,20 @@ class VerPasaporte extends App {
                                                     )
                                                 ),
                                             ] : []),
-
                                             (this.dataPasaporte.STATUS == 2 ? [
                                                 m("li.nav-item",
-                                                    m("a.nav-link[id='home-asig'][data-toggle='tab'][href='#asig'][role='tab'][aria-controls='asig']", {
+                                                    m("a.nav-link[id='home-ver'][data-toggle='tab'][href='#ver'][role='tab'][aria-controls='ver']", {
                                                         style: { "color": "#476ba3" }
                                                     },
                                                         m("i.fas.fa-edit.pd-1.mg-r-2"),
 
-                                                        " Asignar Encuesta  "
+                                                        " Ver Encuesta  "
                                                     )
                                                 )
                                             ] : []),
+
+
+
 
 
 
@@ -181,6 +199,7 @@ class VerPasaporte extends App {
                                     m("td[colspan='6']",
                                         m(".tab-content.bd.bd-gray-300.bd-t-0.wd-100p[id='myTab']", [
                                             m(".tab-pane.fade[id='home'][role='tabpanel'][aria-labelledby='home-tab']", [
+
                                                 m("form", {
                                                     onsubmit: (el) => {
                                                         el.preventDefault();
@@ -193,7 +212,7 @@ class VerPasaporte extends App {
                                                     m("div.form-row", [
                                                         m("div.form-group.col-md-12.text-center m-0", [
                                                             m('div.bg-secondary', [
-                                                                m("label.pd-b-5.pd-t-5.m-0.tx-white.tx-semibold[for='inputEmail4']",
+                                                                m("label.pd-b-5.pd-t-5.m-0.tx-white.tx-semibold",
                                                                     "Preferencias del Paciente",
                                                                 ),
 
@@ -247,7 +266,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "2.- ¿Qué tan importante es para usted la hora a la que se despierta en la mañana?",
                                                                 ),
 
@@ -288,7 +307,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "3.- ¿Qué tan importante es para usted la hora a la que toma un baño?",
                                                                 ),
 
@@ -329,7 +348,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "4.- ¿Qué tan importante es para usted el cuidado diario de su cabello?",
                                                                 ),
 
@@ -370,7 +389,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "5.- ¿Qué tan importante es para usted la hora en la que duerme en la noche?",
                                                                 ),
 
@@ -411,7 +430,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "6.- ¿Qué tan importante es para usted poder escoger su comida?",
                                                                 ),
 
@@ -452,7 +471,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "7.- ¿Qué tan importante es para usted salir al aire libre cuando el clima es adecuado?",
                                                                 ),
 
@@ -493,7 +512,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "8.- ¿Usted tiene mascotas? En caso afirmativo, ¿qué tan importante es para usted estar cerca de sus mascotas?",
                                                                 ),
 
@@ -534,7 +553,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "9.- ¿Qué tan importante es para usted tener libros/revistas a su disposición para leer?",
                                                                 ),
 
@@ -575,7 +594,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     " 10.- ¿Estaría de acuerdo en interactuar con el personal de salud en la entrega recepción de turno?",
                                                                 ),
 
@@ -598,7 +617,7 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "11.- ¿Desea restringir totalmente sus vistas?",
                                                                 ),
 
@@ -622,7 +641,7 @@ class VerPasaporte extends App {
 
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify[for='inputEmail4']",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
                                                                     "12.- ¿Durante su hospitalización y cuidados posteriores a la alta médica, usted desearía que capaciten a una persona de su confianza para que le brinde un cuidado y acompañamiento pertinente?",
                                                                 ),
 
@@ -662,17 +681,280 @@ class VerPasaporte extends App {
                                             ]),
 
                                             m(".tab-pane.fade[id='asig'][role='tabpanel'][aria-labelledby='home-asig']", [
-                                                m("div.mg-5.tx-left", [
-                                                    m("span.badge.badge-light.tx-14",
-                                                        "Observaciones",
-                                                    ),
-                                                    m("textarea.form-control.mg-t-5[rows='5'][placeholder='Observaciones']", {
-                                                        //oninput: function (e) { Observaciones.observaciones = e.target.value; },
-                                                        // value: Observaciones.observaciones,
-                                                    }),
-                                                    m("hr.wd-100p.mg-t-5.mg-b-5"),
-                                                ])
+                                                m("form", {
+                                                    onsubmit: (el) => {
+                                                        el.preventDefault();
+                                                        if (this.usrAsignado !== null) {
+                                                            this.fetchAsignar();
+                                                        }
+                                                    }
+                                                }, [
+                                                    m("div.form-row", [
+                                                        m("div.form-group.col-md-12.text-center m-0", [
+                                                            m('div.bg-secondary', [
+                                                                m("label.pd-b-5.pd-t-5.m-0.tx-white.tx-semibold",
+                                                                    "Asignar Encuesta",
+                                                                ),
 
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+
+
+                                                        ]),
+
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "1.- ¿A quién desea asignar esta encuesta?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.text-justify",
+                                                                    "- Seleccione el Grupo:",
+                                                                ),
+                                                                m("select.custom-select.mg-b-5", {
+                                                                    value: (this.grupo !== null ? this.grupo : ''),
+                                                                    onchange: (e) => {
+                                                                        this.grupo = e.target.value;
+                                                                        this.usrAsignado = null;
+                                                                        this.fetchUsuarios();
+                                                                    }
+                                                                }, [
+
+                                                                    m("option[value='PB']",
+                                                                        "HM-Grp-Encargadas-PB"
+                                                                    ),
+                                                                    m("option[value='H1']",
+                                                                        "HM-Grp-Encargadas-H1"
+                                                                    ),
+                                                                    m("option[value='H2']",
+                                                                        "HM-Grp-Encargadas-H2"
+                                                                    ),
+                                                                    m("option[value='C2']",
+                                                                        "HM-Grp-Encargadas-C2"
+                                                                    ),
+                                                                    m("option[value='COVID']",
+                                                                        "HM-Grp-Encargadas-COVID"
+                                                                    )
+                                                                ]),
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.text-justify", {
+                                                                    class: (this.usuarios !== null ? '' : 'd-none'),
+
+                                                                },
+                                                                    "- Seleccione el Usuario:",
+                                                                ),
+                                                                m("select.custom-select.mg-b-5", {
+                                                                    class: (this.usuarios !== null ? '' : 'd-none'),
+                                                                    onchange: (e) => {
+                                                                        this.usrAsignado = e.target.value;
+                                                                    }
+                                                                }, [
+
+                                                                    (this.usuarios !== null ? [
+                                                                        this.usuarios.map(x =>
+                                                                            m('option', {
+                                                                                value: x.id
+                                                                            }, x.displayName)
+                                                                        )
+                                                                    ] : [])
+                                                                ]),
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0",
+                                                            m("button.btn.btn-primary.btn-xs.btn-block.tx-semibold[type='submit']",
+                                                                "Asignar"
+                                                            )
+                                                        ),
+                                                    ]),
+
+
+
+
+
+                                                ]),
+
+                                            ]),
+
+                                            m(".tab-pane.fade[id='ver'][role='tabpanel'][aria-labelledby='home-ver']", [
+
+                                                m("form", {
+                                                    onsubmit: (el) => {
+                                                        el.preventDefault();
+                                                        let formData = new FormData(el.srcElement)
+                                                        for (let pair of formData.entries()) {
+                                                            console.log(pair)
+                                                        }
+                                                    }
+                                                }, [
+                                                    m("div.form-row", [
+                                                        m("div.form-group.col-md-12.text-center m-0", [
+                                                            m('div.bg-secondary', [
+                                                                m("label.pd-b-5.pd-t-5.m-0.tx-white.tx-semibold",
+                                                                    "Preferencias del Paciente",
+                                                                ),
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+
+
+                                                        ])
+                                                    ]),
+                                                    m("div.form-row", [
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "1.- ¿Còmo prefiere que lo llamemos?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "2.- ¿Qué tan importante es para usted la hora a la que se despierta en la mañana?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "3.- ¿Qué tan importante es para usted la hora a la que toma un baño?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "4.- ¿Qué tan importante es para usted el cuidado diario de su cabello?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "5.- ¿Qué tan importante es para usted la hora en la que duerme en la noche?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "6.- ¿Qué tan importante es para usted poder escoger su comida?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "7.- ¿Qué tan importante es para usted salir al aire libre cuando el clima es adecuado?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "8.- ¿Usted tiene mascotas? En caso afirmativo, ¿qué tan importante es para usted estar cerca de sus mascotas?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "9.- ¿Qué tan importante es para usted tener libros/revistas a su disposición para leer?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    " 10.- ¿Estaría de acuerdo en interactuar con el personal de salud en la entrega recepción de turno?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "11.- ¿Desea restringir totalmente sus vistas?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+
+                                                        m("div.form-group.col-md-12.m-0", [
+                                                            m('div.bg-litecoin op-9', [
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    "12.- ¿Durante su hospitalización y cuidados posteriores a la alta médica, usted desearía que capaciten a una persona de su confianza para que le brinde un cuidado y acompañamiento pertinente?",
+                                                                ),
+
+                                                            ]),
+                                                            m("div.pd-20.bg-white", [
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+
+
+                                                    ]),
+
+
+
+                                                ]),
                                             ]),
 
                                         ])
@@ -703,8 +985,7 @@ class VerPasaporte extends App {
 
 
                                                         m("p.mg-5", [
-                                                            m("span.badge.badge-light.tx-14.text-left.pd-5",
-                                                            ),
+                                                            m("span.badge.badge-light.tx-14.text-left.pd-5",),
                                                             m("div.pd-20", [
 
 
@@ -751,6 +1032,34 @@ class VerPasaporte extends App {
         ];
     }
 
+    fetchUsuarios() {
+
+        let _this = this;
+
+        return m.request({
+            method: "POST",
+            url: "https://prod-86.westus.logic.azure.com:443/workflows/6ae81d0303a0473cac689c25bb466253/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mG7JHMfylqEd193lR_ROizpE6E--wTLs7VbFGbf7BYY",
+            body: {
+                grupo: _this.grupo
+            },
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (result) {
+
+                _this.usuarios = result.value;
+
+            })
+            .catch(function (e) {
+                return {
+                    'status': null,
+                    'message': e
+                };
+            });
+
+    }
+
     fetchPasaporte() {
 
         let _queryString = '?nhc=' + this.idPasaporte;
@@ -764,6 +1073,35 @@ class VerPasaporte extends App {
             },
         })
             .then(function (result) {
+                return result;
+            })
+            .catch(function (e) {
+                return {
+                    'status': null,
+                    'message': e
+                };
+            });
+
+    }
+
+    fetchAsignar() {
+
+        let _this = this;
+
+        return m.request({
+            method: "POST",
+            url: ApiHTTP.apiUrl + "/v2/pacientes/nueva-asignacion",
+            body: {
+                nhc: _this.idPasaporte,
+                usrAsignado: _this.usrAsignado
+            },
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                'Authorization': localStorage.getItem('userToken')
+            },
+        })
+            .then(function (result) {
+                console.log(result)
                 return result;
             })
             .catch(function (e) {
