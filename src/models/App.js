@@ -6,6 +6,8 @@ import AuthMSA from "./AuthMSA";
 
 // App
 class App {
+
+
     static title;
     static name;
     static version;
@@ -14,9 +16,11 @@ class App {
     static userName;
     static auth = null;
     static usrToken = null;
+    static _msa = null;
 
     constructor() {
         App.auth = new AuthManager();
+        App._msa = new AuthMSA();
         App.name = "MetroPlus";
         App.version = " v2.0.0";
         if (App.auth.isAuthenticated()) {
@@ -32,8 +36,6 @@ class App {
     }
 
     static isAuthenticated() {
-
-
         if (!App.auth.isAuthenticated()) {
             App.logout();
         }
@@ -59,7 +61,6 @@ class App {
     }
 
     static login(usrToken) {
-
         App.auth.login({ usrToken: usrToken }).then((result) => {
             if (result) {
                 console.log("Login exitoso");
@@ -80,20 +81,22 @@ class App {
             app: nombreApp
         }));
 
+        // Redireccionar
+        if (nombreApp == 'Flebotomista') {
+            m.route.set('/laboratorio/flebotomista');
+        }
+
     }
 
 
 
     static loginMSA() {
 
-        let _this = this;
-        let _msa = new AuthMSA();
-
         // Crea Objeto para el Login de MSA
-        _msa.myMSALObj.loginPopup(_msa.loginRequest)
+        App._msa.myMSALObj.loginPopup(App._msa.loginRequest)
             .then((loginResponse) => {
                 console.log(1, loginResponse);
-                _this.login(loginResponse.idToken.rawIdToken);
+                App.login(loginResponse.idToken.rawIdToken);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -104,12 +107,9 @@ class App {
 
         if (localStorage.getItem('authToken' + nombreApp) == undefined) {
 
-            let _msa = new AuthMSA();
-
             // Crea Objeto para el Login de MSA
-            _msa.myMSALObj.loginPopup(_msa.loginRequest)
+            App._msa.myMSALObj.loginPopup(App._msa.loginRequest)
                 .then((loginResponse) => {
-                    console.log(2, loginResponse);
                     App.autorizarApp('mchang@hmetro.med.ec', nombreApp);
                 }).catch(function (error) {
                     console.log(error);

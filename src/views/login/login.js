@@ -10,7 +10,9 @@ class Login extends App {
     super();
     if (App.isPublic()) {
       App.title = "Inicia Sesión";
+      this.view = this.page;
     }
+
 
   }
 
@@ -23,7 +25,7 @@ class Login extends App {
     return m(HeaderPublic);
   }
 
-  view() {
+  page() {
     return [
       this.vHeader(),
       this.vForm()

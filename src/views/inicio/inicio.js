@@ -359,10 +359,13 @@ class iMdodule {
 class Inicio extends App {
     constructor() {
         super();
-        App.title = "Inicio";
-        App.isAuthenticated();
+        if (App.isAuthenticated()) {
+            App.title = "Inicio";
+        }
     }
+
     view() {
+
         return [
             m("header.navbar.navbar-header.navbar-header-fixed", [
 

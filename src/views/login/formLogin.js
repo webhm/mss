@@ -5,13 +5,11 @@ class FormLogin extends App {
     constructor() {
         super();
         App.title = "Inicia Sesión";
+        this.view = this.page;
     }
 
-    oncreate() {
-        // this.loginMSA();
-    }
 
-    view() {
+    page() {
         return [
             m(
                 "div.content.content-fixed.content-auth",

@@ -9,17 +9,18 @@ class Laboratorio extends App {
 
     constructor() {
         super();
-        this.title = "Laboratorio";
-        this.isAuthenticated;
 
-        let hasProfile = this.hasProfile = 'LABORATORIO_METROPLUS';
-        if (hasProfile) {
-            this.view = this.page;
+        if (App.isAuthenticated()) {
+            App.title = "Laboratorio";
+            if (App.hasProfile('LABORATORIO_METROPLUS')) {
+                this.view = this.page;
+            }
         }
+
     }
 
     vHeader() {
-        return m(HeaderPrivate, { userName: this.userName });
+        return m(HeaderPrivate, { userName: App.userName });
     }
 
     vMain() {
@@ -40,11 +41,11 @@ class Laboratorio extends App {
 
                         ),
                         m("li.breadcrumb-item.active[aria-current='page']",
-                            this.title
+                            App.title
                         )
                     ]),
                     m("h1.df-title.mg-t-20.mg-b-10",
-                        this.title + ":"
+                        App.title + ":"
                     ),
 
                     m("div.row", [
