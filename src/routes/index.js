@@ -9,6 +9,8 @@ import Hospital from "../views/hospital/hospital";
 import Pasaportes from "../views/hospital/pasaportes/pasaportes";
 import VerPasaporte from "../views/hospital/pasaportes/verPasaporte";
 import StepPassport from "../views/hospital/pasaportes/stepPassport";
+import Laboratorio from "../views/laboratorio/laboratorio";
+import Flebotomista from "../views/laboratorio/flebotomista/flebotomista";
 
 // Crear una instancia de la clase
 // const authManager = new AuthManager();
@@ -49,9 +51,9 @@ const Routes = {
   "/hospitalizacion": Hospital,
   "/hospitalizacion/pasaportes": Pasaportes,
   "/hospitalizacion/pasaporte": VerPasaporte,
+  "/laboratorio": Laboratorio,
+  "/laboratorio/flebotomista": Flebotomista,
   "/step-passport": StepPassport,
-
-
   "/salir": Salir,
 };
 

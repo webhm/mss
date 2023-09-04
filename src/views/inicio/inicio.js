@@ -359,8 +359,8 @@ class iMdodule {
 class Inicio extends App {
     constructor() {
         super();
-        this.title = "Inicio";
-        this.isAuthenticated();
+        App.title = "Inicio";
+        App.isAuthenticated();
     }
     view() {
         return [
@@ -398,7 +398,7 @@ class Inicio extends App {
 
                     ])
                 ]),
-                m(SidebarRight, { userName: this.userName })
+                m(SidebarRight, { userName: App.userName })
             ]),
             m("div.content.content-components", {
 
@@ -415,15 +415,15 @@ class Inicio extends App {
 
                         ),
                         m("li.breadcrumb-item.active[aria-current='page']",
-                            this.title
+                            App.title
                         )
                     ]),
                     m("h1.df-title.mg-t-20.mg-b-10",
-                        this.title + ":"
+                        App.title + ":"
                     ),
 
                     m("div.row.tx-14", [
-                        m(ModulesAccess, { profiles: this.auth.user.profile }),
+                        m(ModulesAccess, { profiles: App.auth.user.profile }),
                     ]),
 
                 ])

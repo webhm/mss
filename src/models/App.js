@@ -16,58 +16,75 @@ class App {
     static usrToken = null;
 
     constructor() {
-        this.auth = new AuthManager();
-        this.name = "MetroPlus";
-        this.version = " v2.0.0";
-        if (this.auth.isAuthenticated()) {
-            this.userName = this.auth.user.user;
+        App.auth = new AuthManager();
+        App.name = "MetroPlus";
+        App.version = " v2.0.0";
+        if (App.auth.isAuthenticated()) {
+            App.userName = App.auth.user.user;
         }
 
+
     }
 
 
-    hasProfile(profile) {
-        return this.auth.hasProfile(profile);
+    static hasProfile(profile) {
+        return App.auth.hasProfile(profile);
     }
 
-    isAuthenticated() {
-        if (!this.auth.isAuthenticated()) {
-            this.logout();
+    static isAuthenticated() {
+
+
+        if (!App.auth.isAuthenticated()) {
+            App.logout();
         }
-        this.setTitle();
-        return this.auth.isAuthenticated();
+        App.setTitle();
+        return App.auth.isAuthenticated();
     }
 
-    isPublic() {
-        if (this.auth.isAuthenticated()) {
-            this.getInicio();
+    static isPublic() {
+        if (App.auth.isAuthenticated()) {
+            App.getInicio();
         }
-        this.setTitle();
-        return !this.auth.isAuthenticated();
+        App.setTitle();
+        return !App.auth.isAuthenticated();
     }
 
-    logout() {
-        this.auth.logout();
-        m.route.set("/");
+    static logout() {
+        App.auth.logout();
+        return m.route.set("/");
     }
 
-    getInicio() {
-        m.route.set("/inicio");
+    static getInicio() {
+        return m.route.set("/inicio");
     }
 
-    login(usrToken) {
+    static login(usrToken) {
 
-        this.auth.login({ usrToken: usrToken }).then((result) => {
+        App.auth.login({ usrToken: usrToken }).then((result) => {
             if (result) {
                 console.log("Login exitoso");
-                this.getInicio();
+                App.getInicio();
             } else {
                 console.log("Login fallido");
             }
         });
     }
 
-    loginMSA() {
+    static autorizarApp(usr, nombreApp) {
+
+        let userToken = localStorage.userToken;
+        localStorage.clear();
+        localStorage.setItem('userToken', userToken);
+        localStorage.setItem('authToken' + nombreApp, JSON.stringify({
+            usr: usr,
+            app: nombreApp
+        }));
+
+    }
+
+
+
+    static loginMSA() {
 
         let _this = this;
         let _msa = new AuthMSA();
@@ -82,7 +99,26 @@ class App {
             });
     }
 
-    loader() {
+    static autorizarMSA(nombreApp) {
+
+
+        if (localStorage.getItem('authToken' + nombreApp) == undefined) {
+
+            let _msa = new AuthMSA();
+
+            // Crea Objeto para el Login de MSA
+            _msa.myMSALObj.loginPopup(_msa.loginRequest)
+                .then((loginResponse) => {
+                    console.log(2, loginResponse);
+                    App.autorizarApp('mchang@hmetro.med.ec', nombreApp);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+    }
+
+    static loader() {
         return [
             m(
                 "div.text-center.mg-t-300",
@@ -95,11 +131,11 @@ class App {
     }
 
     oncreate() {
-        document.title = this.title + " | " + this.name + this.version;
+        document.title = App.title + " | " + App.name + App.version;
     }
 
-    setTitle() {
-        document.title = this.title + " | " + this.name + this.version;
+    static setTitle() {
+        document.title = App.title + " | " + App.name + App.version;
     }
 
     view() { }

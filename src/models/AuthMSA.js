@@ -18,7 +18,7 @@ class AuthMSA {
             auth: {
                 clientId: "a29bcf0f-e889-4181-b2d5-62d630d502ee", // this is a fake id
                 authority: "https://login.microsoftonline.com/266e577b-cdf0-42b2-9523-4dac3f7f4bc7",
-                redirectUri: "http://localhost:3000/",
+                redirectUri: window.location.origin,
             },
             cache: {
                 cacheLocation: "localStorage", // This configures where your cache will be stored

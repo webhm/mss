@@ -14,7 +14,10 @@ import ApiHTTP from "./ApiHTTP";
 // - hasProfile: recibe un perfil como argumento y devuelve true si el usuario tiene ese perfil, y false en caso contrario.
 
 class AuthManager {
+    
+
     constructor() {
+
         this.token = (localStorage.getItem('userToken') == undefined ? null : localStorage.getItem('userToken'));
         this.user = (localStorage.getItem('userToken') == undefined ? null : JSON.parse(atob(localStorage.getItem('userToken').split(".")[1])).data);
     }

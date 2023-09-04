@@ -4,15 +4,14 @@ import App from "../../models/App";
 class FormLogin extends App {
     constructor() {
         super();
-        this.title = "Inicia Sesión";
-        this.view = this.page;
+        App.title = "Inicia Sesión";
     }
 
     oncreate() {
         // this.loginMSA();
     }
 
-    page() {
+    view() {
         return [
             m(
                 "div.content.content-fixed.content-auth",
@@ -144,7 +143,7 @@ class FormLogin extends App {
                             "div.sign-wrapper.mg-lg-l-50.mg-xl-l-60.mg-t-10",
                             m("div.wd-100p", [
                                 m('br'),
-                                m("h3.tx-color-01.mg-t-100", this.name + this.version.substring(0, this.version.length - 2)),
+                                m("h3.tx-color-01.mg-t-100", App.name + App.version.substring(0, App.version.length - 2)),
                                 m(
                                     "p.tx-color-03.tx-15.mg-t-10.mg-b-10",
                                     "¡Bienvenido! Por favor, inicia sesión para continuar."
@@ -173,7 +172,7 @@ class FormLogin extends App {
                                     // disabled: !Auth.canSubmit(),
                                     // onclick: Auth.login
                                     onclick: () => {
-                                        this.loginMSA();
+                                        App.loginMSA();
                                     },
                                 }, [
                                     m("img.mg-r-2[src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHYAAAB2CAYAAAAdp2cRAAAABHNCSVQICAgIfAhkiAAAAZ5JREFUeJzt17FNHFEYRtE3qxUJkmtw5hBRASKhBMf04cA4cEwLWwfRVgCiA2qw5MCSvc85It0Z6eqc8J/ke7rRLL+/XT+M3e77qDqdflz+fHl4f358+To3WLOa3dYDOA9ho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4SNEjZK2Chho4QFAIDl6unX/Rjzfush57McXu8+Hd5f/zx/Oa6/ZT37MefnZRk3Ww85lznn8eMvS/bNY/iPzRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2StgoYaOEjRI2aj9OF4e5/3vcesjZ/Nu/fXTeLfN25SWr+g/+GiEp5JSeMAAAAABJRU5ErkJggg=='][alt='Microsoft'][width='5%'][height='5%']"),
@@ -181,7 +180,7 @@ class FormLogin extends App {
                                 ]
 
                                 ),
-                                m("div.text-center.tx-gray-500.mg-t-20", this.name + this.version),
+                                m("div.text-center.tx-gray-500.mg-t-20", App.name + App.version),
                                 m(
                                     "div.text-center.tx-gray-500",
                                     "Created by Hospital Metropolitano"

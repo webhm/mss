@@ -16,6 +16,11 @@ class VerPasaporte extends App {
     mascotas = false;
     visitas = false
     indicaciones = false;
+    guardia = false;
+    desayuno = false;
+    ducha = false;
+    comida = false;
+    dormir = false;
     constructor(_data) {
         super();
         this.title = "Pasaporte de Paciente";
@@ -59,7 +64,7 @@ class VerPasaporte extends App {
                     ]),
                     m(".df-title.mg-t-20.mg-b-10.tx-30.d-flexs",
                         this.title + ": ",
-                        m("span.badge.badge-warning.tx-30",
+                        m("span.badge.badge-warning.tx-20",
                             (this.dataPasaporte !== null ? [
                                 (this.dataPasaporte.STATUS == 0 ? "Pendiente" : ""),
                                 (this.dataPasaporte.STATUS == 1 ? "Asignado a: " + (this.usrAsignado == null ? '' : this.usrAsignado.displayName) : ""),
@@ -155,7 +160,7 @@ class VerPasaporte extends App {
                                     },
                                         m("ul.nav.nav-tabs[id='myTab'][role='tablist']", [
                                             (this.dataPasaporte.STATUS == 0 ? [
-                                                m("li.nav-item",
+                                                m("li.nav-item.mg-b-5",
                                                     m("a.nav-link[id='home-asig'][data-toggle='tab'][href='#asig'][role='tab'][aria-controls='asig']", {
                                                         style: { "color": "#476ba3" }
                                                     },
@@ -168,7 +173,7 @@ class VerPasaporte extends App {
                                             ] : []),
 
                                             (this.dataPasaporte.STATUS == 1 ? [
-                                                m("li.nav-item",
+                                                m("li.nav-item.pd-b-5",
                                                     m("a.nav-link[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']", {
                                                         style: { "color": "#476ba3" }
                                                     },
@@ -177,7 +182,7 @@ class VerPasaporte extends App {
                                                         " Realizar Encuesta "
                                                     )
                                                 ), ,
-                                                m("li.nav-item",
+                                                m("li.nav-item.pd-b-5",
                                                     m("a.nav-link[id='home-asig'][data-toggle='tab'][href='#asig'][role='tab'][aria-controls='asig']", {
                                                         style: { "color": "#476ba3" }
                                                     },
@@ -188,7 +193,7 @@ class VerPasaporte extends App {
                                                 ),
                                             ] : []),
                                             (this.dataPasaporte.STATUS == 2 ? [
-                                                m("li.nav-item",
+                                                m("li.nav-item.mg-b-5",
                                                     m("a.nav-link[id='home-ver'][data-toggle='tab'][href='#ver'][role='tab'][aria-controls='ver']", {
                                                         style: { "color": "#476ba3" }
                                                     },
@@ -231,7 +236,7 @@ class VerPasaporte extends App {
                                                             _arr.push(pair)
                                                         }
                                                         this.fetchGenerarPasaporte(_arr);
-                                                        console.log(_arr)
+
                                                     }
                                                 }, [
                                                     m("div.form-row", [
@@ -250,14 +255,16 @@ class VerPasaporte extends App {
                                                     m("div.form-row", [
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "1.- ¿Còmo prefiere que lo llamemos?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_rq1'][name='rq1'][value='Por mi Nombre']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q1_rq1'][name='rq1'][value='Por mi Nombre']", {
+
+                                                                    }),
                                                                     m("label.custom-control-label[for='q1_rq1']",
                                                                         "Por mi Nombre"
                                                                     )
@@ -278,7 +285,7 @@ class VerPasaporte extends App {
                                                                     m("label",
                                                                         "Especifique:"
                                                                     ),
-                                                                    m("input.form-control[type='text'][placeholder='Especifique:'][name='rq1']")
+                                                                    m("input.form-control[type='text'][placeholder='Especifique:'][name='rq1_1']")
                                                                 ]),
 
                                                             ]),
@@ -286,38 +293,58 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "2.- ¿Qué tan importante es para usted la hora a la que se despierta en la mañana?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_rq2'][name='rq2'][value='Muy Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q1_rq2'][name='rq2'][value='Muy Importante']", {
+                                                                        onclick: () => {
+                                                                            this.desayuno = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q1_rq2']",
                                                                         "Muy Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_rq2'][name='rq2'][value='Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q2_rq2'][name='rq2'][value='Importante']", {
+                                                                        onclick: () => {
+                                                                            this.desayuno = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q2_rq2']",
                                                                         "Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q3_rq2'][name='rq2'][value='Me da igual']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q3_rq2'][name='rq2'][value='Me da igual']", {
+                                                                        onclick: () => {
+                                                                            this.desayuno = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q3_rq2']",
                                                                         "Me da igual"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q4_rq2'][name='rq2'][value='No muy importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q4_rq2'][name='rq2'][value='No muy importante']", {
+                                                                        onclick: () => {
+                                                                            this.desayuno = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q4_rq2']",
                                                                         "No muy importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q5_rq2'][name='rq2'][value='No es nada importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q5_rq2'][name='rq2'][value='No es nada importante']", {
+                                                                        onclick: () => {
+                                                                            this.desayuno = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q5_rq2']",
                                                                         "No es nada importante"
                                                                     )
@@ -325,40 +352,76 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("hr.wd-100p.mg-t-5.mg-b-5"),
                                                         ]),
+                                                        m("div.form-group.col-md-12.m-0", {
+                                                            class: this.desayuno ? '' : 'd-none'
+                                                        }, [
+
+                                                            m("div.pd-20.bg-white.tx-18", [
+                                                                m("div", [
+                                                                    m("label",
+                                                                        "Hora:"
+                                                                    ),
+                                                                    m("input.form-control[type='text'][placeholder='Hora:'][name='rq2_1']", {
+                                                                        disabled: (!this.desayuno ? 'disabled' : '')
+                                                                    })
+                                                                ]),
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "3.- ¿Qué tan importante es para usted la hora a la que toma un baño?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_rq3'][name='rq3'][value='Muy Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q1_rq3'][name='rq3'][value='Muy Importante']", {
+                                                                        onclick: () => {
+                                                                            this.ducha = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q1_rq3']",
                                                                         "Muy Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_rq3'][name='rq3'][value='Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q2_rq3'][name='rq3'][value='Importante']", {
+                                                                        onclick: () => {
+                                                                            this.ducha = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q2_rq3']",
                                                                         "Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q3_rq3'][name='rq3'][value='Me da igual']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q3_rq3'][name='rq3'][value='Me da igual']", {
+                                                                        onclick: () => {
+                                                                            this.ducha = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q3_rq3']",
                                                                         "Me da igual"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q4_rq3'][name='rq3'][value='No muy importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q4_rq3'][name='rq3'][value='No muy importante']", {
+                                                                        onclick: () => {
+                                                                            this.ducha = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q4_rq3']",
                                                                         "No muy importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q5_rq3'][name='rq3'][value='No es nada importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q5_rq3'][name='rq3'][value='No es nada importante']", {
+                                                                        onclick: () => {
+                                                                            this.ducha = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q5_rq3']",
                                                                         "No es nada importante"
                                                                     )
@@ -366,14 +429,29 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("hr.wd-100p.mg-t-5.mg-b-5"),
                                                         ]),
+                                                        m("div.form-group.col-md-12.m-0", {
+                                                            class: this.ducha ? '' : 'd-none'
+                                                        }, [
+                                                            m("div.pd-20.bg-white.tx-18", [
+                                                                m("div", [
+                                                                    m("label",
+                                                                        "Hora:"
+                                                                    ),
+                                                                    m("input.form-control[type='text'][placeholder='Hora:'][name='rq3_1']", {
+                                                                        disabled: (!this.ducha ? 'disabled' : '')
+                                                                    })
+                                                                ]),
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "4.- ¿Qué tan importante es para usted el cuidado diario de su cabello?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
                                                                     m("input.custom-control-input[type='radio'][id='q1_rq4'][name='rq4'][value='Muy Importante']"),
                                                                     m("label.custom-control-label[for='q1_rq4']",
@@ -409,38 +487,58 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "5.- ¿Qué tan importante es para usted la hora en la que duerme en la noche?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_rq5'][name='rq5'][value='Muy Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q1_rq5'][name='rq5'][value='Muy Importante']", {
+                                                                        onclick: () => {
+                                                                            this.dormir = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q1_rq5']",
                                                                         "Muy Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_rq5'][name='rq5'][value='Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q2_rq5'][name='rq5'][value='Importante']", {
+                                                                        onclick: () => {
+                                                                            this.dormir = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q2_rq5']",
                                                                         "Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q3_rq5'][name='rq5'][value='Me da igual']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q3_rq5'][name='rq5'][value='Me da igual']", {
+                                                                        onclick: () => {
+                                                                            this.dormir = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q3_rq5']",
                                                                         "Me da igual"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q4_rq5'][name='rq5'][value='No muy importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q4_rq5'][name='rq5'][value='No muy importante']", {
+                                                                        onclick: () => {
+                                                                            this.dormir = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q4_rq5']",
                                                                         "No muy importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q5_rq5'][name='rq5'][value='No es nada importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q5_rq5'][name='rq5'][value='No es nada importante']", {
+                                                                        onclick: () => {
+                                                                            this.dormir = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q5_rq5']",
                                                                         "No es nada importante"
                                                                     )
@@ -448,40 +546,81 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("hr.wd-100p.mg-t-5.mg-b-5"),
                                                         ]),
+                                                        m("div.form-group.col-md-12.m-0", {
+                                                            class: this.dormir ? '' : 'd-none'
+
+                                                        }, [
+
+                                                            m("div.pd-20.bg-white.tx-18", [
+                                                                m("div", [
+                                                                    m("label",
+                                                                        "Hora:"
+                                                                    ),
+                                                                    m("input.form-control[type='text'][name='rq5_1']", {
+                                                                        disabled: (!this.dormir ? 'disabled' : '')
+                                                                    })
+                                                                ]),
+
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+
+
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "6.- ¿Qué tan importante es para usted poder escoger su comida?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_rq6'][name='rq6'][value='Muy Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q1_rq6'][name='rq6'][value='Muy Importante']", {
+                                                                        onclick: () => {
+                                                                            this.comida = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q1_rq6']",
                                                                         "Muy Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_rq6'][name='rq6'][value='Importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q2_rq6'][name='rq6'][value='Importante']", {
+                                                                        onclick: () => {
+                                                                            this.comida = true;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q2_rq6']",
                                                                         "Importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q3_rq6'][name='rq6'][value='Me da igual']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q3_rq6'][name='rq6'][value='Me da igual']", {
+                                                                        onclick: () => {
+                                                                            this.comida = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q3_rq6']",
                                                                         "Me da igual"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q4_rq6'][name='rq6'][value='No muy importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q4_rq6'][name='rq6'][value='No muy importante']", {
+                                                                        onclick: () => {
+                                                                            this.comida = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q4_rq6']",
                                                                         "No muy importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q5_rq6'][name='rq6'][value='No es nada importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q5_rq6'][name='rq6'][value='No es nada importante']", {
+                                                                        onclick: () => {
+                                                                            this.comida = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q5_rq6']",
                                                                         "No es nada importante"
                                                                     )
@@ -489,14 +628,51 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("hr.wd-100p.mg-t-5.mg-b-5"),
                                                         ]),
+                                                        m("div.form-group.col-md-12.m-0", {
+                                                            class: this.comida ? '' : 'd-none'
+
+                                                        }, [
+
+                                                            m("div.pd-20.bg-white.tx-18", [
+                                                                m("div", [
+                                                                    m("label",
+                                                                        "Comida Favorita:"
+                                                                    ),
+                                                                    m("input.form-control[type='text'][name='rq6_1']", {
+                                                                        disabled: (!this.comida ? 'disabled' : '')
+                                                                    })
+                                                                ]),
+                                                                m("div", [
+                                                                    m("label",
+                                                                        "Preferencias Comida:"
+                                                                    ),
+                                                                    m("input.form-control[type='text'][name='rq6_2']", {
+                                                                        disabled: (!this.comida ? 'disabled' : '')
+
+                                                                    })
+                                                                ]),
+                                                                m("div", [
+                                                                    m("label",
+                                                                        "Excluir:"
+                                                                    ),
+                                                                    m("input.form-control[type='text'][name='rq6_3']", {
+                                                                        disabled: (!this.comida ? 'disabled' : '')
+
+                                                                    })
+                                                                ]),
+
+                                                            ]),
+                                                            m("hr.wd-100p.mg-t-5.mg-b-5"),
+                                                        ]),
+
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "7.- ¿Qué tan importante es para usted salir al aire libre cuando el clima es adecuado?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
                                                                     m("input.custom-control-input[type='radio'][id='q1_rq7'][name='rq7'][value='Muy Importante']"),
                                                                     m("label.custom-control-label[for='q1_rq7']",
@@ -532,12 +708,12 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "8.- ¿Usted tiene mascotas? En caso afirmativo, ¿qué tan importante es para usted estar cerca de sus mascotas?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
                                                                     m("input.custom-control-input[type='radio'][id='q1_rq8'][name='rq8'][value='Muy Importante']", {
                                                                         onclick: () => {
@@ -569,13 +745,21 @@ class VerPasaporte extends App {
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q4_rq8'][name='rq8'][value='No muy importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q4_rq8'][name='rq8'][value='No muy importante']", {
+                                                                        onclick: () => {
+                                                                            this.mascotas = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q4_rq8']",
                                                                         "No muy importante"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q5_rq8'][name='rq8'][value='No es nada importante']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q5_rq8'][name='rq8'][value='No es nada importante']", {
+                                                                        onclick: () => {
+                                                                            this.mascotas = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q5_rq8']",
                                                                         "No es nada importante"
                                                                     )
@@ -587,26 +771,27 @@ class VerPasaporte extends App {
                                                             class: this.mascotas ? '' : 'd-none'
                                                         }, [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "8.1.- ¿Quiere conocer el procedimiento de ingreso de mascotas al hospital?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_1_rq8'][name='rq8_1'][value='Si']", {
+                                                                    m("input.custom-control-input[type='radio'][id='q1_1_rq8_1'][name='rq8_1'][value='Si']", {
                                                                         disabled: (!this.mascotas ? 'disabled' : '')
+
                                                                     }),
-                                                                    m("label.custom-control-label[for='q1_1_rq8']",
+                                                                    m("label.custom-control-label[for='q1_1_rq8_1']",
                                                                         "Si"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_2_rq8'][name='rq8_1'][value='No']", {
+                                                                    m("input.custom-control-input[type='radio'][id='q2_2_rq8_1'][name='rq8_1'][value='No']", {
                                                                         disabled: (!this.mascotas ? 'disabled' : '')
 
                                                                     }),
-                                                                    m("label.custom-control-label[for='q2_2_rq8']",
+                                                                    m("label.custom-control-label[for='q2_2_rq8_1']",
                                                                         "No"
                                                                     )
                                                                 ])
@@ -616,12 +801,12 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "9.- ¿Qué tan importante es para usted tener libros/revistas a su disposición para leer?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
                                                                     m("input.custom-control-input[type='radio'][id='q1_rq9'][name='rq9'][value='Muy Importante']"),
                                                                     m("label.custom-control-label[for='q1_rq9']",
@@ -657,16 +842,16 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     " 10.- ¿Estaría de acuerdo en interactuar con el personal de salud en la entrega recepción de turno?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
                                                                     m("input.custom-control-input[type='radio'][id='q1_rq10'][name='rq10'][value='Si']", {
                                                                         onclick: () => {
-                                                                            this.visitas = true;
+                                                                            this.guardia = true;
                                                                         }
                                                                     }),
                                                                     m("label.custom-control-label[for='q1_rq10']",
@@ -674,7 +859,11 @@ class VerPasaporte extends App {
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_rq10'][name='rq10'][value='No']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q2_rq10'][name='rq10'][value='No']", {
+                                                                        onclick: () => {
+                                                                            this.guardia = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q2_rq10']",
                                                                         "No"
                                                                     )
@@ -683,30 +872,30 @@ class VerPasaporte extends App {
                                                             m("hr.wd-100p.mg-t-5.mg-b-5"),
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", {
-                                                            class: this.visitas ? '' : 'd-none'
+                                                            class: this.guardia ? '' : 'd-none'
                                                         }, [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
-                                                                    "10.1.- ¿En que turno preferiría partidipar.?",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
+                                                                    "10.1.- ¿En que turno preferiría participar.?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_1_rq10_1'][name='rq10_1'][value='Si']", {
-                                                                        disabled: (!this.visitas ? 'disabled' : '')
+                                                                    m("input.custom-control-input[type='radio'][id='q1_1_rq10_1'][name='rq10_1'][value='Mañana']", {
+                                                                        disabled: (!this.guardia ? 'disabled' : '')
                                                                     }),
                                                                     m("label.custom-control-label[for='q1_1_rq10_1']",
-                                                                        "Si"
+                                                                        "Mañana"
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_2_rq10_1'][name='rq10_1'][value='No']", {
-                                                                        disabled: (!this.visitas ? 'disabled' : '')
+                                                                    m("input.custom-control-input[type='radio'][id='q2_2_rq10_1'][name='rq10_1'][value='Tarde']", {
+                                                                        disabled: (!this.guardia ? 'disabled' : '')
 
                                                                     }),
                                                                     m("label.custom-control-label[for='q2_2_rq10_1']",
-                                                                        "No"
+                                                                        "Tarde"
                                                                     )
                                                                 ])
 
@@ -715,12 +904,12 @@ class VerPasaporte extends App {
                                                         ]),
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "11.- ¿Desea restringir totalmente sus vistas?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
                                                                     m("input.custom-control-input[type='radio'][id='q1_rq11'][name='rq11'][value='Si']"),
                                                                     m("label.custom-control-label[for='q1_rq11']",
@@ -739,12 +928,12 @@ class VerPasaporte extends App {
 
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "12.- ¿Durante su hospitalización y cuidados posteriores a la alta médica, usted desearía que capaciten a una persona de su confianza para que le brinde un cuidado y acompañamiento pertinente?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("div.custom-control.custom-radio", [
                                                                     m("input.custom-control-input[type='radio'][id='q1_rq12'][name='rq12'][value='Si']", {
                                                                         onclick: () => {
@@ -756,7 +945,11 @@ class VerPasaporte extends App {
                                                                     )
                                                                 ]),
                                                                 m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_rq12'][name='rq12'][value='No']"),
+                                                                    m("input.custom-control-input[type='radio'][id='q2_rq12'][name='rq12'][value='No']", {
+                                                                        onclick: () => {
+                                                                            this.indicaciones = false;
+                                                                        }
+                                                                    }),
                                                                     m("label.custom-control-label[for='q2_rq12']",
                                                                         "No"
                                                                     )
@@ -768,29 +961,22 @@ class VerPasaporte extends App {
                                                             class: this.indicaciones ? '' : 'd-none'
                                                         }, [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
-                                                                    "12.1.- Especificar nombre de la persona que requiere capacitación:",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
+                                                                    "12.1.- Especificar el nombre de la persona que requiere capacitación:",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
-                                                                m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q1_1_rq12_1'][name='rq12_1'][value='Si']", {
-                                                                        disabled: (!this.indicaciones ? 'disabled' : '')
-                                                                    }),
-                                                                    m("label.custom-control-label[for='q1_1_rq12_1']",
-                                                                        "Si"
-                                                                    )
-                                                                ]),
-                                                                m("div.custom-control.custom-radio", [
-                                                                    m("input.custom-control-input[type='radio'][id='q2_2_rq12_1'][name='rq12_1'][value='No']", {
+                                                            m("div.pd-20.bg-white.tx-18", [
+                                                                m("div", [
+                                                                    m("label",
+                                                                        "Nombre:"
+                                                                    ),
+                                                                    m("input.form-control[type='text'][placeholder='Nombre:'][name='rq12_1']", {
                                                                         disabled: (!this.indicaciones ? 'disabled' : '')
 
-                                                                    }),
-                                                                    m("label.custom-control-label[for='q2_2_rq12_1']",
-                                                                        "No"
-                                                                    )
+                                                                    })
                                                                 ])
+
 
                                                             ]),
                                                             m("hr.wd-100p.mg-t-5.mg-b-5"),
@@ -800,8 +986,8 @@ class VerPasaporte extends App {
                                                     ]),
 
 
-                                                    m("div.form-group.pd-25.bg-white",
-                                                        m("button.btn.btn-primary.btn-xs.btn-block.tx-semibold[type='submit']",
+                                                    m("div.form-group.pd-5.bg-white",
+                                                        m("button.btn.btn-primary.btn-xs.btn-block.tx-semibold.tx-18[type='submit']",
                                                             "Enviar"
                                                         )
                                                     ),
@@ -844,12 +1030,12 @@ class VerPasaporte extends App {
 
                                                         m("div.form-group.col-md-12.m-0", [
                                                             m('div.bg-litecoin op-9', [
-                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                     "1.- ¿A quién desea asignar esta encuesta?",
                                                                 ),
 
                                                             ]),
-                                                            m("div.pd-20.bg-white", [
+                                                            m("div.pd-20.bg-white.tx-18", [
                                                                 m("label.pd-l-10.pd-t-10.pd-r-10.text-justify",
                                                                     "- Seleccione el Grupo:",
                                                                 ),
@@ -931,8 +1117,8 @@ class VerPasaporte extends App {
                                                         ]),
 
                                                     ]),
-                                                    m("div.form-group.pd-25.bg-white",
-                                                        m("button.btn.btn-primary.btn-xs.btn-block.tx-semibold[type='submit']",
+                                                    m("div.form-group.pd-5.bg-white",
+                                                        m("button.btn.btn-primary.btn-xs.btn-block.tx-semibold.tx-18[type='submit']",
                                                             "Asignar"
                                                         )
                                                     ),
@@ -964,24 +1150,24 @@ class VerPasaporte extends App {
                                                         m("div.form-row", [
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "1.- ¿Còmo prefiere que lo llamemos?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq1
                                                                 ]),
                                                                 m("hr.wd-100p.mg-t-5.mg-b-5"),
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "2.- ¿Qué tan importante es para usted la hora a la que se despierta en la mañana?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq2
 
                                                                 ]),
@@ -989,12 +1175,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "3.- ¿Qué tan importante es para usted la hora a la que toma un baño?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq3
 
                                                                 ]),
@@ -1002,12 +1188,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "4.- ¿Qué tan importante es para usted el cuidado diario de su cabello?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq4
 
                                                                 ]),
@@ -1015,12 +1201,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "5.- ¿Qué tan importante es para usted la hora en la que duerme en la noche?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq5
 
                                                                 ]),
@@ -1028,12 +1214,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "6.- ¿Qué tan importante es para usted poder escoger su comida?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq6
 
                                                                 ]),
@@ -1041,12 +1227,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "7.- ¿Qué tan importante es para usted salir al aire libre cuando el clima es adecuado?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq7
 
                                                                 ]),
@@ -1054,12 +1240,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "8.- ¿Usted tiene mascotas? En caso afirmativo, ¿qué tan importante es para usted estar cerca de sus mascotas?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq8
 
                                                                 ]),
@@ -1067,12 +1253,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "9.- ¿Qué tan importante es para usted tener libros/revistas a su disposición para leer?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq9
 
                                                                 ]),
@@ -1080,12 +1266,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         " 10.- ¿Estaría de acuerdo en interactuar con el personal de salud en la entrega recepción de turno?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq10
 
                                                                 ]),
@@ -1093,12 +1279,12 @@ class VerPasaporte extends App {
                                                             ]),
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "11.- ¿Desea restringir totalmente sus vistas?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq11
 
                                                                 ]),
@@ -1107,12 +1293,12 @@ class VerPasaporte extends App {
 
                                                             m("div.form-group.col-md-12.m-0", [
                                                                 m('div.bg-litecoin op-9', [
-                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify",
+                                                                    m("label.pd-l-10.pd-t-10.pd-r-10.tx-white.text-justify.tx-16",
                                                                         "12.- ¿Durante su hospitalización y cuidados posteriores a la alta médica, usted desearía que capaciten a una persona de su confianza para que le brinde un cuidado y acompañamiento pertinente?",
                                                                     ),
 
                                                                 ]),
-                                                                m("div.pd-20.bg-white", [
+                                                                m("div.pd-20.bg-white.tx-18", [
                                                                     this.dataPasaporte.ENCUESTA.rq12
 
                                                                 ]),
@@ -1155,7 +1341,7 @@ class VerPasaporte extends App {
 
         let _this = this;
 
-        _this.formLoader = !_this.formLoader;
+        _this.formLoader = true;
 
         return m.request({
             method: "POST",
@@ -1168,7 +1354,7 @@ class VerPasaporte extends App {
             },
         })
             .then(function (result) {
-                _this.formLoader = !_this.formLoader;
+                _this.formLoader = false;
                 _this.usuarios = result.value;
 
             })
@@ -1225,8 +1411,8 @@ class VerPasaporte extends App {
             },
         })
             .then(function (result) {
+                _this.formLoader = false;
                 if (result.status) {
-                    _this.formLoader = false;
                     window.location.reload();
                 } else {
                     alert(result.message)
@@ -1249,7 +1435,7 @@ class VerPasaporte extends App {
 
         return m.request({
             method: "POST",
-            url: ApiHTTP.apiUrl + "/v2/pacientes/nuevo-pasaporte",
+            url: ApiHTTP.apiUrl + "/v2/pacientes/nuevo-pasaporte-2",
             body: {
                 encuesta: encuesta,
                 pte: _this.dataPasaporte
@@ -1260,8 +1446,8 @@ class VerPasaporte extends App {
             },
         })
             .then(function (result) {
+                _this.formLoader = false;
                 if (result.status) {
-                    _this.formLoader = false;
                     window.location.reload();
                 } else {
                     alert(result.message)
