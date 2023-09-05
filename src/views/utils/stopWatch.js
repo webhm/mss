@@ -48,42 +48,6 @@ export function Stopwatch() {
         view() {
             return [
                 m("div.mg-b-0", [
-                    m("div.d-flex.align-items-center.justify-content-between.mg-b-5", [
-                        m("h6.tx-uppercase.tx-10.tx-spacing-1.tx-color-02.tx-semibold.mg-b-0",
-                            "Actualización en:"
-                        ),
-
-                    ]),
-                    m("div.d-flex.justify-content-between.mg-b-5", [
-                        m("h5.tx-normal.tx-rubik.mg-b-0",
-                            model.seconds + "s."
-                        ),
-                        m("h5.tx-normal.tx-rubik.tx-color-03.mg-b-0",
-                            m("small.pd-2.tx-15",
-                                (model.isPaused ? [m("i.fas.fa-play.pd-2", {
-                                    title: "Start",
-                                    onclick() {
-                                        actions.toggle(model);
-                                    },
-                                    style: { "cursor": "pointer" }
-                                })] : [m("i.fas.fa-pause.pd-2", {
-                                    title: "Pause",
-                                    onclick() {
-                                        actions.toggle(model);
-                                    },
-                                    style: { "cursor": "pointer" }
-
-                                })]),
-
-
-                            ),
-
-
-
-                        ),
-
-
-                    ]),
                     m("div.progress.ht-4.mg-b-0.op-5",
                         m(".progress-bar.bg-primary.[role='progressbar'][aria-valuenow='" + model.seconds + "'][aria-valuemin='0'][aria-valuemax='60']", {
                             oncreate: (el) => {

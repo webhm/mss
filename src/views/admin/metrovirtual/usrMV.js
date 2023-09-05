@@ -17,9 +17,8 @@ class usrMV extends App {
     idFiltro = 1;
     constructor(_data) {
         super();
-        this.title = "Usuarios MetroVirtual";
-        this.isAuthenticated();
-        if (this.hasProfile('ADM_USUARIOS_METROPLUS')) {
+        if (App.isAuthenticated() && App.hasProfile('ADM_USUARIOS_METROPLUS')) {
+            App.title = "Usuarios MetroVirtual";
             this.view = this.page;
         }
 
@@ -62,11 +61,11 @@ class usrMV extends App {
                             ]),
                         ),
                         m("li.breadcrumb-item.active[aria-current='page']",
-                            this.title
+                            App.title
                         )
                     ]),
                     m("h1.df-title.mg-t-20.mg-b-20",
-                        this.title + ":"
+                        App.title + ":"
                     ),
 
                     m("div", [
@@ -160,7 +159,7 @@ class usrMV extends App {
                 class: (this.usuarios !== null ? '' : 'd-none')
             }, [
                 m("label.nav-label",
-                    this.title + ":"
+                    App.title + ":"
                 ),
                 m("div.mg-t-10.bg-white", {
 
@@ -212,11 +211,11 @@ class usrMV extends App {
                             ]),
                         ),
                         m("li.breadcrumb-item.active[aria-current='page']",
-                            this.title
+                            App.title
                         )
                     ]),
                     m("h1.df-title.mg-t-20.mg-b-10",
-                        this.title + ":"
+                        App.title + ":"
                     ),
                     (this.dataUser !== null ? [
                         m('div.table-responsive', [

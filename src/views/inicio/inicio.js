@@ -359,7 +359,7 @@ class iMdodule {
 class Inicio extends App {
     constructor() {
         super();
-        if (App.isAuthenticated()) {
+        if (App.isAuthenticated() && App.auth !== null) {
             App.title = "Inicio";
         }
     }
