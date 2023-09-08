@@ -41,7 +41,7 @@ class usrMV extends App {
         m.redraw();
     }
     vHeader() {
-        return m(HeaderPrivate, { userName: this.userName });
+        return m(HeaderPrivate, { userName: App.userName });
     }
     vMain() {
         return [

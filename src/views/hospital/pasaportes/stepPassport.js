@@ -15,8 +15,9 @@ class StepPassport extends App {
         super();
     }
     oncreate(_data) {
+
         if (_data.attrs !== undefined) {
-            this.dataPasaporte = queryStringToJSON(location.href);
+            this.dataPasaporte = _data.attrs;
             this.idPasaporte = this.dataPasaporte.NHC;
             this.fetchPasaporte();
         }

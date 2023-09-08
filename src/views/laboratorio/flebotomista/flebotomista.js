@@ -267,6 +267,10 @@ class MenuFlebot {
                             onclick: () => {
                                 Flebotomista.showPendientes = !Flebotomista.showPendientes;
                                 Flebotomista.reLoader = !Flebotomista.reLoader;
+                                if (Flebotomista.pedidos == null) {
+                                    Flebotomista.fetchPendientes();
+                                }
+
                             },
                         }, [
                             m("div.media", [
@@ -293,6 +297,7 @@ class MenuFlebot {
                                 ),
 
                                 m("div.pd-10.bg-gray-500", {
+                                    style: { "cursor": "pointer" },
                                     onclick: () => {
                                         Flebotomista.pedidos = null;
                                         Flebotomista.fetchPendientes();
@@ -503,10 +508,10 @@ class Flebotomista extends App {
                 title: "Paciente:",
             },
             {
-                title: "Timbrar:",
+                title: "Nhc:",
             },
             {
-                title: "Ver Pedido:",
+                title: "Opciones:",
             },
 
 
@@ -515,68 +520,121 @@ class Flebotomista extends App {
                 mRender: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 },
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+
+                    return m.mount(nTd, {
+                        view: () => {
+                            return [
+                                m("button.btn-xs[type='button']", {
+                                    class: 'bg-warning',
+                                },
+                                    m('i.fas.fa-bell.tx-22'),
+                                    m('div.tx-12.tx-semibold', 'Llamar'),
+                                    m('div.d-inline.tx-12.tx-semibold.tx-danger', ''),
+                                )
+                            ]
+                        }
+                    });
+                },
                 visible: true,
                 aTargets: [0],
-                orderable: false,
-                width: '0.5%'
+                orderable: true,
             },
             {
                 mRender: function (data, type, full) {
                     return moment(full.fechaPedido, 'DD-MM-YYYY HH:mm:ss').unix();
                 },
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    return m.mount(nTd, {
+                        view: () => {
+                            return m('.d-block.pd-0.mg-0', oData.fechaPedido)
+                        }
+                    });
+                },
                 visible: true,
                 aTargets: [1],
-                orderable: false,
+                orderable: true,
 
             },
             {
                 mRender: function (data, type, full) {
                     return full.codigoPedido;
                 },
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+
+
+                    return m.mount(nTd, {
+                        view: () => {
+                            return m('.d-block.pd-0.mg-0', oData.codigoPedido)
+                        }
+                    });
+                },
                 visible: true,
                 aTargets: [2],
-                orderable: false,
+                orderable: true,
             },
             {
                 mRender: function (data, type, full) {
                     return full.paciente;
                 },
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    return m.mount(nTd, {
+                        view: () => {
+                            return [
+                                m('.d-block.pd-0.mg-0.tx-12.tx-primary.op-9', oData.sector),
+                                m('.d-block.pd-0.mg-0', oData.paciente),
+                            ]
+                        }
+                    });
+                },
                 visible: true,
                 aTargets: [3],
-                orderable: false,
-                width: '50%'
+                orderable: true,
             }, {
                 mRender: function (data, type, full) {
-                    return full.descPrestadorSolicitante;
+                    return full.numeroHistoriaClinica;
 
+                },
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    return m.mount(nTd, {
+                        view: () => {
+                            return m('.d-block.pd-0.mg-0', oData.numeroHistoriaClinica)
+                        }
+                    });
                 },
                 visible: true,
                 aTargets: [4],
-                orderable: false,
-                width: '5%'
+                orderable: true,
 
             },
             {
-                mRender: function (data, type, full) {
-                    return 'OPCIONES';
+                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                    return m.mount(nTd, {
+                        view: () => {
+                            return [
+                                m("button.btn-xs.btn-block.tx-white[type='button']", {
+                                    style: { "background-color": "#185b98" },
+                                },
+                                    m('i.fas.fa-folder-open.tx-22'),
+                                    m('div.tx-12.tx-semibold', 'Ver'),
+                                )
+                            ]
 
+                        }
+                    });
                 },
                 visible: true,
                 aTargets: [5],
-                orderable: false,
-                width: '5%'
+                orderable: true,
 
-            },
+            }
+            ],
 
 
-            ]
         }
 
     };
 
-    oncreate() {
-        Flebotomista.fetchPendientes();
-    }
 
 
     getConnectRTC() {

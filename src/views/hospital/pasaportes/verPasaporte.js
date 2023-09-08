@@ -64,7 +64,9 @@ class VerPasaporte extends App {
                     ]),
                     m(".df-title.mg-t-20.mg-b-10.tx-30.d-flexs",
                         this.title + ": ",
-                        m("span.badge.badge-warning.tx-20",
+                        m("span.badge.tx-20", {
+                            class: (this.dataPasaporte !== null && this.dataPasaporte.STATUS == 2 ? 'badge-success' : 'badge-warning')
+                        },
                             (this.dataPasaporte !== null ? [
                                 (this.dataPasaporte.STATUS == 0 ? "Pendiente" : ""),
                                 (this.dataPasaporte.STATUS == 1 ? "Asignado a: " + (this.usrAsignado == null ? '' : this.usrAsignado.displayName) : ""),
