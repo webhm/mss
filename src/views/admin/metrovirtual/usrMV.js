@@ -18,9 +18,10 @@ class usrMV extends App {
     constructor(_data) {
         super();
         if (App.isAuthenticated() && App.hasProfile('ADM_USUARIOS_METROPLUS')) {
-            App.title = "Usuarios MetroVirtual";
+            App.setTitle("Usuarios MetroVirtual");
             this.view = this.page;
         }
+
 
     }
     oncreate(_data) {

@@ -10,7 +10,7 @@ class Administracion extends App {
     constructor() {
         super();
         if (App.isAuthenticated() && App.hasProfile('ADM_USUARIOS_METROPLUS')) {
-            App.title = "Administración";
+            App.setTitle("Administración");
             this.view = this.page;
         }
     }

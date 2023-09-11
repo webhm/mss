@@ -134,7 +134,8 @@ class App {
         document.title = App.title + " | " + App.name + App.version;
     }
 
-    static setTitle() {
+    static setTitle(_title) {
+        App.title = _title;
         document.title = App.title + " | " + App.name + App.version;
     }
 

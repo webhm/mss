@@ -17,12 +17,10 @@ class usrMPlus extends App {
     idFiltro = 1;
     constructor(_data) {
         super();
-        this.title = "Usuarios MetroVirtual";
-        this.isAuthenticated();
-        if (this.hasProfile('ADM_USUARIOS_METROPLUS')) {
+        if (App.isAuthenticated() && App.hasProfile('ADM_USUARIOS_METROPLUS')) {
+            App.setTitle("Usuarios MetroPlus");
             this.view = this.page;
         }
-
     }
     oncreate(_data) {
         if (_data.attrs.idFiltro !== undefined) {
@@ -62,11 +60,11 @@ class usrMPlus extends App {
                             ]),
                         ),
                         m("li.breadcrumb-item.active[aria-current='page']",
-                            this.title
+                            App.title
                         )
                     ]),
                     m("h1.df-title.mg-t-20.mg-b-20",
-                        this.title + ":"
+                        App.title + ":"
                     ),
 
                     m("div", [
@@ -588,8 +586,7 @@ class usrMPlus extends App {
                                     m('.tx-12.d-block', 'Actualizado: ' + aData.whenchanged),
                                     m('.tx-12.d-block', 'Última Contraseña: ' + aData.pwdlastset),
                                     m('.tx-12.d-block', 'Último Acceso: ' + aData.lastlogontimestamp),
-                                ]
-                                )
+                                ])
                             ]),
 
 
