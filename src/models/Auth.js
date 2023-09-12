@@ -43,6 +43,7 @@ class AuthManager {
                 if (!res.status) {
                     localStorage.clear();
                     App.messageError = res.message;
+                    console.log(App.messageError)
                     return false;
                 }
 

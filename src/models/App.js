@@ -67,6 +67,7 @@ class App {
                 console.log("Login exitoso");
                 App.getInicio();
             } else {
+                m.redraw();
                 console.log("Login fallido");
             }
         });

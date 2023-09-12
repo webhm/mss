@@ -14,7 +14,7 @@ class FormLogin extends App {
             m(
                 "div.content.content-fixed.content-auth",
                 m(
-                    "div.container.animated.bounceInUp",
+                    "div.container",
                     m(
                         "div.media.align-items-stretch.justify-content-center.ht-100p.pos-relative", [
                         m(
@@ -147,10 +147,7 @@ class FormLogin extends App {
                                     "¡Bienvenido! Por favor, inicia sesión para continuar."
                                 ),
                                 m(".tx-semibold.alert.alert-solid.alert-danger[role='alert']", {
-                                    oncreate: (el) => {
-                                        console.log(33, el)
-                                    },
-                                    class: (App.messageError == null ? "d-none" : "op-8")
+                                    class: (App.messageError == null ? "d-none" : "op-9")
                                 }, App.messageError),
                                 m(
                                     "button.btn.btn-brand-02.btn-block.tx-semibold", {
