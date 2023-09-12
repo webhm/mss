@@ -146,25 +146,12 @@ class FormLogin extends App {
                                     "p.tx-color-03.tx-15.mg-t-10.mg-b-10",
                                     "¡Bienvenido! Por favor, inicia sesión para continuar."
                                 ),
-                                m(".tx-semibold.alert.alert-solid.alert-danger.d-none[role='alert']"),
-                                m("div.form-group.d-none", [
-                                    m("label", "Usuario:"),
-                                    m("input.form-control[type='text'][placeholder='mpaez']", {
-                                        //oninput: function (e) { Auth.setUsername(e.target.value) },
-                                        //value: Auth.username,
-                                    }),
-                                ]),
-                                m("div.form-group.d-none", [
-                                    m("div.d-flex.justify-content-between.mg-b-5", [
-                                        m("label.mg-b-0-f", "Contraseña:"),
-                                    ]),
-                                    m(
-                                        "input.form-control[type='password'][placeholder='Contraseña']", {
-                                        // oninput: function (e) { Auth.setPassword(e.target.value) },
-                                        // value: Auth.password,
-                                    }
-                                    ),
-                                ]),
+                                m(".tx-semibold.alert.alert-solid.alert-danger[role='alert']", {
+                                    oncreate: (el) => {
+                                        console.log(33, el)
+                                    },
+                                    class: (App.messageError == null ? "d-none" : "op-8")
+                                }, App.messageError),
                                 m(
                                     "button.btn.btn-brand-02.btn-block.tx-semibold", {
                                     // disabled: !Auth.canSubmit(),

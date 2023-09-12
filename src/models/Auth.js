@@ -1,6 +1,7 @@
 // Crea una clase de JavaScript para administrar en una SPA la autenticación en JWT y un sistema de control de accesos, roles y perfiles y un ejemplo de su funcionamiento.
 
 import ApiHTTP from "./ApiHTTP";
+import App from "./App";
 
 
 // La clase se llama AuthManager y tiene los siguientes atributos y métodos:
@@ -14,7 +15,7 @@ import ApiHTTP from "./ApiHTTP";
 // - hasProfile: recibe un perfil como argumento y devuelve true si el usuario tiene ese perfil, y false en caso contrario.
 
 class AuthManager {
-    
+
 
     constructor() {
 
@@ -24,6 +25,8 @@ class AuthManager {
 
     async login(credentials) {
         try {
+
+            App.messageError = null;
             // Hacer la petición al servidor con las credenciales
             let response = await fetch(ApiHTTP.apiUrl + "/v2/auth", {
                 method: "POST",
@@ -36,6 +39,13 @@ class AuthManager {
             // Si la respuesta es exitosa, extraer el token y el usuario
             if (response.ok) {
                 let res = await response.json();
+
+                if (!res.status) {
+                    localStorage.clear();
+                    App.messageError = res.message;
+                    return false;
+                }
+
                 this.token = res.data.jwt;
                 // Guardar el token y el usuario en el almacenamiento local
                 // Objeto Token del User 

@@ -11,6 +11,7 @@ import VerPasaporte from "../views/hospital/pasaportes/verPasaporte";
 import StepPassport from "../views/hospital/pasaportes/stepPassport";
 import Laboratorio from "../views/laboratorio/laboratorio";
 import Flebotomista from "../views/laboratorio/flebotomista/flebotomista";
+import Imagen from "../views/imagen/imagen";
 
 // Crear una instancia de la clase
 // const authManager = new AuthManager();
@@ -54,6 +55,7 @@ const Routes = {
   "/laboratorio": Laboratorio,
   "/laboratorio/flebotomista": Flebotomista,
   "/step-passport": StepPassport,
+  "/imagen": Imagen,
   "/salir": Salir,
 };
 

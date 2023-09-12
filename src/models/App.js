@@ -17,6 +17,7 @@ class App {
     static auth = null;
     static usrToken = null;
     static _msa = null;
+    static messageError = null;
 
     constructor() {
         App.auth = new AuthManager();
