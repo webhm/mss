@@ -1,6 +1,7 @@
 import m from "mithril";
-import App from "../../models/App";
-import Menu from "./menuImagen";
+import Menu from "./menuAgenda";
+import App from "../../../models/App";
+
 
 
 class MenuSidebar {
@@ -8,14 +9,15 @@ class MenuSidebar {
         if (Menu.modulos.length !== 0) {
             return [
                 Menu.modulos.map(function (_v, _i, _contentData) {
+
                     if (App.hasProfile(_v.profile)) {
                         return [
-                            m(m.route.Link, { href: "/" + _v.page, class: ((SidebarImagen.page == _v.page) ? "active" : "") }, [
+                            m(m.route.Link, { href: "/" + _v.page, class: ((SidebarAgendas.page == _v.page) ? "active" : "") }, [
                                 _v.label
                             ])
                         ]
-                    }
 
+                    }
 
 
                 })
@@ -29,9 +31,9 @@ class MenuSidebar {
 
 
 
-class SidebarImagen {
+class SidebarAgendas {
     oninit(_data) {
-        SidebarImagen.page = _data.attrs.page;
+        SidebarAgendas.page = _data.attrs.page;
     }
     view() {
         return [
@@ -54,9 +56,9 @@ class SidebarImagen {
                         ),
                         m("li.nav-item.show", [
 
-                            m(m.route.Link, { href: "/imagen", class: "nav-link with-sub" }, [
+                            m(m.route.Link, { href: "/imagen/agendas", class: "nav-link with-sub" }, [
                                 m("i[data-feather='layout']"),
-                                " Imagen "
+                                " Agenda MV "
                             ]),
                             m("nav.nav", [
 
@@ -73,4 +75,4 @@ class SidebarImagen {
 
 };
 
-export default SidebarImagen;
+export default SidebarAgendas;

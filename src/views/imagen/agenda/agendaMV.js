@@ -1,12 +1,10 @@
 import m from "mithril";
-import App from "../../models/App";
-import HeaderPrivate from "../layout/headerPrivate";
-import SidebarImagen from "./sidebarImagen";
-import Menu from "./menuImagen";
+import App from "../../../models/App";
+import HeaderPrivate from "../../layout/headerPrivate";
+import Sidebar from "./sidebarAgendas";
+import Menu from "./menuAgenda";
 
-// Menu
-
-class MainImagen {
+class MainAgendaMV {
     view() {
 
         return Menu.modulos.map(function (_v, _i, _contentData) {
@@ -47,12 +45,15 @@ class MainImagen {
     }
 }
 
-class Imagen extends App {
+
+// AgendaMV
+
+class AgendaMV extends App {
 
     constructor() {
         super();
-        if (App.isAuthenticated() && App.hasProfile('PERFIL_IMAGEN_METROPLUS')) {
-            App.setTitle("Imagen");
+        if (App.isAuthenticated() && App.hasProfile('PERFIL_AGENDAMV_IMAGEN_METROPLUS')) {
+            App.setTitle("Agenda MV");
             this.view = this.page;
         }
     }
@@ -78,6 +79,13 @@ class Imagen extends App {
                             ]),
 
                         ),
+                        m("li.breadcrumb-item",
+                            m(m.route.Link, { href: "/imagen", }, [
+                                "Imagen"
+
+                            ]),
+
+                        ),
                         m("li.breadcrumb-item.active[aria-current='page']",
                             App.title
                         )
@@ -88,7 +96,7 @@ class Imagen extends App {
 
                     m("div.row", [
 
-                        m(MainImagen)
+                        m(MainAgendaMV)
 
                     ]),
 
@@ -98,7 +106,7 @@ class Imagen extends App {
     }
 
     vMenu() {
-        return m(SidebarImagen);
+        return m(Sidebar);
     }
 
     page() {
@@ -113,4 +121,4 @@ class Imagen extends App {
 
 }
 
-export default Imagen;
+export default AgendaMV;
