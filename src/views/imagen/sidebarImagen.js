@@ -2,11 +2,11 @@ import m from "mithril";
 
 class MenuAdmin {
     static modulos = [{
-        page: 'administracion/metrovirtual',
-        label: 'Usuarios MetroVirtual',
+        page: 'imagen/pedidos',
+        label: 'Recepción de Pedidos',
     }, {
-        page: 'administracion/metroplus',
-        label: 'Usuarios MetroPlus',
+        page: 'imagen/agendas',
+        label: 'Agenda MV',
     }];
 }
 

@@ -9,7 +9,7 @@ class Imagen extends App {
 
     constructor() {
         super();
-        if (App.isAuthenticated() && App.hasProfile('ADM_USUARIOS_METROPLUS')) {
+        if (App.isAuthenticated() && App.hasProfile('PERFIL_IMAGEN_METROPLUS')) {
             App.setTitle("Imagen");
             this.view = this.page;
         }

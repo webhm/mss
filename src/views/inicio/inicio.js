@@ -96,7 +96,7 @@ class ModulesAccess {
                     ])
                 ),
             ] : []),
-            (_data.attrs.profiles.includes('IMAGEN_METROPLUS') ? [
+            (_data.attrs.profiles.includes('PERFIL_IMAGEN_METROPLUS') ? [
                 m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
 
                     m("a[href='/imagen']", {
