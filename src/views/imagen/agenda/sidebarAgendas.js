@@ -58,7 +58,7 @@ class SidebarAgendas {
 
                             m(m.route.Link, { href: "/imagen/agendas", class: "nav-link with-sub" }, [
                                 m("i[data-feather='layout']"),
-                                " Agenda MV "
+                                " Agenda Centralizada "
                             ]),
                             m("nav.nav", [
 

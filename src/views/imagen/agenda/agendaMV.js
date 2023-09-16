@@ -53,7 +53,7 @@ class AgendaMV extends App {
     constructor() {
         super();
         if (App.isAuthenticated() && App.hasProfile('PERFIL_AGENDAMV_IMAGEN_METROPLUS')) {
-            App.setTitle("Agenda MV");
+            App.setTitle("Agenda Centralizada");
             this.view = this.page;
         }
     }

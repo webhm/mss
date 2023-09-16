@@ -6,7 +6,7 @@ class MenuImagen {
         icon: 'fa-inbox'
     }, {
         page: 'imagen/agendas',
-        label: 'Agenda MV',
+        label: 'Agenda Centralizada',
         profile: 'PERFIL_AGENDAMV_IMAGEN_METROPLUS',
         icon: 'fa-calendar-day'
     }];

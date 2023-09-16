@@ -11,7 +11,7 @@ class MenuAgenda {
         icon: 'fa-user'
     }, {
         page: 'imagen/agendas/calendario',
-        label: 'Citas Imagen',
+        label: 'Ver Calendario',
         profile: 'PERFIL_AGENDAMV_GEST_IMAGEN',
         icon: 'fa-calendar-day'
     }];
