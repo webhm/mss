@@ -1,10 +1,4 @@
 {
-  "routes": [
-    {
-      "route": "/api*",
-      "redirect": "https://mss.hospitalmetropolitano.org/api"
-    }
-  ],
   "navigationFallback": {
     "rewrite": "index.html",
     "exclude": [
