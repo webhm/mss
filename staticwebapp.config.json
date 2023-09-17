@@ -2,7 +2,7 @@
   "routes": [
     {
       "route": "/assets/*",
-      "rewrite": "./assets/*"
+      "rewrite": "/assets/*"
     }
   ],
   "navigationFallback": {
