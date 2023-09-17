@@ -1,10 +1,4 @@
 {
-  "routes": [
-    {
-      "route": "/assets/*",
-      "rewrite": "/assets/*"
-    }
-  ],
   "navigationFallback": {
     "rewrite": "index.html",
     "exclude": [
