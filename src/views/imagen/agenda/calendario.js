@@ -333,7 +333,9 @@ class Calendario extends App {
 
             m("div.calendar-wrapper", [
                 m("div.calendar-sidebar", [
+
                     m("div.calendar-sidebar-header", [
+
                         m("i[data-feather='search']"),
                         m("div.search-form", [
                             m("input.form-control[type='search'][placeholder='Buscar por Apellidos y Nombres']")
@@ -349,6 +351,7 @@ class Calendario extends App {
                             Calendario.setSidebar();
                         }
                     }, [
+
                         m("div.calendar-inline", [
                             m("div[id='calendarInline']"),
 
@@ -410,9 +413,9 @@ class Calendario extends App {
                     ])
                 ]),
                 m("div.calendar-content", [
-                    m(Loader, {
-                        class: 'pd-10'
-                    }),
+                    m('div.pd-20', [
+                        m(Loader)
+                    ]),
                     m("div.calendar-content-body[id='calendar']", {
                         oncreate: () => {
                             Calendario.setCalendar();
