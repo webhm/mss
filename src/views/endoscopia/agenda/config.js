@@ -1,16 +1,16 @@
 import m from "mithril";
 import App from "../../../models/App";
 import HeaderPrivate from "../../layout/headerPrivate";
-import SidebarAdmin from "./sidebarAgendas";
+import Sidebar from "./sidebar";
 import Loader from "../../utils/loader";
 import Errors from "../../utils/errors";
 import Table from "../../utils/table";
 import { Stopwatch } from "../../utils/stopWatch";
 import ApiHTTP from "../../../models/ApiHTTP";
 
-// ConfigAgendaImagen MV
+// ConfigAgEndo MV
 
-class ConfigAgendaImagen extends App {
+class ConfigAgEndo extends App {
     usuarios = null;
     dataUser = null;
     idAgenda = null;
@@ -18,12 +18,10 @@ class ConfigAgendaImagen extends App {
     idFiltro = 1;
     constructor(_data) {
         super();
-        if (App.isAuthenticated() && App.hasProfile('PERFIL_AG_ADM_IMAGEN')) {
+        if (App.isAuthenticated() && App.hasProfile('PERFIL_AG_ADM_ENDOSCOPIA')) {
             App.setTitle("Configuración de Agendas");
             this.view = this.page;
         }
-
-
     }
     oncreate(_data) {
         if (_data.attrs.idFiltro !== undefined) {
@@ -115,7 +113,7 @@ class ConfigAgendaImagen extends App {
                                                     ),
                                                     m(m.route.Link, {
                                                         class: 'dropdown-item',
-                                                        href: "/imagen/agendas/configuracion/?idFiltro=1",
+                                                        href: "/imagen/agendas/ConfigAgEndouracion/?idFiltro=1",
                                                         onclick: (e) => {
                                                             this.reloadData(1);
                                                             this.fetchData().then((_data) => {
@@ -127,7 +125,7 @@ class ConfigAgendaImagen extends App {
                                                     ]),
                                                     m(m.route.Link, {
                                                         class: 'dropdown-item',
-                                                        href: "/imagen/agendas/configuracion/?idFiltro=2",
+                                                        href: "/imagen/agendas/ConfigAgEndouracion/?idFiltro=2",
                                                         onclick: (e) => {
                                                             this.reloadData(2);
                                                             this.fetchData().then((_data) => {
@@ -145,7 +143,7 @@ class ConfigAgendaImagen extends App {
                                         m("span.badge.bg-litecoin.tx-white.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-14", {
                                             style: { "cursor": "pointer" },
                                             onclick: () => {
-                                                m.route.set("/imagen/agendas/configuracion/?view=new");
+                                                m.route.set("/imagen/agendas/ConfigAgEndouracion/?view=new");
                                             }
                                         }, [
                                             m("i.fas.fa-plus-circle.pd-2"),
@@ -431,7 +429,7 @@ class ConfigAgendaImagen extends App {
         ];
     }
     vMenu() {
-        return m(SidebarAdmin, { page: 'administracion/metrovirtual' });
+        return m(Sidebar, { page: 'administracion/metrovirtual' });
     }
     reloadData(idFiltro) {
         this.usuarios = null;
@@ -619,7 +617,7 @@ class ConfigAgendaImagen extends App {
                                 m('button.btn.btn-sm.btn-block.tx-semibold.tx-white', {
                                     style: { "background-color": "#185b98" },
                                     onclick: () => {
-                                        m.route.set('/imagen/agendas/configuracion/', {
+                                        m.route.set('/imagen/agendas/ConfigAgEndouracion/', {
                                             idAgenda: aData.samaccountname
                                         });
                                     }
@@ -661,4 +659,4 @@ class ConfigAgendaImagen extends App {
 }
 
 
-export default ConfigAgendaImagen;
+export default ConfigAgEndo;

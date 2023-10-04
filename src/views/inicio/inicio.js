@@ -384,10 +384,11 @@ class Inicio extends App {
         super();
         if (App.isAuthenticated()) {
             App.setTitle("Inicio");
+            this.view = this.page;
         }
     }
 
-    view() {
+    page() {
 
         return [
             m("header.navbar.navbar-header.navbar-header-fixed", [

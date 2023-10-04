@@ -1,14 +1,15 @@
-import m from 'mithril';
-import App from '../../models/App';
+import App from "../../models/App";
 
-class Salir extends App {
+class SingOut extends App {
     constructor() {
         super();
         try {
-            App._logoutMsi();
+            App.auth.logout();
+            App.logout();
         } catch (error) {
             m.route.set("/");
         }
+
     }
 
     view() {
@@ -16,4 +17,4 @@ class Salir extends App {
     }
 }
 
-export default Salir;
+export default SingOut;

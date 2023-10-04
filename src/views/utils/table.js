@@ -30,7 +30,7 @@ class Table {
         if (this.dataTable.length !== null) {
             return [
 
-                m('div.row.animated.fadeInUp', [
+                m('div.row', [
                     m('div.col-12', [
                         m("div.table-content.col-12.pd-r-0.pd-l-0.pd-b-20.mg-t-10", [
                             m("div.d-flex.align-items-center.justify-content-between.mg-b-75.mg-t-10", [

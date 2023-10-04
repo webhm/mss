@@ -68,6 +68,7 @@ class AuthManager {
         this.user = null;
         // Borrar el token y el usuario del almacenamiento local
         localStorage.removeItem("userToken");
+        localStorage.clear();
     }
 
     isAuthenticated() {

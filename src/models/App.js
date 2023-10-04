@@ -1,6 +1,9 @@
 import m from "mithril";
 import AuthManager from "./Auth";
 import AuthMSA from "./AuthMSA";
+import VentanaTemporizada from "../views/utils/ventanaTemp";
+
+
 
 
 
@@ -53,8 +56,15 @@ class App {
     }
 
     static logout() {
-        App.auth.logout();
         return m.route.set("/");
+    }
+
+
+    static async _logoutMsi() {
+
+        await App._msa.myMSALObj.initialize();
+        await App._msa.myMSALObj.logoutPopup(App._msa.logoutRequest);
+
     }
 
     static getInicio() {
@@ -92,13 +102,16 @@ class App {
 
 
 
-    static loginMSA() {
+    static async loginMSA() {
+
+        await App._msa.myMSALObj.initialize();
 
         // Crea Objeto para el Login de MSA
         App._msa.myMSALObj.loginPopup(App._msa.loginRequest)
             .then((loginResponse) => {
+                App._msa.accountId = loginResponse.account.homeAccountId;
                 console.log(1, loginResponse);
-                App.login(loginResponse.idToken.rawIdToken);
+                App.login(loginResponse.idToken);
             }).catch(function (error) {
                 console.log(error);
             });
