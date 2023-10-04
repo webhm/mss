@@ -9,7 +9,7 @@ import Loader from "../../utils/loader";
 class MainCalendarioEndo {
     view() {
 
-        return Menu.modulos.map(function (_v, _i, _contentData) {
+        return Menu.modulos.map(function(_v, _i, _contentData) {
 
             if (App.hasProfile(_v.profile)) {
                 return [
@@ -22,8 +22,8 @@ class MainCalendarioEndo {
                             m("div.card.card-help", [
                                 m("div.card-body.tx-13", [
                                     m("div.tx-60.lh-0.mg-b-15", {
-                                        style: { 'color': "#325a98" }
-                                    },
+                                            style: { 'color': "#325a98" }
+                                        },
                                         m("i.fas", {
                                             class: _v.icon
                                         })
@@ -52,6 +52,9 @@ class MainCalendarioEndo {
 
 class CalendarioEndo extends App {
 
+    loader = false;
+    citasDisponibles = [];
+
     constructor() {
         super();
         if (App.isAuthenticated()) {
@@ -72,7 +75,7 @@ class CalendarioEndo extends App {
         $('#calendarInline').datepicker({
             showOtherMonths: true,
             selectOtherMonths: true,
-            beforeShowDay: function (date) {
+            beforeShowDay: function(date) {
 
                 // add leading zero to single digit date
                 var day = date.getDate();
@@ -82,14 +85,14 @@ class CalendarioEndo extends App {
         });
 
 
-        setTimeout(function () {
+        setTimeout(function() {
             // Initialize scrollbar for sidebar
             new PerfectScrollbar('#calendarSidebarBody', { suppressScrollX: true });
         }, 100);
 
 
 
-        $('#calendarSidebarShow').on('click', function (e) {
+        $('#calendarSidebarShow').on('click', function(e) {
             e.preventDefault()
             $('body').toggleClass('calendar-sidebar-show');
 
@@ -97,7 +100,7 @@ class CalendarioEndo extends App {
             $('#mainMenuOpen').removeClass('d-none');
         })
 
-        $(document).on('click touchstart', function (e) {
+        $(document).on('click touchstart', function(e) {
             e.stopPropagation();
 
             // closing of sidebar menu when clicking outside of it
@@ -145,7 +148,7 @@ class CalendarioEndo extends App {
             timeFormat: 'HH:mma',
             views: {
                 agenda: {
-                    columnHeaderHtml: function (mom) {
+                    columnHeaderHtml: function(mom) {
                         return '<span>' + mom.format('ddd') + '</span>' +
                             '<span>' + mom.format('DD') + '</span>';
                     }
@@ -167,10 +170,10 @@ class CalendarioEndo extends App {
             },
 
             eventSources: [],
-            eventAfterAllRender: function (view) {
+            eventAfterAllRender: function(view) {
                 if (view.name === 'listMonth' || view.name === 'listWeek') {
                     var dates = view.el.find('.fc-list-heading-main');
-                    dates.each(function () {
+                    dates.each(function() {
                         var text = $(this).text().split(' ');
                         var now = moment().format('DD');
 
@@ -181,7 +184,7 @@ class CalendarioEndo extends App {
 
                 console.log(view.el);
             },
-            eventRender: function (event, element) {
+            eventRender: function(event, element) {
 
                 if (event.description) {
                     element.find('.fc-list-item-title').append('<span class="fc-desc">' + event.description + '</span>');
@@ -215,7 +218,7 @@ class CalendarioEndo extends App {
         }
 
         // change view based in viewport width when resize is detected
-        calendar.option('windowResize', function (view) {
+        calendar.option('windowResize', function(view) {
             if (view.name === 'listWeek') {
                 if (window.matchMedia('(min-width: 992px)').matches) {
                     calendar.changeView('month');
@@ -226,7 +229,7 @@ class CalendarioEndo extends App {
         });
 
         // Display calendar event modal
-        calendar.on('eventClick', function (calEvent, jsEvent, view) {
+        calendar.on('eventClick', function(calEvent, jsEvent, view) {
 
 
             if (calEvent.stAgendar == 1) {
@@ -297,20 +300,20 @@ class CalendarioEndo extends App {
 
         // display current date
         var dateNow = calendar.getDate();
-        calendar.option('select', function (startDate, endDate) {
+        calendar.option('select', function(startDate, endDate) {
 
             alert("Seleccione una cita disponible.");
 
             throw "Seleccione una cita disponible."
-            /*
+                /*
 
-            $('#modalCreateEvent').modal('show');
-            $('#eventStartDate').val(startDate.format('LL'));
-            $('#eventEndDate').val(endDate.format('LL'));
+                $('#modalCreateEvent').modal('show');
+                $('#eventStartDate').val(startDate.format('LL'));
+                $('#eventEndDate').val(endDate.format('LL'));
 
-            $('#eventStartTime').val(startDate.format('LT')).trigger('change');
-            $('#eventEndTime').val(endDate.format('LT')).trigger('change');
-            */
+                $('#eventStartTime').val(startDate.format('LT')).trigger('change');
+                $('#eventEndTime').val(endDate.format('LT')).trigger('change');
+                */
         });
 
         $('.select2-modal').select2({
@@ -318,13 +321,13 @@ class CalendarioEndo extends App {
             dropdownCssClass: 'select2-dropdown-modal',
         });
 
-        $('.calendar-add').on('click', function (e) {
+        $('.calendar-add').on('click', function(e) {
             e.preventDefault()
 
             $('#modalCreateEvent').modal('show');
         });
 
-
+        CalendarioEndo.citasDisponibles = [1, 2];
 
     }
 
@@ -405,7 +408,9 @@ class CalendarioEndo extends App {
                     ])
                 ]),
                 m("div.calendar-content", [
-                    m('div.pd-20', [
+                    m('div.pd-20', {
+                        class: (CalendarioEndo.citasDisponibles !== undefined && CalendarioEndo.citasDisponibles.length !== 0 ? '' : 'd-none')
+                    }, [
                         m(Loader)
                     ]),
                     m("div.calendar-content-body[id='calendar']", {
@@ -425,6 +430,11 @@ class CalendarioEndo extends App {
 
     static vMenu() {
         return m(Sidebar);
+    }
+
+    oncreate() {
+        $('[data-toggle="tooltip"]').tooltip();
+        document.body.classList.add('app-calendar');
     }
 
     static page() {

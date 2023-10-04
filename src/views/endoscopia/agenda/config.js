@@ -113,7 +113,7 @@ class ConfigAgEndo extends App {
                                                     ),
                                                     m(m.route.Link, {
                                                         class: 'dropdown-item',
-                                                        href: "/imagen/agendas/ConfigAgEndouracion/?idFiltro=1",
+                                                        href: "/endoscopia/agendas/configuracion/?idFiltro=1",
                                                         onclick: (e) => {
                                                             this.reloadData(1);
                                                             this.fetchData().then((_data) => {
@@ -125,7 +125,7 @@ class ConfigAgEndo extends App {
                                                     ]),
                                                     m(m.route.Link, {
                                                         class: 'dropdown-item',
-                                                        href: "/imagen/agendas/ConfigAgEndouracion/?idFiltro=2",
+                                                        href: "/endoscopia/agendas/configuracion/?idFiltro=2",
                                                         onclick: (e) => {
                                                             this.reloadData(2);
                                                             this.fetchData().then((_data) => {
@@ -143,7 +143,7 @@ class ConfigAgEndo extends App {
                                         m("span.badge.bg-litecoin.tx-white.tx-semibold.pd-l-10.pd-r-10.mg-l-5.tx-14", {
                                             style: { "cursor": "pointer" },
                                             onclick: () => {
-                                                m.route.set("/imagen/agendas/ConfigAgEndouracion/?view=new");
+                                                m.route.set("/endoscopia/agendas/configuracion/?view=new");
                                             }
                                         }, [
                                             m("i.fas.fa-plus-circle.pd-2"),
@@ -617,7 +617,7 @@ class ConfigAgEndo extends App {
                                 m('button.btn.btn-sm.btn-block.tx-semibold.tx-white', {
                                     style: { "background-color": "#185b98" },
                                     onclick: () => {
-                                        m.route.set('/imagen/agendas/ConfigAgEndouracion/', {
+                                        m.route.set('/endoscopia/agendas/configuracion/', {
                                             idAgenda: aData.samaccountname
                                         });
                                     }
