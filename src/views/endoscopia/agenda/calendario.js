@@ -20,13 +20,11 @@ class Cita {
 }
 
 // Calendario
-
 class Calendario extends App {
 
     loader = false;
     citas = null;
     idCalendar = null;
-
     constructor() {
         super();
         if (App.isAuthenticated() && App.hasProfile('PERFIL_AG_GEST_ENDOSCOPIA')) {
@@ -1380,14 +1378,13 @@ class Calendario extends App {
             method: "GET",
             url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
             params: {
-                idCalendar: Calendario.idCalendar
+                idFiltro: Calendario.idCalendar
             },
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
         })
             .then(function (res) {
-
                 Calendario.loader = false;
                 Calendario.citas = {
                     status: res.status,
