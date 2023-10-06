@@ -13,18 +13,15 @@ class Cita {
     }
     static crearCita() {
         $('#modalCreateEvent').modal('show');
-        // m.redraw();
     }
 }
 
 // Calendario
-
 class Calendario extends App {
 
     loader = false;
     citas = null;
     idCalendar = null;
-
     constructor() {
         super();
         if (App.isAuthenticated() && App.hasProfile('PERFIL_AG_GEST_ENDOSCOPIA')) {
@@ -46,7 +43,7 @@ class Calendario extends App {
         $('#calendarInline').datepicker({
             showOtherMonths: true,
             selectOtherMonths: true,
-            beforeShowDay: function (date) {
+            beforeShowDay: function(date) {
 
                 // add leading zero to single digit date
                 var day = date.getDate();
@@ -56,14 +53,14 @@ class Calendario extends App {
         });
 
 
-        setTimeout(function () {
+        setTimeout(function() {
             // Initialize scrollbar for sidebar
             new PerfectScrollbar('#calendarSidebarBody', { suppressScrollX: true });
         }, 100);
 
 
 
-        $('#calendarSidebarShow').on('click', function (e) {
+        $('#calendarSidebarShow').on('click', function(e) {
             e.preventDefault()
             $('body').toggleClass('calendar-sidebar-show');
 
@@ -71,7 +68,7 @@ class Calendario extends App {
             $('#mainMenuOpen').removeClass('d-none');
         })
 
-        $(document).on('click touchstart', function (e) {
+        $(document).on('click touchstart', function(e) {
             e.stopPropagation();
 
             // closing of sidebar menu when clicking outside of it
@@ -120,7 +117,7 @@ class Calendario extends App {
             timeFormat: 'HH:mma',
             views: {
                 agenda: {
-                    columnHeaderHtml: function (mom) {
+                    columnHeaderHtml: function(mom) {
                         return '<span>' + mom.format('ddd') + '</span>' +
                             '<span>' + mom.format('DD') + '</span>';
                     }
@@ -141,10 +138,10 @@ class Calendario extends App {
                 }
             },
             eventSources: [Calendario.citas.data],
-            eventAfterAllRender: function (view) {
+            eventAfterAllRender: function(view) {
                 if (view.name === 'listMonth' || view.name === 'listWeek') {
                     var dates = view.el.find('.fc-list-heading-main');
-                    dates.each(function () {
+                    dates.each(function() {
                         var text = $(this).text().split(' ');
                         var now = moment().format('DD');
 
@@ -155,7 +152,7 @@ class Calendario extends App {
 
                 console.log(view.el);
             },
-            eventRender: function (event, element) {
+            eventRender: function(event, element) {
 
                 if (event.description) {
                     element.find('.fc-list-item-title').append('<span class="fc-desc">' + event.description + '</span>');
@@ -189,7 +186,7 @@ class Calendario extends App {
         }
 
         // change view based in viewport width when resize is detected
-        calendar.option('windowResize', function (view) {
+        calendar.option('windowResize', function(view) {
             if (view.name === 'listWeek') {
                 if (window.matchMedia('(min-width: 992px)').matches) {
                     calendar.changeView('month');
@@ -200,7 +197,7 @@ class Calendario extends App {
         });
 
         // Display calendar event modal
-        calendar.on('eventClick', function (calEvent, jsEvent, view) {
+        calendar.on('eventClick', function(calEvent, jsEvent, view) {
 
 
             if (calEvent.stAgendar == 1) {
@@ -271,20 +268,20 @@ class Calendario extends App {
 
         // display current date
         var dateNow = calendar.getDate();
-        calendar.option('select', function (startDate, endDate) {
+        calendar.option('select', function(startDate, endDate) {
 
             alert("Seleccione una cita disponible.");
 
             throw "Seleccione una cita disponible."
-            /*
+                /*
 
-            $('#modalCreateEvent').modal('show');
-            $('#eventStartDate').val(startDate.format('LL'));
-            $('#eventEndDate').val(endDate.format('LL'));
+                $('#modalCreateEvent').modal('show');
+                $('#eventStartDate').val(startDate.format('LL'));
+                $('#eventEndDate').val(endDate.format('LL'));
 
-            $('#eventStartTime').val(startDate.format('LT')).trigger('change');
-            $('#eventEndTime').val(endDate.format('LT')).trigger('change');
-            */
+                $('#eventStartTime').val(startDate.format('LT')).trigger('change');
+                $('#eventEndTime').val(endDate.format('LT')).trigger('change');
+                */
         });
 
         $('.select2-modal').select2({
@@ -292,7 +289,7 @@ class Calendario extends App {
             dropdownCssClass: 'select2-dropdown-modal',
         });
 
-        $('.calendar-add').on('click', function (e) {
+        $('.calendar-add').on('click', function(e) {
             e.preventDefault()
 
             $('#modalCreateEvent').modal('show');
@@ -380,8 +377,7 @@ class Calendario extends App {
                 m("div.calendar-content", [
 
                     (!Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0) ? [
-                        m("div.calendar-content-body[id='calendar']", {
-                        }),
+                        m("div.calendar-content-body[id='calendar']", {}),
                     ] : (!Calendario.loader && Calendario.citas !== null && (!Calendario.citas.status || Calendario.citas.status == null)) ? [
                         m('div.pd-20', [
                             m(Errors, { type: (!Calendario.citas.status ? 1 : 0), error: Calendario.citas })
@@ -420,8 +416,8 @@ class Calendario extends App {
                         ]),
                         m("div.modal-body.pd-20.pd-sm-30", [
                             m("div.mg-t-10.pd-10.wd-100p", {
-                                class: (Cita.loader ? '' : 'd-none')
-                            },
+                                    class: (Cita.loader ? '' : 'd-none')
+                                },
                                 m("div.placeholder-paragraph", [
                                     m("div.line"),
                                     m("div.line")
@@ -456,21 +452,21 @@ class Calendario extends App {
                                                 }),
                                                 m("div.input-group-append",
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorPacientes.searchField.length !== 0) {
-                                                                BuscadorPacientes.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese Apellidos y Nombres para continuar.')
+                                                            onclick: (e) => {
+                                                                if (BuscadorPacientes.searchField.length !== 0) {
+                                                                    BuscadorPacientes.fetchSearch();
+                                                                } else {
+                                                                    alert('Ingrese Apellidos y Nombres para continuar.')
+                                                                }
                                                             }
-                                                        }
-                                                    },
+                                                        },
                                                         "Buscar"
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarPacientes = !Calendario.buscarPacientes;
-                                                        }
-                                                    },
+                                                            onclick: (e) => {
+                                                                Calendario.buscarPacientes = !Calendario.buscarPacientes;
+                                                            }
+                                                        },
                                                         m("i.fas.fa-times-circle"),
                                                     )
                                                 )
@@ -516,21 +512,21 @@ class Calendario extends App {
                                                 }),
                                                 m("div.input-group-append",
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorMedicos.searchField.length !== 0) {
-                                                                BuscadorMedicos.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese Apellidos y Nombres para continuar.')
+                                                            onclick: (e) => {
+                                                                if (BuscadorMedicos.searchField.length !== 0) {
+                                                                    BuscadorMedicos.fetchSearch();
+                                                                } else {
+                                                                    alert('Ingrese Apellidos y Nombres para continuar.')
+                                                                }
                                                             }
-                                                        }
-                                                    },
+                                                        },
                                                         "Buscar"
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarMedicos = !Calendario.buscarMedicos;
-                                                        }
-                                                    },
+                                                            onclick: (e) => {
+                                                                Calendario.buscarMedicos = !Calendario.buscarMedicos;
+                                                            }
+                                                        },
                                                         m("i.fas.fa-times-circle"),
                                                     )
                                                 )
@@ -578,21 +574,21 @@ class Calendario extends App {
                                                 }),
                                                 m("div.input-group-append",
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorItems.searchField.length !== 0) {
-                                                                BuscadorItems.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese algún valor para continuar.')
+                                                            onclick: (e) => {
+                                                                if (BuscadorItems.searchField.length !== 0) {
+                                                                    BuscadorItems.fetchSearch();
+                                                                } else {
+                                                                    alert('Ingrese algún valor para continuar.')
+                                                                }
                                                             }
-                                                        }
-                                                    },
+                                                        },
                                                         "Buscar"
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarItems = !Calendario.buscarItems;
-                                                        }
-                                                    },
+                                                            onclick: (e) => {
+                                                                Calendario.buscarItems = !Calendario.buscarItems;
+                                                            }
+                                                        },
                                                         m("i.fas.fa-times-circle"),
                                                     )
                                                 )
@@ -686,14 +682,14 @@ class Calendario extends App {
                                             }),
                                             m("div.input-group-append",
                                                 m("button.btn.btn-primary[type='button']", {
-                                                    onclick: (e) => {
-                                                        Calendario.buscarItems = !Calendario.buscarItems;
-                                                    }
-                                                }, [
-                                                    m("i.fas.fa-search.mg-r-2"),
-                                                    " Buscar Estudios"
+                                                        onclick: (e) => {
+                                                            Calendario.buscarItems = !Calendario.buscarItems;
+                                                        }
+                                                    }, [
+                                                        m("i.fas.fa-search.mg-r-2"),
+                                                        " Buscar Estudios"
 
-                                                ]
+                                                    ]
 
                                                 )
                                             )
@@ -778,11 +774,11 @@ class Calendario extends App {
                                                     "Sexo:"
                                                 ),
                                                 m('select.tx-semibold', {
-                                                    onchange: (e) => {
-                                                        Cita.sexType = e.target.value;
+                                                        onchange: (e) => {
+                                                            Cita.sexType = e.target.value;
+                                                        },
+                                                        class: "custom-select"
                                                     },
-                                                    class: "custom-select"
-                                                },
                                                     m('option', 'Seleccione...'),
                                                     m('option[value="M"]', 'Masculino'),
                                                     m('option[value="F"]', 'Femenino')
@@ -883,11 +879,11 @@ class Calendario extends App {
                         ]),
                         m("div.modal-footer", [
                             m("button.btn.btn-primary.mg-r-5", {
-                                onclick: () => {
+                                    onclick: () => {
 
-                                    Calendario.agendarCita();
-                                }
-                            },
+                                        Calendario.agendarCita();
+                                    }
+                                },
                                 "Agendar Cita"
                             ),
                             m("a.btn.btn-secondary[href=''][data-dismiss='modal']",
@@ -910,8 +906,8 @@ class Calendario extends App {
                         ]),
                         m("div.modal-body.pd-20.pd-sm-30", [
                             m("div.mg-t-10.pd-10.wd-100p", {
-                                class: (Cita.loader ? '' : 'd-none')
-                            },
+                                    class: (Cita.loader ? '' : 'd-none')
+                                },
                                 m("div.placeholder-paragraph", [
                                     m("div.line"),
                                     m("div.line")
@@ -946,21 +942,21 @@ class Calendario extends App {
                                                 }),
                                                 m("div.input-group-append",
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorPacientes.searchField.length !== 0) {
-                                                                BuscadorPacientes.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese Apellidos y Nombres para continuar.')
+                                                            onclick: (e) => {
+                                                                if (BuscadorPacientes.searchField.length !== 0) {
+                                                                    BuscadorPacientes.fetchSearch();
+                                                                } else {
+                                                                    alert('Ingrese Apellidos y Nombres para continuar.')
+                                                                }
                                                             }
-                                                        }
-                                                    },
+                                                        },
                                                         "Buscar"
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarPacientes = !Calendario.buscarPacientes;
-                                                        }
-                                                    },
+                                                            onclick: (e) => {
+                                                                Calendario.buscarPacientes = !Calendario.buscarPacientes;
+                                                            }
+                                                        },
                                                         m("i.fas.fa-times-circle"),
                                                     )
                                                 )
@@ -1006,21 +1002,21 @@ class Calendario extends App {
                                                 }),
                                                 m("div.input-group-append",
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorMedicos.searchField.length !== 0) {
-                                                                BuscadorMedicos.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese Apellidos y Nombres para continuar.')
+                                                            onclick: (e) => {
+                                                                if (BuscadorMedicos.searchField.length !== 0) {
+                                                                    BuscadorMedicos.fetchSearch();
+                                                                } else {
+                                                                    alert('Ingrese Apellidos y Nombres para continuar.')
+                                                                }
                                                             }
-                                                        }
-                                                    },
+                                                        },
                                                         "Buscar"
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarMedicos = !Calendario.buscarMedicos;
-                                                        }
-                                                    },
+                                                            onclick: (e) => {
+                                                                Calendario.buscarMedicos = !Calendario.buscarMedicos;
+                                                            }
+                                                        },
                                                         m("i.fas.fa-times-circle"),
                                                     )
                                                 )
@@ -1068,21 +1064,21 @@ class Calendario extends App {
                                                 }),
                                                 m("div.input-group-append",
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorItems.searchField.length !== 0) {
-                                                                BuscadorItems.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese algún valor para continuar.')
+                                                            onclick: (e) => {
+                                                                if (BuscadorItems.searchField.length !== 0) {
+                                                                    BuscadorItems.fetchSearch();
+                                                                } else {
+                                                                    alert('Ingrese algún valor para continuar.')
+                                                                }
                                                             }
-                                                        }
-                                                    },
+                                                        },
                                                         "Buscar"
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarItems = !Calendario.buscarItems;
-                                                        }
-                                                    },
+                                                            onclick: (e) => {
+                                                                Calendario.buscarItems = !Calendario.buscarItems;
+                                                            }
+                                                        },
                                                         m("i.fas.fa-times-circle"),
                                                     )
                                                 )
@@ -1237,17 +1233,17 @@ class Calendario extends App {
                                             }),
                                             m("div.input-group-append",
                                                 m("button.btn.btn-primary[type='button']", {
-                                                    onclick: (e) => {
+                                                        onclick: (e) => {
 
 
 
-                                                        Calendario.buscarItems = !Calendario.buscarItems;
-                                                    }
-                                                }, [
-                                                    m("i.fas.fa-search.mg-r-2"),
-                                                    " Buscar Estudios "
+                                                            Calendario.buscarItems = !Calendario.buscarItems;
+                                                        }
+                                                    }, [
+                                                        m("i.fas.fa-search.mg-r-2"),
+                                                        " Buscar Estudios "
 
-                                                ]
+                                                    ]
 
                                                 )
                                             )
@@ -1276,13 +1272,13 @@ class Calendario extends App {
                         ]),
                         m("div.modal-footer", [
                             m("button.btn.btn-primary.mg-r-5", {
-                                onclick: () => {
+                                    onclick: () => {
 
-                                    console.log(22, Cita)
-                                    Calendario.validarReagendamiento();
+                                        console.log(22, Cita)
+                                        Calendario.validarReagendamiento();
 
-                                }
-                            },
+                                    }
+                                },
                                 "Reagendar Cita"
                             ),
                             m("a.btn.btn-secondary[href=''][data-dismiss='modal']",
@@ -1333,29 +1329,29 @@ class Calendario extends App {
                             m("p.event-desc.tx-gray-900.mg-b-40"),
                             (!Cita.editable ? [
                                 m("button.btn.btn-primary.mg-r-5[data-dismiss='modal']", {
-                                    onclick: () => {
-                                        console.log(Cita)
-                                        Calendario.trackReAgendar();
-                                    }
-                                },
+                                        onclick: () => {
+                                            console.log(Cita)
+                                            Calendario.trackReAgendar();
+                                        }
+                                    },
                                     "Reagendar Cita"
                                 ),
                             ] : [
                                 m("button.btn.btn-primary.mg-r-5[data-dismiss='modal']", {
-                                    onclick: () => {
-                                        console.log(Cita)
-                                        Calendario.trackCancelReAgendar();
-                                    }
-                                },
+                                        onclick: () => {
+                                            console.log(Cita)
+                                            Calendario.trackCancelReAgendar();
+                                        }
+                                    },
                                     "Cancelar Reagendamiento"
                                 ),
                             ]),
 
                             m("button.btn.btn-danger.mg-r-5", {
-                                onclick: () => {
-                                    Calendario.cancelarCita();
-                                }
-                            },
+                                    onclick: () => {
+                                        Calendario.cancelarCita();
+                                    }
+                                },
                                 "Cancelar Cita"
                             ),
                             m("a.btn.btn-secondary.pd-x-20[href=''][data-dismiss='modal']",
@@ -1376,30 +1372,30 @@ class Calendario extends App {
     static fetchAgendas() {
         Calendario.loader = true;
         m.request({
-            method: "GET",
-            url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
-            params: {
-                idFiltro: Calendario.idCalendar
-            },
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-        })
-            .then(function (res) {
+                method: "GET",
+                url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
+                params: {
+                    idFiltro: Calendario.idCalendar
+                },
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+            })
+            .then(function(res) {
                 Calendario.loader = false;
                 Calendario.citas = {
                     status: res.status,
                     data: res.citasAgendadas
                 };
-                setTimeout(function () {
+                setTimeout(function() {
                     Calendario.setCalendar();
                 }, 80);
-                setTimeout(function () {
+                setTimeout(function() {
                     Calendario.setSidebar();
                 }, 160);
 
             })
-            .catch(function (e) {
+            .catch(function(e) {
                 Calendario.loader = false;
                 Calendario.citas = {
                     status: null,
@@ -1415,21 +1411,21 @@ class Calendario extends App {
 
             Calendario.loader = true;
             m.request({
-                method: "POST",
-                url: "https://api.hospitalmetropolitano.org/v2/date/citas/perfil",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.userToken
-                },
-            })
-                .then(function (res) {
+                    method: "POST",
+                    url: "https://api.hospitalmetropolitano.org/v2/date/citas/perfil",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.userToken
+                    },
+                })
+                .then(function(res) {
 
                     console.log(res)
 
 
                 })
-                .catch(function (e) {
+                .catch(function(e) {
                     Calendario.loader = false;
                     Calendario.citas = {
                         status: null,
