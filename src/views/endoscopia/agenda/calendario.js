@@ -7,13 +7,15 @@ import Errors from "../../utils/errors";
 
 // Cita
 class Cita {
+    loader = false;
     data = null;
     constructor() {
 
     }
     static crearCita() {
+
+
         $('#modalCreateEvent').modal('show');
-        // m.redraw();
     }
 }
 
@@ -380,8 +382,7 @@ class Calendario extends App {
                 m("div.calendar-content", [
 
                     (!Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0) ? [
-                        m("div.calendar-content-body[id='calendar']", {
-                        }),
+                        m("div.calendar-content-body[id='calendar']", {}),
                     ] : (!Calendario.loader && Calendario.citas !== null && (!Calendario.citas.status || Calendario.citas.status == null)) ? [
                         m('div.pd-20', [
                             m(Errors, { type: (!Calendario.citas.status ? 1 : 0), error: Calendario.citas })
@@ -613,7 +614,7 @@ class Calendario extends App {
                                 m("div", {
                                     class: (Calendario.buscarPacientes || Calendario.buscarMedicos || Calendario.buscarItems ? 'd-none' : '')
                                 }, [
-                                    m("div.form-group.d-none",
+                                    m("div.form-group",
                                         m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                             "Tipo:"
                                         ),
@@ -1379,13 +1380,14 @@ class Calendario extends App {
             method: "GET",
             url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
             params: {
-                idFiltro: Calendario.idCalendar
+                idCalendar: Calendario.idCalendar
             },
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
         })
             .then(function (res) {
+
                 Calendario.loader = false;
                 Calendario.citas = {
                     status: res.status,
@@ -1397,6 +1399,7 @@ class Calendario extends App {
                 setTimeout(function () {
                     Calendario.setSidebar();
                 }, 160);
+
 
             })
             .catch(function (e) {
@@ -1425,9 +1428,19 @@ class Calendario extends App {
             })
                 .then(function (res) {
 
-                    console.log(res)
-
-
+                    if (res.status) {
+                        Calendario.idCalendar = res.data.data.idCalendar
+                        m.route.set('/endoscopia/agendas/calendario/', {
+                            idCalendar: encodeURIComponent(Calendario.idCalendar)
+                        });
+                        Calendario.fetchAgendas();
+                    } else {
+                        Calendario.loader = false;
+                        Calendario.citas = {
+                            status: res.status,
+                            message: res.message
+                        };
+                    }
                 })
                 .catch(function (e) {
                     Calendario.loader = false;
