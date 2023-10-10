@@ -5,34 +5,749 @@ import Loader from "../../utils/loader";
 import HeaderCalendar from "../../layout/headerCalendar";
 import Errors from "../../utils/errors";
 
+class AlertCalendar {
+
+    view() {
+
+        if (Calendario.typeAlert !== null) {
+            return [
+                m("div.pos-absolute.t-70.r-10", {
+                    style: { "z-index": "999999;" }
+                },
+                    m(".toast.animated.bounceInRight[role='alert'][aria-live='assertive'][aria-atomic='true'][data-delay='8000']",
+                        [
+                            m("div.toast-header.tx-white." + Calendario.typeAlert,
+
+                                [
+                                    m("h6.tx-white.tx-14.mg-b-0.mg-r-auto.",
+                                        " Anuncio "
+                                    ),
+                                    m("button.ml-2.mb-1.close[type='button'][data-dismiss='toast'][aria-label='Cerrar']",
+                                        m("span..tx-white[aria-hidden='true']",
+                                            m.trust("&times;")
+                                        )
+                                    )
+                                ]
+                            ),
+                            m("div.toast-body.tx-semibold",
+                                Calendario.messageAlert
+                            )
+                        ]
+                    )
+                )
+            ]
+        }
+
+    }
+}
+
+class OptionSelect {
+
+    view() {
+        if (Calendario.calendarios.length !== 0) {
+            return Calendario.calendarios.map(function (_v, _i, _contentData) {
+
+                return [
+
+                    m("option.tx-10[value='" + _v.IDCALENDAR + "']", {
+                        oncreate: (el) => {
+
+                            if (Calendario.idCalendar.search(_v.IDCALENDAR) != -1) {
+                                el.dom.selected = true;
+                            }
+
+                        }
+                    },
+
+                        _v.CALENDAR
+                    ),
+
+
+
+                ]
+
+            })
+        }
+
+
+    }
+}
+
+class BuscadorItems {
+    static searchField = '';
+    static data = [];
+    static loader = false;
+    static loadItems() {
+
+        $.fn.dataTable.ext.errMode = "none";
+        var table = $("#table-items").DataTable({
+            data: BuscadorItems.data,
+            dom: 'ltp',
+            responsive: true,
+            language: {
+                searchPlaceholder: "Buscar...",
+                sSearch: "",
+                lengthMenu: "Mostrar _MENU_ registros por página",
+                sProcessing: "Procesando...",
+                sZeroRecords: "Todavía no tienes resultados disponibles.",
+                sEmptyTable: "Ningún dato disponible en esta tabla",
+                sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+                sInfoPostFix: "",
+                sUrl: "",
+                sInfoThousands: ",",
+                sLoadingRecords: "Cargando...",
+                oPaginate: {
+                    sFirst: "Primero",
+                    sLast: "Último",
+                    sNext: "Siguiente",
+                    sPrevious: "Anterior",
+                },
+                oAria: {
+                    sSortAscending: ": Activar para ordenar la columna de manera ascendente",
+                    sSortDescending: ": Activar para ordenar la columna de manera descendente",
+                },
+            },
+            cache: false,
+            order: [
+                [2, "Asc"]
+            ],
+            destroy: true,
+            columns: [{
+                title: "N°:",
+            },
+            {
+                title: "Código:",
+            },
+            {
+                title: "Item:",
+            },
+
+            {
+                title: "Duración:",
+            },
+
+            {
+                title: "Opciones:",
+            },
+
+
+            ],
+            aoColumnDefs: [{
+                mRender: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                visible: true,
+                aTargets: [0],
+            },
+            {
+                mRender: function (data, type, full) {
+                    return full.CD_ITEM_AGENDAMENTO;
+                },
+                visible: true,
+                aTargets: [1],
+
+            },
+            {
+                mRender: function (data, type, full) {
+                    return full.DS_ITEM_AGENDAMENTO;
+                },
+                visible: true,
+                aTargets: [2],
+            },
+
+            {
+                mRender: function (data, type, full) {
+                    return '<b class="tx-14 tx-semibold tx-danger">' + full.DURACION + ' Min. </b>';
+                },
+                visible: true,
+                aTargets: [3],
+            },
+
+            {
+                mRender: function (data, type, full) {
+                    return 'OPCIONES';
+
+                },
+                visible: true,
+                aTargets: [4],
+            },
+
+
+            ],
+            fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+
+            },
+            drawCallback: function (settings) {
+
+
+                settings.aoData.map(function (_i) {
+
+                    m.mount(_i.anCells[4], {
+                        view: function () {
+                            return [
+                                m("button.btn.btn-sm.btn-block.btn-primary[type='button']", {
+
+                                    onclick: () => {
+
+
+                                        let fecha1 = moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm');
+                                        let _duracion = moment(_i._aData.DURACION, 'HH:mm').minutes();
+                                        let _suma = fecha1.add(_duracion, 'minutes');
+
+                                        Cita.data.end = moment(_suma).format('dddd, DD-MM-YYYY HH:mm');
+                                        Cita.data.pn_fin = moment(_suma).format('YYYY-MM-DD HH:mm');
+                                        Cita.data.hashCita = moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm') + '.' + moment(_suma).format('YYYY-MM-DD HH:mm');
+
+                                        Cita.data.codItem = _i._aData.CD_ITEM_AGENDAMENTO;
+                                        Cita.data.estudio = _i._aData.DS_ITEM_AGENDAMENTO;
+                                        Cita.data.pn_item_agendamento = _i._aData.CD_ITEM_AGENDAMENTO;
+                                        Cita.buscarItems = !Cita.buscarItems;
+                                        Calendario.validarAgendamiento();
+                                    }
+                                },
+                                    "Seleccionar"
+                                )
+
+                            ]
+
+
+                        }
+                    });
+
+                })
+
+            },
+        });
+
+        $('.dataTables_length select').select2({
+            minimumResultsForSearch: Infinity
+        });
+
+
+
+        return table;
+
+    }
+    static fetchSearch() {
+
+        BuscadorItems.loader = true;
+        BuscadorItems.data = [];
+
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/items",
+            body: {
+                searchField: BuscadorItems.searchField
+            },
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+                BuscadorItems.loader = false;
+                BuscadorItems.data = res.data;
+                BuscadorItems.loadItems();
+            })
+            .catch(function (e) { });
+
+    }
+    view() {
+
+        return [
+            m("div.mg-t-10.pd-10.wd-100p", {
+                class: (BuscadorItems.loader ? '' : 'd-none')
+            },
+                m("div.placeholder-paragraph", [
+                    m("div.line"),
+                    m("div.line")
+                ])
+            ),
+            m("div.mg-t-10.pd-10.wd-100p", {
+                class: (BuscadorItems.loader ? 'd-none' : '')
+            },
+                m("table.table.table-sm.tx-11[id='table-items'][width='100%']"),
+            )
+        ];
+
+
+
+
+    }
+}
+
+class BuscadorPacientes {
+    static searchField = '';
+    static data = [];
+    static loader = false;
+    static loadPacientes() {
+
+        $.fn.dataTable.ext.errMode = "none";
+        var table = $("#table-pacientes").DataTable({
+            data: BuscadorPacientes.data,
+            dom: 'ltp',
+            responsive: true,
+            language: {
+                searchPlaceholder: "Buscar...",
+                sSearch: "",
+                lengthMenu: "Mostrar _MENU_ registros por página",
+                sProcessing: "Procesando...",
+                sZeroRecords: "Todavía no tienes resultados disponibles.",
+                sEmptyTable: "Ningún dato disponible en esta tabla",
+                sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+                sInfoPostFix: "",
+                sUrl: "",
+                sInfoThousands: ",",
+                sLoadingRecords: "Cargando...",
+                oPaginate: {
+                    sFirst: "Primero",
+                    sLast: "Último",
+                    sNext: "Siguiente",
+                    sPrevious: "Anterior",
+                },
+                oAria: {
+                    sSortAscending: ": Activar para ordenar la columna de manera ascendente",
+                    sSortDescending: ": Activar para ordenar la columna de manera descendente",
+                },
+            },
+            cache: false,
+            order: [
+                [2, "Asc"]
+            ],
+            destroy: true,
+            columns: [{
+                title: "N°:",
+            },
+            {
+                title: "NHC:",
+            },
+            {
+                title: "Paciente:",
+            },
+            {
+                title: "Edad:",
+            },
+            {
+                title: "Sexo:",
+            },
+            {
+                title: "F. Nacimiento:",
+            },
+            {
+                title: "Opciones:",
+            },
+
+
+            ],
+            aoColumnDefs: [{
+                mRender: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                },
+                visible: true,
+                aTargets: [0],
+            },
+            {
+                mRender: function (data, type, full) {
+                    return full.CD_PACIENTE;
+                },
+                visible: true,
+                aTargets: [1],
+
+            },
+            {
+                mRender: function (data, type, full) {
+                    return full.NM_PACIENTE;
+                },
+                visible: true,
+                aTargets: [2],
+                width: '60%'
+            },
+            {
+                mRender: function (data, type, full) {
+                    return full.EDAD;
+                },
+                visible: true,
+                aTargets: [3],
+            }, {
+                mRender: function (data, type, full) {
+                    return full.TP_SEXO;
+
+                },
+                visible: true,
+                aTargets: [4],
+            },
+            {
+                mRender: function (data, type, full) {
+                    return full.DT_NASCIMENTO;
+
+                },
+                visible: true,
+                aTargets: [5],
+            },
+            {
+                mRender: function (data, type, full) {
+                    return 'OPCIONES';
+
+                },
+                visible: true,
+                aTargets: [6],
+            },
+
+
+            ],
+            fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+
+            },
+            drawCallback: function (settings) {
+
+
+                settings.aoData.map(function (_i) {
+
+                    m.mount(_i.anCells[6], {
+                        view: function () {
+
+                            return [
+                                m("button.btn.btn-sm.btn-block.btn-primary[type='button']", {
+                                    onclick: () => {
+
+                                        Cita.data.nhc = _i._aData.CD_PACIENTE;
+                                        Cita.data.patientId = _i._aData.CD_PACIENTE;
+                                        Cita.data.paciente = _i._aData.NM_PACIENTE;
+                                        Cita.data.patientName = _i._aData.NM_PACIENTE;
+                                        Cita.data.phoneNumber = '0998785402';
+                                        Cita.data.sexType = _i._aData.TP_SEXO;
+                                        Cita.data.dateBirth = moment(_i._aData.DT_NASCIMENTO, 'DD-MM-YYYY').format('DD/MM/YYYY');
+                                        Cita.data.email = 'mchangcnt@gmail.com';
+
+                                        // Cita HTTP
+                                        Cita.data.pn_paciente = Cita.data.nhc;
+                                        Cita.data.pc_nm_paciente = Cita.data.patientName;
+                                        Cita.data.pc_telefono = Cita.data.phoneNumber;
+                                        Cita.data.pc_email = Cita.data.email;
+                                        Cita.data.pc_fecha_nacimiento = Cita.data.dateBirth;
+                                        Cita.buscarPacientes = !Cita.buscarPacientes;
+                                    }
+                                },
+                                    "Seleccionar"
+                                )
+
+                            ]
+
+
+                        }
+                    });
+
+                })
+
+            },
+        });
+
+        $('.dataTables_length select').select2({
+            minimumResultsForSearch: Infinity
+        });
+
+
+
+        return table;
+
+    }
+    static fetchSearch() {
+
+        BuscadorPacientes.loader = true;
+        BuscadorPacientes.data = [];
+
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/pacientes",
+            body: {
+                searchField: BuscadorPacientes.searchField
+            },
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+                BuscadorPacientes.loader = false;
+                BuscadorPacientes.data = res.data;
+                BuscadorPacientes.loadPacientes();
+            })
+            .catch(function (e) { });
+
+    }
+    view() {
+        return [
+            m("div.mg-t-10.pd-10.wd-100p", {
+                class: (BuscadorPacientes.loader ? '' : 'd-none')
+            },
+                m("div.placeholder-paragraph", [
+                    m("div.line"),
+                    m("div.line")
+                ])
+            ),
+            m("div.mg-t-10.pd-10.wd-100p", {
+                class: (BuscadorPacientes.loader ? 'd-none' : '')
+            },
+                m("table.table.table-sm.tx-11[id='table-pacientes'][width='100%']"),
+            )
+        ];
+
+    }
+}
+
 // Cita
 class Cita {
-    loader = false;
-    data = null;
-    constructor() {
+    static buscarPacientes = false;
+    static buscarItems = false;
+    static loader = false;
+    static data = {};
+
+    static verCita(calEvent) {
+
+        Cita.data.id = calEvent.id;
+        Cita.data.hashCita = calEvent.id;
+        Cita.data.idCalendar = calEvent.idCalendar;
+        Cita.data.start = calEvent.start;
+        Cita.data.end = calEvent.end;
+        Cita.data.paciente = calEvent.title;
+        Cita.data.estudio = calEvent.estudio;
+        Cita.data.prestador = calEvent.prestador;
+        Cita.data.editable = calEvent.editable;
+        Cita.data.comentarios = calEvent.comentarios;
+
+        let modal = $('#modalCalendarEvent');
+        modal.modal('show');
+        modal.find('.event-title').text(Cita.data.paciente);
+        modal.find('.event-start-date').text(moment(calEvent.start).format('LLL'));
+        modal.find('.event-end-date').text(moment(calEvent.end).format('LLL'));
+        m.redraw();
 
     }
-    static crearCita() {
 
+    static verUpdate(calEvent) {
 
+        let modal = $('#modalUpdateEvent');
+        modal.modal('show');
+        modal.find('.modal-header').css('backgroundColor', (calEvent.source.borderColor) ? calEvent.source.borderColor : calEvent.borderColor);
+        m.redraw();
+
+    }
+
+    static crearCita(startDate, endDate) {
+        this.data.hashCita = startDate.format('YYYY-MM-DD HH:mm') + '.' + endDate.format('YYYY-MM-DD HH:mm')
+        this.data.start = startDate.format('dddd, DD-MM-YYYY HH:mm');
+        this.data.end = endDate.format('dddd, DD-MM-YYYY HH:mm');
+        this.data.pn_inicio = startDate.format('DD/MM/YYYY HH:mm');
+        this.data.pn_fin = endDate.format('DD/MM/YYYY HH:mm');
         $('#modalCreateEvent').modal('show');
+        $('#eventStartDate').val(moment(startDate).format('LLL'));
+        $('#eventEndDate').val(moment(endDate).format('LLL'));
+        $('#eventStartTime').val(moment(startDate).format('LT')).trigger('change');
+        $('#eventEndTime').val(moment(endDate).format('LT')).trigger('change');
+        m.redraw();
     }
+
+    static trackReAgendar() {
+
+        Cita.loader = true;
+
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/citas/reagendar",
+            body: Cita.data,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+
+                Cita.loader = false;
+
+
+                if (res.status) {
+                    Calendario.reloadFetchAgenda();
+                    Calendario.showAlertCalendar('bg-primary', 'Ahora puede reagendar este Cita.');
+                } else {
+                    Calendario.showAlertCalendar('bg-primary', res.message);
+                }
+
+            })
+            .catch(function (e) {
+                Calendario.showAlertCalendar('bg-danger', e);
+
+
+            });
+
+    }
+
+    static trackCancelReAgendar() {
+
+        Cita.loader = true;
+
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/citas/reagendar/cancel",
+            body: Cita.data,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+
+                Cita.loader = false;
+                if (res.status) {
+                    Calendario.reloadFetchAgenda();
+                    Calendario.showAlertCalendar('bg-danger', 'El reagendamiento se canceló.');
+                } else {
+                    Calendario.showAlertCalendar('bg-danger', res.message);
+                }
+
+            })
+            .catch(function (e) {
+                Calendario.showAlertCalendar('bg-danger', e);
+
+            });
+
+    }
+
+    static agendarCita() {
+
+        Cita.loader = true;
+        Cita.data.idCalendar = Calendario.idCalendar;
+        Cita.data.calendarios = Calendario.calendarios;
+
+        Cita.codMedico = 1173;
+        Cita.prestador = "ABARCA RUIZ JAYSOOM WILLEEM";
+        Cita.pn_prestador = 1173;
+
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/citas/nueva",
+            body: Cita.data,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+
+                Cita.loader = false;
+
+                console.log(res)
+
+                if (res.status) {
+
+                    Calendario.showAlertCalendar('bg-success', res.message);
+                    $('#modalCreateEvent').modal('hide');
+                    Calendario.reloadFetchAgenda();
+                    Cita.data = {};
+
+                } else {
+                    Calendario.showAlertCalendar('bg-danger', res.message);
+                }
+
+            })
+            .catch(function (e) {
+                Calendario.showAlertCalendar('bg-danger', e);
+
+
+            });
+
+    }
+
+    static reAgendarCita() {
+
+        Calendario.validarAgendamiento();
+
+        Cita.loader = true;
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/citas/update",
+            body: Cita.data,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+
+                Cita.loader = false;
+
+                console.log(res)
+
+                if (res.status) {
+
+                    Calendario.showAlertCalendar('bg-success', res.message);
+                    $('#modalUpdateEvent').modal('hide');
+                    Calendario.reloadFetchAgenda();
+
+                } else {
+                    Calendario.showAlertCalendar('bg-danger', res.message);
+                }
+
+            })
+            .catch(function (e) {
+                Calendario.showAlertCalendar('bg-danger', e);
+
+            });
+
+    }
+    static cancelarCita() {
+
+        Cita.loader = true;
+
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/citas/delete",
+            body: Cita.data,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+
+                Cita.loader = false;
+
+                console.log(res)
+
+                if (res.status) {
+                    Calendario.showAlertCalendar('bg-success', res.message);
+                    $('#modalCalendarEvent').modal('hide');
+                    Calendario.reloadFetchAgenda();
+                    Cita.data = {};
+                } else {
+                    Calendario.showAlertCalendar('bg-danger', res.message);
+                }
+
+            })
+            .catch(function (e) {
+                Calendario.showAlertCalendar('bg-danger', e);
+            });
+
+    }
+
+
 }
 
 // Calendario
 class Calendario extends App {
 
-    loader = false;
-    citas = null;
-    idCalendar = null;
+    static loader = false;
+    static cita = null;
+    static citas = null;
+    static idCalendar = null;
+    static calendarios = [];
+    static typeAlert = null;
+    static messageAlert = null;
+
     constructor() {
         super();
         if (App.isAuthenticated() && App.hasProfile('PERFIL_AG_GEST_ENDOSCOPIA')) {
             App.setTitle("Agenda Centralizada Endoscopía");
             this.view = Calendario.page;
         }
-    }
 
+    }
 
 
     static vHeader() {
@@ -40,6 +755,8 @@ class Calendario extends App {
     }
 
     static setSidebar() {
+
+
 
 
         // Sidebar calendar
@@ -51,9 +768,26 @@ class Calendario extends App {
                 // add leading zero to single digit date
                 var day = date.getDate();
                 console.log(day);
-                return [true, (day < 10 ? 'zero' : '')];
+
+                if (day < 10) {
+                    return [
+                        true,
+                        'zero  tx-danger '
+                    ];
+                } else {
+                    return [
+                        true,
+                        ' tx-danger'
+                    ];
+                }
+
+
+
             }
         });
+
+
+
 
 
         setTimeout(function () {
@@ -90,11 +824,20 @@ class Calendario extends App {
 
 
 
+
+
+
+
+        //     });
+        //   $('.slider').slider();
+        //
+
+
+
+
     }
 
     static setCalendar() {
-
-
 
         // Initialize fullCalendar
         $('#calendar').fullCalendar({
@@ -106,7 +849,7 @@ class Calendario extends App {
             },
             navLinks: true,
             selectable: true,
-            defaultDate: "2023-04-24",
+            defaultDate: "2023-10-10",
             selectLongPressDelay: 100,
             nowIndicator: true,
             editable: false,
@@ -163,17 +906,80 @@ class Calendario extends App {
                 }
 
                 var eBorderColor = (event.source.borderColor) ? event.source.borderColor : event.borderColor;
-                element.find('.fc-list-item-time').css({
-                    color: eBorderColor,
-                    borderColor: eBorderColor
-                });
 
-                element.find('.fc-list-item-title').css({
-                    borderColor: eBorderColor
-                });
+                if (event.editable) {
 
-                element.css('borderLeftColor', eBorderColor);
+                    element.find('.fc-content').css({
+                        'background-color': '#dc3545',
+                        'color': '#fff'
+                    });
+
+                    element.find('.fc-title').css({
+                        'background-color': '#dc3545',
+                        'color': '#fff'
+                    });
+
+
+                } else {
+
+                    element.find('.fc-list-item-time').css({
+                        color: eBorderColor,
+                        borderColor: eBorderColor
+                    });
+
+                    element.find('.fc-list-item-title').css({
+                        borderColor: eBorderColor
+                    });
+
+                    element.css('borderLeftColor', eBorderColor);
+
+                }
             },
+            eventDrop: function (calEvent) {
+
+                Cita.data.id = calEvent.id;
+                Cita.data.start = calEvent.start.format('dddd, DD-MM-YYYY HH:mm');
+                Cita.data.end = calEvent.end.format('dddd, DD-MM-YYYY HH:mm');
+                Cita.data.paciente = calEvent.paciente;
+                Cita.data.prestador = calEvent.prestador;
+                Cita.data.nhc = calEvent.nhc;
+                Cita.data.codMedico = calEvent.codMedico;
+                Cita.data.codItem = calEvent.codItem;
+                Cita.data.estudio = calEvent.estudio;
+                Cita.data.comentarios = calEvent.comentarios;
+                Cita.data.idCalendar = calEvent.idCalendar;
+                Cita.data.ubicacion = calEvent.ubicacion;
+                Cita.data.tipo = 1;
+                Cita.data.hashCita = calEvent.hashCita;
+                Cita.data.newHashCita = calEvent.start.format('YYYY-MM-DD HH:mm') + '.' + calEvent.end.format('YYYY-MM-DD HH:mm')
+                Cita.verUpdate(calEvent);
+                Calendario.validarAgendamiento();
+
+            },
+            eventResize: function (calEvent) {
+
+
+                Cita.data.id = calEvent.id;
+                Cita.data.start = calEvent.start.format('dddd, DD-MM-YYYY HH:mm');
+                Cita.data.end = calEvent.end.format('dddd, DD-MM-YYYY HH:mm');
+                Cita.data.paciente = calEvent.paciente;
+                Cita.data.prestador = calEvent.prestador;
+                Cita.data.nhc = calEvent.nhc;
+                Cita.data.codMedico = calEvent.codMedico;
+                Cita.data.codItem = calEvent.codItem;
+                Cita.data.estudio = calEvent.estudio;
+                Cita.data.comentarios = calEvent.comentarios;
+                Cita.data.idCalendar = calEvent.idCalendar;
+                Cita.data.ubicacion = calEvent.ubicacion;
+                Cita.data.tipo = 1;
+                Cita.data.hashCita = calEvent.hashCita;
+                Cita.data.newHashCita = calEvent.start.format('YYYY-MM-DD HH:mm') + '.' + calEvent.end.format('YYYY-MM-DD HH:mm')
+                Cita.verUpdate(calEvent);
+                Calendario.validarAgendamiento();
+
+
+
+            }
         });
 
         var calendar = $('#calendar').fullCalendar('getCalendar');
@@ -202,69 +1008,10 @@ class Calendario extends App {
         // Display calendar event modal
         calendar.on('eventClick', function (calEvent, jsEvent, view) {
 
-
-            if (calEvent.stAgendar == 1) {
-
-
-                /*
-
-                Calendario.cita = calEvent;
-                Calendario.cita.horaInicio = moment(calEvent.start).format('dddd, DD-MM-YYYY HH:mm');
-                Calendario.cita.horaFin = moment(calEvent.end).format('dddd, DD-MM-YYYY HH:mm');
-                Calendario.loadDetalle = true;
-
-                m.route.set('/imagen/agendamiento/cita/', {
-                    id: Calendario.cita.id,
-                });
-
-
-                var modal = $('#modalCalendarEvent');
-
-                modal.modal('show');
-                modal.find('.event-title').text(calEvent.title);
-
-                if (calEvent.description) {
-                    modal.find('.event-desc').text(calEvent.description);
-                    modal.find('.event-desc').prev().removeClass('d-none');
-                } else {
-                    modal.find('.event-desc').text('');
-                    modal.find('.event-desc').prev().addClass('d-none');
-                }
-
-                modal.find('.event-start-date').text(moment(calEvent.start).format('LLL'));
-                modal.find('.event-end-date').text(moment(calEvent.end).format('LLL'));
-
-                //styling
-                modal.find('.modal-header').css('backgroundColor', (calEvent.source.borderColor) ? calEvent.source.borderColor : calEvent.borderColor);
-
-                */
-
-            } else {
-
-
-                /*
-
-                Calendario.cita = calEvent;
-                Calendario.cita.horaInicio = moment(calEvent.start).format('dddd, DD-MM-YYYY HH:mm');
-                Calendario.cita.horaFin = moment(calEvent.end).format('dddd, DD-MM-YYYY HH:mm');
-                m.route.set('/imagen/agendamiento/nueva-cita/', {
-                    id: Calendario.cita.id,
-                });
+            Cita.verCita(calEvent);
 
 
 
-                
-                $('#modalCreateEvent').modal('show');
-                $('#eventStartDate').val(moment(calEvent.start).format('LLL'));
-                $('#eventEndDate').val(moment(calEvent.end).format('LLL'));
-
-                $('#eventStartTime').val(moment(calEvent.start).format('LT')).trigger('change');
-                $('#eventEndTime').val(moment(calEvent.end).format('LT')).trigger('change');
-
-                */
-
-
-            }
 
 
         });
@@ -272,19 +1019,8 @@ class Calendario extends App {
         // display current date
         var dateNow = calendar.getDate();
         calendar.option('select', function (startDate, endDate) {
-
-            alert("Seleccione una cita disponible.");
-
-            throw "Seleccione una cita disponible."
-            /*
-
-            $('#modalCreateEvent').modal('show');
-            $('#eventStartDate').val(startDate.format('LL'));
-            $('#eventEndDate').val(endDate.format('LL'));
-
-            $('#eventStartTime').val(startDate.format('LT')).trigger('change');
-            $('#eventEndTime').val(endDate.format('LT')).trigger('change');
-            */
+            Cita.data.tipo = 1;
+            Cita.crearCita(startDate, endDate);
         });
 
         $('.select2-modal').select2({
@@ -294,9 +1030,11 @@ class Calendario extends App {
 
         $('.calendar-add').on('click', function (e) {
             e.preventDefault()
-
             $('#modalCreateEvent').modal('show');
         });
+
+
+
 
 
     }
@@ -313,9 +1051,7 @@ class Calendario extends App {
                         m("div.search-form", [
                             m("input.form-control[type='search'][placeholder='Buscar por NHC o Apellidos y Nombres'][title='Buscar por NHC o Apellidos y Nombres']")
                         ]),
-                        m("a.btn btn-sm btn-primary btn-icon calendar-add", {
-                            onclick: Cita.crearCita
-                        }, [
+                        m("a.btn btn-sm btn-primary btn-icon calendar-add", [
                             m("div[data-toggle='tooltip']", [
                                 m("i.tx-white[data-feather='plus']")
                             ])
@@ -334,33 +1070,45 @@ class Calendario extends App {
                                 "Filtro Calendarios: "
                             ),
                             m("div.schedule-group",
-                                m("select.form-control.select2-limit[multiple='multiple']", {
-                                    oncreate: () => {
-                                        $('.select2-limit').select2({
-                                            placeholder: 'Seleccione...',
-                                            searchInputPlaceholder: 'Buscar'
+                                m("select.tx-5.form-control.select2-limit[multiple='multiple'][id='agendas']", {
+                                    oncreate: (el) => {
+                                        setTimeout(() => {
+                                            $('.select2-limit').select2({
+                                                placeholder: 'Seleccione...',
+                                                searchInputPlaceholder: 'Buscar',
+                                            }).on("change", function (e) {
 
-                                        });
+                                                let idCalendar = '';
+                                                let tree = $(this).val();
+                                                // Using the each() method
+                                                $.each(tree, function (index, value) {
+                                                    idCalendar += value + ",";
+                                                });
+
+                                                idCalendar = idCalendar.substring(0, idCalendar.length - 1);
+
+                                                Calendario.idCalendar = idCalendar;
+
+                                                if (tree.length > 0) {
+                                                    m.route.set("/endoscopia/agendas/calendario/", {
+                                                        idCalendar: encodeURIComponent(Calendario.idCalendar)
+                                                    })
+                                                } else {
+                                                    m.route.set("/endoscopia/agendas/calendario")
+                                                }
+
+
+                                                Calendario.reloadFetchAgenda();
+
+
+                                            });
+                                        }, 1000);
 
 
                                     }
                                 }, [
-                                    m("option[label='Choose one']"),
-                                    m("option[value='Firefox']",
-                                        "Firefox"
-                                    ),
-                                    m("option[value='Chrome']",
-                                        "Chrome"
-                                    ),
-                                    m("option[value='Safari']",
-                                        "Safari"
-                                    ),
-                                    m("option[value='Opera']",
-                                        "Opera"
-                                    ),
-                                    m("option[value='Internet Explorer']",
-                                        "Internet Explorer"
-                                    )
+                                    m(OptionSelect)
+
                                 ])
 
                             )
@@ -374,7 +1122,8 @@ class Calendario extends App {
 
 
                             ])
-                        ])
+                        ]),
+
                     ])
                 ]),
                 m("div.calendar-content", [
@@ -390,16 +1139,12 @@ class Calendario extends App {
                             m(Loader)
                         ])
                     ]
-
-
                 ]),
 
 
 
-
-
-
             ]),
+
             m(".modal.calendar-modal-create[id='modalCreateEvent'][role='dialog'][aria-hidden='true']",
                 m(".modal-dialog.modal-dialog-centered.modal-xl[role='document']",
                     m("div.modal-content", [
@@ -428,10 +1173,11 @@ class Calendario extends App {
                             ),
 
                             m('div', {
-                                class: (Cita.loader ? 'd-none' : '')
+                                class: (Cita.loader ? 'd-none' : ''),
+
                             }, [
                                 m("div", {
-                                    class: (!Calendario.buscarPacientes ? 'd-none' : '')
+                                    class: (!Cita.buscarPacientes ? 'd-none' : '')
                                 }, [
                                     m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                         "Buscar Pacientes:"
@@ -467,7 +1213,7 @@ class Calendario extends App {
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
                                                         onclick: (e) => {
-                                                            Calendario.buscarPacientes = !Calendario.buscarPacientes;
+                                                            Cita.buscarPacientes = !Cita.buscarPacientes;
                                                         }
                                                     },
                                                         m("i.fas.fa-times-circle"),
@@ -478,7 +1224,7 @@ class Calendario extends App {
 
                                         m("div.row", [
                                             m("div.col-12",
-                                                // m(BuscadorPacientes)
+                                                m(BuscadorPacientes)
                                             ),
 
                                         ])
@@ -487,72 +1233,9 @@ class Calendario extends App {
 
 
                                 ]),
+
                                 m("div", {
-                                    class: (!Calendario.buscarMedicos ? 'd-none' : '')
-                                }, [
-                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                        "Buscar Médicos:"
-                                    ),
-                                    m("div.form-group",
-
-                                        m('form', {
-                                            onsubmit: (e) => {
-                                                e.preventDefault();
-                                                if (BuscadorMedicos.searchField.length !== 0) {
-                                                    BuscadorMedicos.fetchSearch();
-                                                } else {
-                                                    alert('Ingrese Apellidos y Nombres para continuar.')
-                                                }
-                                            }
-                                        }, [
-
-                                            m("div.input-group", [
-                                                m("input.form-control[type='text'][placeholder='Apellidos y Nombres']", {
-                                                    oninput: (e) => {
-                                                        BuscadorMedicos.searchField = e.target.value;
-                                                    },
-
-                                                }),
-                                                m("div.input-group-append",
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorMedicos.searchField.length !== 0) {
-                                                                BuscadorMedicos.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese Apellidos y Nombres para continuar.')
-                                                            }
-                                                        }
-                                                    },
-                                                        "Buscar"
-                                                    ),
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarMedicos = !Calendario.buscarMedicos;
-                                                        }
-                                                    },
-                                                        m("i.fas.fa-times-circle"),
-                                                    )
-                                                )
-                                            ]),
-
-                                        ]),
-
-
-
-
-                                        m("div.row", [
-                                            m("div.col-12",
-                                                //  m(BuscadorMedicos)
-                                            ),
-
-                                        ])
-
-                                    ),
-
-
-                                ]),
-                                m("div", {
-                                    class: (!Calendario.buscarItems ? 'd-none' : '')
+                                    class: (!Cita.buscarItems ? 'd-none' : '')
                                 }, [
                                     m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                         "Buscar Items:"
@@ -589,7 +1272,7 @@ class Calendario extends App {
                                                     ),
                                                     m("button.btn.btn-outline-light[type='button']", {
                                                         onclick: (e) => {
-                                                            Calendario.buscarItems = !Calendario.buscarItems;
+                                                            Cita.buscarItems = !Cita.buscarItems;
                                                         }
                                                     },
                                                         m("i.fas.fa-times-circle"),
@@ -600,7 +1283,7 @@ class Calendario extends App {
 
                                         m("div.row", [
                                             m("div.col-12",
-                                                //  m(BuscadorItems)
+                                                m(BuscadorItems)
                                             ),
 
                                         ])
@@ -609,9 +1292,16 @@ class Calendario extends App {
 
 
                                 ]),
+
                                 m("div", {
-                                    class: (Calendario.buscarPacientes || Calendario.buscarMedicos || Calendario.buscarItems ? 'd-none' : '')
+                                    class: (Cita.buscarPacientes || Cita.buscarItems ? 'd-none' : '')
                                 }, [
+                                    m("div.form-group.d-none",
+                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                            "Agendas:"
+                                        ),
+
+                                    ),
                                     m("div.form-group",
                                         m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                             "Tipo:"
@@ -620,7 +1310,9 @@ class Calendario extends App {
                                             m("div.custom-control.custom-radio", [
                                                 m("input.custom-control-input[type='radio'][id='tipoCita1'][name='tipoCita']", {
                                                     onclick: (e) => {
-                                                        Cita.tipoCita = 1;
+                                                        Cita.data.tipo = 1;
+                                                        console.log(Cita.data)
+
                                                     },
                                                     oncreate: (el) => {
                                                         el.dom.checked = true;
@@ -633,7 +1325,9 @@ class Calendario extends App {
                                             m("div.custom-control.custom-radio.mg-l-20", [
                                                 m("input.custom-control-input[type='radio'][id='tipoCita2'][name='tipoCita']", {
                                                     onclick: (e) => {
-                                                        Cita.tipoCita = 2;
+                                                        Cita.data.tipo = 2;
+                                                        console.log(Cita.data)
+
                                                     }
                                                 }),
                                                 m("label.custom-control-label[for='tipoCita2']",
@@ -644,49 +1338,67 @@ class Calendario extends App {
                                         ])
                                     ),
 
-                                    m("div.form-group", [
-
-                                        m("div.row.row-xs", [
-                                            m("div.col-6",
-                                                m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                                    "Fecha y Hora de Inicio:"
+                                    (Cita.data.tipo == 2 || Cita.data.codItem !== undefined ? [
+                                        m("div.form-group", [
+                                            m("div.row.row-xs", [
+                                                m("div.col-6",
+                                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                        "Fecha y Hora de Inicio:"
+                                                    ),
+                                                    m("input.form-control[id='eventStartDate'][type='text'][disabled='disabled']", {
+                                                        value: Cita.data.start
+                                                    })
                                                 ),
-                                                m("input.form-control[id='eventStartDate'][type='text'][disabled='disabled']", {
-                                                    value: Cita.start
-                                                })
-                                            ),
-                                            m("div.col-6",
-                                                m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                                    "Fecha y Hora de Fin"
+                                                m("div.col-6",
+                                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                        "Fecha y Hora de Fin"
+                                                    ),
+                                                    m("input.form-control[type='text'][id='eventEndDate'][disabled='disabled']", {
+                                                        value: Cita.data.end
+
+                                                    })
                                                 ),
-                                                m("input.form-control[type='text'][value=''][disabled='disabled']", {
-                                                    value: Cita.end
 
-                                                })
-                                            ),
+                                            ]),
 
+
+                                        ])] : []),
+
+                                    m("div.form-group", {
+                                        class: (Cita.data.tipo == 2 ? '' : 'd-none')
+                                    },
+                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                            "Nombre Evento:"
+                                        ),
+                                        m("div.input-group", [
+                                            m("input.form-control[type='text'][placeholder='Nombre Evento']", {
+
+
+                                            }),
                                         ]),
 
+                                    ),
 
-                                    ]),
 
-                                    m("div.form-group",
+                                    m("div.form-group", {
+                                        class: (Cita.data.tipo == 1 ? '' : 'd-none')
+                                    },
                                         m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                             "Estudio:"
                                         ),
                                         m("div.input-group", [
                                             m("input.form-control[type='text'][placeholder='Items/Estudio']", {
-                                                value: (Cita.codItem !== undefined ? Cita.codItem + ' - ' + Cita.estudio : ''),
+                                                value: (Cita.data.codItem !== undefined ? Cita.data.codItem + ' - ' + Cita.data.estudio : ''),
                                                 oninput: (e) => {
                                                     e.preventDefault();
                                                 },
-                                                disabled: (Cita.codItem !== undefined ? 'disabled' : '')
+                                                disabled: (Cita.data.codItem !== undefined ? 'disabled' : '')
 
                                             }),
                                             m("div.input-group-append",
                                                 m("button.btn.btn-primary[type='button']", {
                                                     onclick: (e) => {
-                                                        Calendario.buscarItems = !Calendario.buscarItems;
+                                                        Cita.buscarItems = !Cita.buscarItems;
                                                     }
                                                 }, [
                                                     m("i.fas.fa-search.mg-r-2"),
@@ -701,30 +1413,32 @@ class Calendario extends App {
                                     ),
 
 
-                                    m("div.form-group",
+                                    m("div.form-group", {
+                                        class: (Cita.data.tipo == 1 ? '' : 'd-none')
+                                    },
                                         m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                             "Historia Clínica Paciente: ",
                                             m('div.d-inline.tx.semibold.tx-danger', {
                                                 style: { "cursor": "pointer" },
                                                 onclick: () => {
-                                                    Calendario.sinDatos = !Calendario.sinDatos;
+                                                    Cita.data.sinDatos = !Cita.data.sinDatos;
                                                 }
                                             }, ' *Sin Historia Clínica ')
                                         ),
                                         m("div.input-group", {
-                                            class: (Calendario.sinDatos ? 'd-none' : '')
+                                            class: (Cita.data.sinDatos ? 'd-none' : '')
                                         }, [
                                             m("input.form-control[type='text'][placeholder='Numero de Historia Clínica'][autofocus]", {
-                                                value: (Cita.paciente !== undefined ? Cita.nhc + ' - ' + Cita.paciente : ''),
+                                                value: (Cita.data.paciente !== undefined ? Cita.data.nhc + ' - ' + Cita.data.paciente : ''),
                                                 oninput: (e) => {
                                                     e.preventDefault();
                                                 },
-                                                disabled: (Cita.paciente !== undefined ? 'disabled' : '')
+                                                disabled: (Cita.data.paciente !== undefined ? 'disabled' : '')
                                             }),
                                             m("div.input-group-append",
                                                 m("button.btn.btn-primary[type='button']", {
                                                     onclick: (e) => {
-                                                        Calendario.buscarPacientes = !Calendario.buscarPacientes;
+                                                        Cita.buscarPacientes = !Cita.buscarPacientes;
                                                     }
                                                 }, [
                                                     m("i.fas.fa-search.mg-r-2"),
@@ -733,17 +1447,17 @@ class Calendario extends App {
                                             )
                                         ]),
                                         m("div.input-group", {
-                                            class: (Calendario.sinDatos ? '' : 'd-none')
+                                            class: (Cita.data.sinDatos ? '' : 'd-none')
                                         }, [
                                             m('div.col-12.mg-b-10', [
                                                 m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                                     "Apellidos y Nombres del Paciente:"
                                                 ),
                                                 m("input.form-control[type='text'][placeholder='Apellidos y Nombres del Paciente'][autofocus]", {
-                                                    value: (Cita.paciente !== undefined ? Cita.paciente : ''),
+                                                    value: (Cita.data.paciente !== undefined ? Cita.data.paciente : ''),
                                                     oninput: (e) => {
-                                                        Cita.paciente = e.target.value;
-                                                        Cita.pn_paciente = Cita.paciente;
+                                                        Cita.data.paciente = e.target.value;
+                                                        Cita.data.pn_paciente = Cita.data.paciente;
                                                     },
                                                 }),
 
@@ -751,7 +1465,7 @@ class Calendario extends App {
 
                                         ]),
                                         m("div.input-group", {
-                                            class: (Calendario.sinDatos ? '' : 'd-none')
+                                            class: (Cita.data.sinDatos ? '' : 'd-none')
                                         }, [
 
                                             m('div.col-12.mg-b-10', [
@@ -760,7 +1474,7 @@ class Calendario extends App {
                                                 ),
                                                 m("input.form-control[type='date'][placeholder='Fecha Nacimiento']", {
                                                     oninput: (e) => {
-                                                        Cita.dateBirth = e.target.value;
+                                                        Cita.data.dateBirth = e.target.value;
                                                         console.log(Cita.dateBirth)
                                                     },
                                                 }),
@@ -769,7 +1483,7 @@ class Calendario extends App {
 
                                         ]),
                                         m("div.input-group", {
-                                            class: (Calendario.sinDatos ? '' : 'd-none')
+                                            class: (Cita.data.sinDatos ? '' : 'd-none')
                                         }, [
 
                                             m('div.col-12.mg-b-10', [
@@ -778,7 +1492,7 @@ class Calendario extends App {
                                                 ),
                                                 m('select.tx-semibold', {
                                                     onchange: (e) => {
-                                                        Cita.sexType = e.target.value;
+                                                        Cita.data.sexType = e.target.value;
                                                     },
                                                     class: "custom-select"
                                                 },
@@ -791,7 +1505,7 @@ class Calendario extends App {
 
                                         ]),
                                         m("div.input-group", {
-                                            class: (Calendario.sinDatos ? '' : 'd-none')
+                                            class: (Cita.data.sinDatos ? '' : 'd-none')
                                         }, [
 
                                             m('div.col-12.mg-b-10', [
@@ -799,10 +1513,10 @@ class Calendario extends App {
                                                     "Correo electrónico:"
                                                 ),
                                                 m("input.form-control[type='text'][placeholder='Correo electrónico'][autofocus]", {
-                                                    value: (Cita.pc_email !== undefined ? Cita.pc_email : ''),
+                                                    value: (Cita.data.pc_email !== undefined ? Cita.data.pc_email : ''),
                                                     oninput: (e) => {
-                                                        Cita.email = e.target.value;
-                                                        Cita.pc_email = e.target.value;
+                                                        Cita.data.email = e.target.value;
+                                                        Cita.data.pc_email = e.target.value;
                                                     },
                                                 }),
                                             ]),
@@ -810,7 +1524,7 @@ class Calendario extends App {
 
                                         ]),
                                         m("div.input-group", {
-                                            class: (Calendario.sinDatos ? '' : 'd-none')
+                                            class: (Cita.data.sinDatos ? '' : 'd-none')
                                         }, [
 
                                             m('div.col-12.mg-b-10', [
@@ -818,9 +1532,9 @@ class Calendario extends App {
                                                     "Celular:"
                                                 ),
                                                 m("input.form-control[type='text'][placeholder='Correo electrónico'][autofocus]", {
-                                                    value: (Cita.pc_telefono !== undefined ? Cita.pc_telefono : ''),
+                                                    value: (Cita.data.pc_telefono !== undefined ? Cita.data.pc_telefono : ''),
                                                     oninput: (e) => {
-                                                        Cita.pc_telefono = e.target.value;
+                                                        Cita.data.pc_telefono = e.target.value;
                                                     },
                                                 }),
                                             ]),
@@ -830,48 +1544,69 @@ class Calendario extends App {
                                     ),
 
 
-                                    m("div.form-group.d-none",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Médico:"
-                                        ),
-                                        m("div.input-group", [
-                                            m("input.form-control[type='text'][placeholder='Prestador']", {
-                                                value: (Cita.prestador !== undefined ? Cita.codMedico + ' - ' + Cita.prestador : ''),
-                                                oninput: (e) => {
-                                                    e.preventDefault();
-                                                },
-                                                disabled: (Cita.prestador !== undefined ? 'disabled' : '')
-
-                                            }),
-                                            m("div.input-group-append",
-                                                m("button.btn.btn-primary[type='button']", {
-                                                    onclick: (e) => {
-                                                        Calendario.buscarMedicos = !Calendario.buscarMedicos;
-                                                    }
-                                                }, [
-                                                    m("i.fas.fa-search.mg-r-2"),
-                                                    " Buscar Médicos "
-                                                ])
-                                            )
-                                        ]),
-
-                                    ),
-
-
 
                                     m("div.form-group",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Comentarios:"
-                                        ),
-                                        m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
+
+                                        [
+                                            m("ul.nav.nav-tabs[id='myTab'][role='tablist']",
+                                                [
+                                                    m("li.nav-item",
+                                                        m("a.nav-link.active[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']",
+                                                            "Comentarios"
+                                                        )
+                                                    ),
+                                                    m("li.nav-item.d-none",
+                                                        m("a.nav-link[id='profile-tab'][data-toggle='tab'][href='#profile'][role='tab'][aria-controls='profile'][aria-selected='false']",
+                                                            "Notificación al Correo"
+                                                        )
+                                                    ),
+                                                    m("li.nav-item.d-none",
+                                                        m("a.nav-link[id='contact-tab'][data-toggle='tab'][href='#contact'][role='tab'][aria-controls='contact'][aria-selected='false']",
+                                                            "Archivos Adjuntos"
+                                                        )
+                                                    )
+                                                ]
+                                            ),
+                                            m(".tab-content.bd.bd-gray-300.bd-t-0.pd-20[id='myTabContent']",
+                                                [
+                                                    m(".tab-pane.fade.show.active[id='home'][role='tabpanel'][aria-labelledby='home-tab']",
+                                                        [
+
+                                                            m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
 
 
-                                            oninput: (e) => {
-                                                Cita.comentarios = e.target.value;
+                                                                oninput: (e) => {
+                                                                    Cita.data.comentarios = e.target.value;
 
 
-                                            }
-                                        })
+                                                                }
+                                                            })
+                                                        ]
+                                                    ),
+                                                    m(".tab-pane.fade[id='profile'][role='tabpanel'][aria-labelledby='profile-tab']",
+                                                        [
+                                                            m("h6",
+                                                                "Profile"
+                                                            ),
+                                                            m("p",
+                                                                "..."
+                                                            )
+                                                        ]
+                                                    ),
+                                                    m(".tab-pane.fade[id='contact'][role='tabpanel'][aria-labelledby='contact-tab']",
+                                                        [
+                                                            m("h6",
+                                                                "Contact"
+                                                            ),
+                                                            m("p",
+                                                                "..."
+                                                            )
+                                                        ]
+                                                    )
+                                                ]
+                                            )
+                                        ],
+
                                     )
                                 ])
 
@@ -884,7 +1619,7 @@ class Calendario extends App {
                             m("button.btn.btn-primary.mg-r-5", {
                                 onclick: () => {
 
-                                    Calendario.agendarCita();
+                                    Cita.agendarCita();
                                 }
                             },
                                 "Agendar Cita"
@@ -896,411 +1631,16 @@ class Calendario extends App {
                     ])
                 )
             ),
-            m(".modal.calendar-modal-create[id='modalUpdateEvent'][role='dialog'][aria-hidden='true']",
-                m(".modal-dialog.modal-dialog-centered.modal-xl[role='document']",
-                    m("div.modal-content", [
-                        m("div.modal-header.tx-white", {
-                            style: { 'background-color': 'rgb(50, 90, 152)' }
-                        }, [
-                            m("h5.event-title.tx-white",
-                                "Reagendar Cita"
-                            ),
-
-                        ]),
-                        m("div.modal-body.pd-20.pd-sm-30", [
-                            m("div.mg-t-10.pd-10.wd-100p", {
-                                class: (Cita.loader ? '' : 'd-none')
-                            },
-                                m("div.placeholder-paragraph", [
-                                    m("div.line"),
-                                    m("div.line")
-                                ])
-                            ),
-
-                            m('div', {
-                                class: (Cita.loader ? 'd-none' : '')
-                            }, [
-                                m("div", {
-                                    class: (!Calendario.buscarPacientes ? 'd-none' : '')
-                                }, [
-                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                        "Buscar Pacientes:"
-                                    ),
-                                    m("div.form-group",
-                                        m('form', {
-                                            onsubmit: (e) => {
-                                                e.preventDefault();
-                                                if (BuscadorPacientes.searchField.length !== 0) {
-                                                    BuscadorPacientes.fetchSearch();
-                                                } else {
-                                                    alert('Ingrese Apellidos y Nombres para continuar.')
-                                                }
-                                            }
-                                        }, [
-                                            m("div.input-group", [
-                                                m("input.form-control[type='text'][placeholder='Apellidos y Nombres']", {
-                                                    oninput: (e) => {
-                                                        BuscadorPacientes.searchField = e.target.value;
-                                                    }
-                                                }),
-                                                m("div.input-group-append",
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorPacientes.searchField.length !== 0) {
-                                                                BuscadorPacientes.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese Apellidos y Nombres para continuar.')
-                                                            }
-                                                        }
-                                                    },
-                                                        "Buscar"
-                                                    ),
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarPacientes = !Calendario.buscarPacientes;
-                                                        }
-                                                    },
-                                                        m("i.fas.fa-times-circle"),
-                                                    )
-                                                )
-                                            ])
-                                        ]),
-
-                                        m("div.row", [
-                                            m("div.col-12",
-                                                //  m(BuscadorPacientes)
-                                            ),
-
-                                        ])
-
-                                    ),
-
-
-                                ]),
-                                m("div", {
-                                    class: (!Calendario.buscarMedicos ? 'd-none' : '')
-                                }, [
-                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                        "Buscar Médicos:"
-                                    ),
-                                    m("div.form-group",
-
-                                        m('form', {
-                                            onsubmit: (e) => {
-                                                e.preventDefault();
-                                                if (BuscadorMedicos.searchField.length !== 0) {
-                                                    BuscadorMedicos.fetchSearch();
-                                                } else {
-                                                    alert('Ingrese Apellidos y Nombres para continuar.')
-                                                }
-                                            }
-                                        }, [
-
-                                            m("div.input-group", [
-                                                m("input.form-control[type='text'][placeholder='Apellidos y Nombres']", {
-                                                    oninput: (e) => {
-                                                        BuscadorMedicos.searchField = e.target.value;
-                                                    },
-
-                                                }),
-                                                m("div.input-group-append",
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorMedicos.searchField.length !== 0) {
-                                                                BuscadorMedicos.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese Apellidos y Nombres para continuar.')
-                                                            }
-                                                        }
-                                                    },
-                                                        "Buscar"
-                                                    ),
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarMedicos = !Calendario.buscarMedicos;
-                                                        }
-                                                    },
-                                                        m("i.fas.fa-times-circle"),
-                                                    )
-                                                )
-                                            ]),
-
-                                        ]),
-
-
-
-
-                                        m("div.row", [
-                                            m("div.col-12",
-                                                // m(BuscadorMedicos)
-                                            ),
-
-                                        ])
-
-                                    ),
-
-
-                                ]),
-                                m("div", {
-                                    class: (!Calendario.buscarItems ? 'd-none' : '')
-                                }, [
-                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                        "Buscar Items:"
-                                    ),
-                                    m("div.form-group",
-                                        m('form', {
-                                            onsubmit: (e) => {
-                                                e.preventDefault();
-                                                if (BuscadorItems.searchField.length !== 0) {
-                                                    BuscadorItems.fetchSearch();
-                                                } else {
-                                                    alert('Ingrese algún valor para continuar.')
-                                                }
-                                            }
-                                        }, [
-                                            m("div.input-group", [
-                                                m("input.form-control[type='text'][placeholder='Buscar Items']", {
-                                                    oninput: (e) => {
-                                                        BuscadorItems.searchField = e.target.value;
-                                                    },
-
-                                                }),
-                                                m("div.input-group-append",
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            if (BuscadorItems.searchField.length !== 0) {
-                                                                BuscadorItems.fetchSearch();
-                                                            } else {
-                                                                alert('Ingrese algún valor para continuar.')
-                                                            }
-                                                        }
-                                                    },
-                                                        "Buscar"
-                                                    ),
-                                                    m("button.btn.btn-outline-light[type='button']", {
-                                                        onclick: (e) => {
-                                                            Calendario.buscarItems = !Calendario.buscarItems;
-                                                        }
-                                                    },
-                                                        m("i.fas.fa-times-circle"),
-                                                    )
-                                                )
-                                            ])
-                                        ]),
-
-                                        m("div.row", [
-                                            m("div.col-12",
-                                                // m(BuscadorItems)
-                                            ),
-
-                                        ])
-
-                                    ),
-
-
-                                ]),
-                                m("div", {
-                                    class: (Calendario.buscarPacientes || Calendario.buscarMedicos || Calendario.buscarItems ? 'd-none' : '')
-                                }, [
-                                    m("div.form-group.d-none",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Tipo:"
-                                        ),
-                                        m("div.input-group", [
-                                            m("div.custom-control.custom-radio", [
-                                                m("input.custom-control-input[type='radio'][id='tipoCitaUpdate1'][name='tipoCitaUpdate']", {
-                                                    onclick: (e) => {
-                                                        Cita.tipoCita = 1;
-                                                    },
-                                                    onupdate: (el) => {
-                                                        if (Cita.tipoCita == 1) {
-                                                            el.dom.checked = true;
-                                                        }
-                                                    }
-                                                }),
-                                                m("label.custom-control-label[for='tipoCitaUpdate1']",
-                                                    "Cita Médica"
-                                                )
-                                            ]),
-                                            m("div.custom-control.custom-radio.mg-l-20", [
-                                                m("input.custom-control-input[type='radio'][id='tipoCitaUpdate2'][name='tipoCitaUpdate']", {
-                                                    onclick: (e) => {
-                                                        Cita.tipoCita = 2;
-                                                    },
-                                                    onupdate: (el) => {
-                                                        if (Cita.tipoCita == 2) {
-                                                            el.dom.checked = true;
-                                                        }
-                                                    }
-                                                }),
-                                                m("label.custom-control-label[for='tipoCitaUpdate2']",
-                                                    "Evento"
-                                                )
-                                            ])
-
-                                        ])
-                                    ),
-                                    m("div.form-group", [
-
-                                        m("div.row.row-xs", [
-                                            m("div.col-6",
-                                                m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                                    "Fecha y Hora de Inicio:"
-                                                ),
-                                                m("input.form-control[id='eventStartDate'][type='text'][disabled='disabled']", {
-                                                    value: Cita.start
-                                                })
-                                            ),
-                                            m("div.col-6",
-                                                m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                                    "Fecha y Hora de Fin"
-                                                ),
-                                                m("input.form-control[type='text'][value=''][disabled='disabled']", {
-                                                    value: Cita.end
-
-                                                })
-                                            ),
-
-                                        ]),
-
-
-                                    ]),
-
-
-
-                                    m("div.form-group",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Historia Clínica Paciente:"
-                                        ),
-                                        m("div.input-group", [
-
-                                            m("input.form-control[type='text'][placeholder='Numero de Historia Clínica'][autofocus]", {
-                                                value: (Cita.paciente !== undefined ? Cita.nhc + ' - ' + Cita.paciente : ''),
-                                                oninput: (e) => {
-                                                    e.preventDefault();
-                                                },
-                                                disabled: (Cita.paciente !== undefined ? 'disabled' : '')
-                                            }),
-                                            m("div.input-group-append",
-                                                m("button.btn.btn-primary[type='button']", {
-                                                    onclick: (e) => {
-                                                        Calendario.buscarPacientes = !Calendario.buscarPacientes;
-                                                    }
-                                                }, [
-                                                    m("i.fas.fa-search.mg-r-2"),
-                                                    " Buscar Pacientes "
-                                                ])
-                                            )
-                                        ])
-                                    ),
-
-
-                                    m("div.form-group",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Médico:"
-                                        ),
-                                        m("div.input-group", [
-                                            m("input.form-control[type='text'][placeholder='Prestador']", {
-                                                value: (Cita.prestador !== undefined ? Cita.codMedico + ' - ' + Cita.prestador : ''),
-                                                oninput: (e) => {
-                                                    e.preventDefault();
-                                                },
-                                                disabled: (Cita.prestador !== undefined ? 'disabled' : '')
-
-                                            }),
-                                            m("div.input-group-append",
-                                                m("button.btn.btn-primary[type='button']", {
-                                                    onclick: (e) => {
-                                                        Calendario.buscarMedicos = !Calendario.buscarMedicos;
-                                                    }
-                                                }, [
-                                                    m("i.fas.fa-search.mg-r-2"),
-                                                    " Buscar Médicos "
-                                                ])
-                                            )
-                                        ]),
-
-                                    ),
-                                    m("div.form-group",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Estudio:"
-                                        ),
-                                        m("div.input-group", [
-                                            m("input.form-control[type='text'][placeholder='Items/Estudio']", {
-                                                value: (Cita.codItem !== undefined ? Cita.codItem + ' - ' + Cita.estudio : ''),
-                                                oninput: (e) => {
-                                                    e.preventDefault();
-                                                },
-                                                disabled: (Cita.codItem !== undefined ? 'disabled' : '')
-
-                                            }),
-                                            m("div.input-group-append",
-                                                m("button.btn.btn-primary[type='button']", {
-                                                    onclick: (e) => {
-
-
-
-                                                        Calendario.buscarItems = !Calendario.buscarItems;
-                                                    }
-                                                }, [
-                                                    m("i.fas.fa-search.mg-r-2"),
-                                                    " Buscar Estudios "
-
-                                                ]
-
-                                                )
-                                            )
-                                        ]),
-
-                                    ),
-
-
-                                    m("div.form-group",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Comentarios:"
-                                        ),
-                                        m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
-                                            value: Cita.comentarios,
-                                            oninput: (e) => {
-                                                Cita.comentarios = e.target.value;
-                                            }
-                                        })
-                                    )
-                                ])
-
-                            ])
-
-
-
-                        ]),
-                        m("div.modal-footer", [
-                            m("button.btn.btn-primary.mg-r-5", {
-                                onclick: () => {
-
-                                    console.log(22, Cita)
-                                    Calendario.validarReagendamiento();
-
-                                }
-                            },
-                                "Reagendar Cita"
-                            ),
-                            m("a.btn.btn-secondary[href=''][data-dismiss='modal']",
-                                "Cerrar"
-                            )
-                        ])
-                    ])
-                )
-            ),
             m(".modal.calendar-modal-event[id='modalCalendarEvent'][role='dialog'][aria-hidden='true']",
                 m(".modal-dialog.modal-dialog-centered.modal-xl[role='document']",
                     m("div.modal-content", [
-                        m("div.modal-header", [
+                        m("div.modal-header.bg-success", [
                             m("h6.event-title"),
                             m("nav.nav.nav-modal-event", [
-
-                                m("a.nav-link[href='#'][data-dismiss='modal']",
-                                    m("i[data-feather='x']")
+                                m(".tx-14.d-inline.mg-0.tx-white",
+                                    "Agenda Centralizada MV v1.0"
                                 )
+
                             ])
                         ]),
                         m("div.modal-body", [
@@ -1322,19 +1662,18 @@ class Calendario extends App {
                                 "Descripción:"
                             ),
                             m("p.mg-b-40", [
-                                Cita.paciente,
+                                Cita.data.paciente,
                                 m('br'),
-                                Cita.estudio,
+                                Cita.data.estudio,
                                 m('br'),
-                                Cita.prestador,
+                                Cita.data.prestador,
                                 m('br'),
                             ]),
                             m("p.event-desc.tx-gray-900.mg-b-40"),
-                            (!Cita.editable ? [
+                            (!Cita.data.editable ? [
                                 m("button.btn.btn-primary.mg-r-5[data-dismiss='modal']", {
                                     onclick: () => {
-                                        console.log(Cita)
-                                        Calendario.trackReAgendar();
+                                        Cita.trackReAgendar();
                                     }
                                 },
                                     "Reagendar Cita"
@@ -1342,8 +1681,7 @@ class Calendario extends App {
                             ] : [
                                 m("button.btn.btn-primary.mg-r-5[data-dismiss='modal']", {
                                     onclick: () => {
-                                        console.log(Cita)
-                                        Calendario.trackCancelReAgendar();
+                                        Cita.trackCancelReAgendar();
                                     }
                                 },
                                     "Cancelar Reagendamiento"
@@ -1352,7 +1690,7 @@ class Calendario extends App {
 
                             m("button.btn.btn-danger.mg-r-5", {
                                 onclick: () => {
-                                    Calendario.cancelarCita();
+                                    Cita.cancelarCita();
                                 }
                             },
                                 "Cancelar Cita"
@@ -1363,7 +1701,316 @@ class Calendario extends App {
                         ])
                     ])
                 )
-            )
+            ),
+            m(".modal.calendar-modal-create[id='modalUpdateEvent'][role='dialog'][aria-hidden='true']",
+                m(".modal-dialog.modal-dialog-centered.modal-xl[role='document']",
+                    m("div.modal-content", [
+                        m("div.modal-header.tx-white.bg-primary", [
+                            m("h5.event-title.tx-white",
+                                "Reagendar Cita"
+                            ),
+                            m("nav.nav.nav-modal-event", [
+                                m(".tx-14.d-inline.mg-0.tx-white",
+                                    "Agenda Centralizada MV v1.0"
+                                )
+
+                            ])
+
+                        ]),
+                        m("div.modal-body.pd-20.pd-sm-30", [
+                            m("div.mg-t-10.pd-10.wd-100p", {
+                                class: (Cita.loader ? '' : 'd-none')
+                            },
+                                m("div.placeholder-paragraph", [
+                                    m("div.line"),
+                                    m("div.line")
+                                ])
+                            ),
+
+                            m('div', {
+                                class: (Cita.loader ? 'd-none' : '')
+                            }, [
+                                m("div", {
+                                    class: (!Cita.buscarPacientes ? 'd-none' : '')
+                                }, [
+                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                        "Buscar Pacientes:"
+                                    ),
+                                    m("div.form-group",
+                                        m('form', {
+                                            onsubmit: (e) => {
+                                                e.preventDefault();
+                                                if (BuscadorPacientes.searchField.length !== 0) {
+                                                    BuscadorPacientes.fetchSearch();
+                                                } else {
+                                                    alert('Ingrese Apellidos y Nombres para continuar.')
+                                                }
+                                            }
+                                        }, [
+                                            m("div.input-group", [
+                                                m("input.form-control[type='text'][placeholder='Apellidos y Nombres']", {
+                                                    oninput: (e) => {
+                                                        BuscadorPacientes.searchField = e.target.value;
+                                                    }
+                                                }),
+                                                m("div.input-group-append",
+                                                    m("button.btn.btn-outline-light[type='button']", {
+                                                        onclick: (e) => {
+                                                            if (BuscadorPacientes.searchField.length !== 0) {
+                                                                BuscadorPacientes.fetchSearch();
+                                                            } else {
+                                                                alert('Ingrese Apellidos y Nombres para continuar.')
+                                                            }
+                                                        }
+                                                    },
+                                                        "Buscar"
+                                                    ),
+                                                    m("button.btn.btn-outline-light[type='button']", {
+                                                        onclick: (e) => {
+                                                            Cita.buscarPacientes = !Cita.buscarPacientes;
+                                                        }
+                                                    },
+                                                        m("i.fas.fa-times-circle"),
+                                                    )
+                                                )
+                                            ])
+                                        ]),
+
+                                        m("div.row", [
+                                            m("div.col-12",
+                                                m(BuscadorPacientes)
+                                            ),
+
+                                        ])
+
+                                    ),
+
+
+                                ]),
+
+                                m("div", {
+                                    class: (!Cita.buscarItems ? 'd-none' : '')
+                                }, [
+                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                        "Buscar Items:"
+                                    ),
+                                    m("div.form-group",
+                                        m('form', {
+                                            onsubmit: (e) => {
+                                                e.preventDefault();
+                                                if (BuscadorItems.searchField.length !== 0) {
+                                                    BuscadorItems.fetchSearch();
+                                                } else {
+                                                    alert('Ingrese algún valor para continuar.')
+                                                }
+                                            }
+                                        }, [
+                                            m("div.input-group", [
+                                                m("input.form-control[type='text'][placeholder='Buscar Items']", {
+                                                    oninput: (e) => {
+                                                        BuscadorItems.searchField = e.target.value;
+                                                    },
+
+                                                }),
+                                                m("div.input-group-append",
+                                                    m("button.btn.btn-outline-light[type='button']", {
+                                                        onclick: (e) => {
+                                                            if (BuscadorItems.searchField.length !== 0) {
+                                                                BuscadorItems.fetchSearch();
+                                                            } else {
+                                                                alert('Ingrese algún valor para continuar.')
+                                                            }
+                                                        }
+                                                    },
+                                                        "Buscar"
+                                                    ),
+                                                    m("button.btn.btn-outline-light[type='button']", {
+                                                        onclick: (e) => {
+                                                            Cita.buscarItems = !Cita.buscarItems;
+                                                        }
+                                                    },
+                                                        m("i.fas.fa-times-circle"),
+                                                    )
+                                                )
+                                            ])
+                                        ]),
+
+                                        m("div.row", [
+                                            m("div.col-12",
+                                                m(BuscadorItems)
+                                            ),
+
+                                        ])
+
+                                    ),
+
+
+                                ]),
+                                m("div", {
+                                    class: (Cita.buscarPacientes || Cita.buscarItems ? 'd-none' : '')
+                                }, [
+                                    m("div.form-group.d-none",
+                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                            "Tipo:"
+                                        ),
+                                        m("div.input-group", [
+                                            m("div.custom-control.custom-radio", [
+                                                m("input.custom-control-input[type='radio'][id='tipoCitaUpdate1'][name='tipoCitaUpdate']", {
+                                                    onclick: (e) => {
+                                                        Cita.data.tipo = 1;
+                                                    },
+                                                    onupdate: (el) => {
+                                                        if (Cita.data.tipo == 1) {
+                                                            el.dom.checked = true;
+                                                        }
+                                                    }
+                                                }),
+                                                m("label.custom-control-label[for='tipoCitaUpdate1']",
+                                                    "Cita Médica"
+                                                )
+                                            ]),
+                                            m("div.custom-control.custom-radio.mg-l-20", [
+                                                m("input.custom-control-input[type='radio'][id='tipoCitaUpdate2'][name='tipoCitaUpdate']", {
+                                                    onclick: (e) => {
+                                                        Cita.data.tipo = 2;
+                                                    },
+                                                    onupdate: (el) => {
+                                                        if (Cita.data.tipo == 2) {
+                                                            el.dom.checked = true;
+                                                        }
+                                                    }
+                                                }),
+                                                m("label.custom-control-label[for='tipoCitaUpdate2']",
+                                                    "Evento"
+                                                )
+                                            ])
+
+                                        ])
+                                    ),
+                                    m("div.form-group", [
+
+                                        m("div.row.row-xs", [
+                                            m("div.col-6",
+                                                m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                    "Fecha y Hora de Inicio:"
+                                                ),
+                                                m("input.form-control[id='eventStartDate'][type='text'][disabled='disabled']", {
+                                                    value: Cita.data.start
+                                                })
+                                            ),
+                                            m("div.col-6",
+                                                m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                    "Fecha y Hora de Fin"
+                                                ),
+                                                m("input.form-control[type='text'][value=''][disabled='disabled']", {
+                                                    value: Cita.data.end
+
+                                                })
+                                            ),
+
+                                        ]),
+
+
+                                    ]),
+
+
+
+                                    m("div.form-group",
+                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                            "Historia Clínica Paciente:"
+                                        ),
+                                        m("div.input-group", [
+
+                                            m("input.form-control[type='text'][placeholder='Numero de Historia Clínica'][autofocus]", {
+                                                value: (Cita.data.paciente !== undefined ? Cita.data.nhc + ' - ' + Cita.data.paciente : ''),
+                                                oninput: (e) => {
+                                                    e.preventDefault();
+                                                },
+                                                disabled: (Cita.data.paciente !== undefined ? 'disabled' : '')
+                                            }),
+                                            m("div.input-group-append",
+                                                m("button.btn.btn-primary[type='button']", {
+                                                    onclick: (e) => {
+                                                        Cita.buscarPacientes = !Cita.buscarPacientes;
+                                                    }
+                                                }, [
+                                                    m("i.fas.fa-search.mg-r-2"),
+                                                    " Buscar Pacientes "
+                                                ])
+                                            )
+                                        ])
+                                    ),
+
+
+
+                                    m("div.form-group",
+                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                            "Estudio:"
+                                        ),
+                                        m("div.input-group", [
+                                            m("input.form-control[type='text'][placeholder='Items/Estudio']", {
+                                                value: (Cita.data.codItem !== undefined ? Cita.data.codItem + ' - ' + Cita.data.estudio : ''),
+                                                oninput: (e) => {
+                                                    e.preventDefault();
+                                                },
+                                                disabled: (Cita.data.codItem !== undefined ? 'disabled' : '')
+
+                                            }),
+                                            m("div.input-group-append",
+                                                m("button.btn.btn-primary[type='button']", {
+                                                    onclick: (e) => {
+                                                        Cita.buscarItems = !Cita.buscarItems;
+                                                    }
+                                                }, [
+                                                    m("i.fas.fa-search.mg-r-2"),
+                                                    " Buscar Estudios "
+
+                                                ]
+
+                                                )
+                                            )
+                                        ]),
+
+                                    ),
+
+
+                                    m("div.form-group",
+                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                            "Comentarios:"
+                                        ),
+                                        m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
+                                            value: Cita.data.comentarios,
+                                            oninput: (e) => {
+                                                Cita.data.comentarios = e.target.value;
+                                            }
+                                        })
+                                    )
+                                ])
+
+                            ])
+
+
+
+                        ]),
+                        m("div.modal-footer", [
+                            m("button.btn.btn-primary.mg-r-5", {
+                                onclick: () => {
+
+                                    Cita.reAgendarCita();
+
+                                }
+                            },
+                                "Reagendar Cita"
+                            ),
+                            m("a.btn.btn-secondary[href=''][data-dismiss='modal']",
+                                "Cerrar"
+                            )
+                        ])
+                    ])
+                )
+            ),
+
+
 
         ];
     }
@@ -1373,42 +2020,76 @@ class Calendario extends App {
     }
 
     static fetchAgendas() {
-        Calendario.loader = true;
+
+        if (Calendario.idCalendar !== undefined) {
+
+            Calendario.loader = true;
+            m.request({
+                method: "GET",
+                url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
+                params: {
+                    idCalendar: Calendario.idCalendar
+                },
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+            })
+                .then(function (res) {
+
+                    Calendario.loader = false;
+                    Calendario.citas = {
+                        status: res.status,
+                        data: res.citasAgendadas
+                    };
+                    setTimeout(function () {
+                        Calendario.setCalendar();
+                    }, 80);
+                    setTimeout(function () {
+                        Calendario.setSidebar();
+                    }, 160);
+
+
+                })
+                .catch(function (e) {
+                    Calendario.loader = false;
+                    Calendario.citas = {
+                        status: null,
+                        message: e
+                    };
+                });
+
+        }
+
+
+    }
+
+    static reloadFetchAgenda() {
+
         m.request({
             method: "GET",
             url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
             params: {
-                idFiltro: Calendario.idCalendar
+                idCalendar: Calendario.idCalendar
             },
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
         })
             .then(function (res) {
-                Calendario.loader = false;
                 Calendario.citas = {
                     status: res.status,
                     data: res.citasAgendadas
                 };
-                setTimeout(function () {
-                    Calendario.setCalendar();
-                }, 80);
-                setTimeout(function () {
-                    Calendario.setSidebar();
-                }, 160);
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar('addEventSource', Calendario.citas.data);
+                $('#calendar').fullCalendar('rerenderEvents');
 
 
             })
-            .catch(function (e) {
-                Calendario.loader = false;
-                Calendario.citas = {
-                    status: null,
-                    message: e
-                };
-            });
+            .catch(function (e) { });
     }
 
-    static fetchPerfilAgenda() {
+    static fetchPerfilAgenda(_data) {
 
         try {
 
@@ -1426,10 +2107,14 @@ class Calendario extends App {
                 .then(function (res) {
 
                     if (res.status) {
-                        Calendario.idCalendar = res.data.data.idCalendar
-                        m.route.set('/endoscopia/agendas/calendario/', {
-                            idCalendar: encodeURIComponent(Calendario.idCalendar)
-                        });
+
+                        Calendario.calendarios = res.data.calendarios;
+                        if (Calendario.idCalendar == null) {
+                            Calendario.idCalendar = res.data.agendas
+                            m.route.set('/endoscopia/agendas/calendario/', {
+                                idCalendar: encodeURIComponent(Calendario.idCalendar)
+                            });
+                        }
                         Calendario.fetchAgendas();
                     } else {
                         Calendario.loader = false;
@@ -1440,11 +2125,13 @@ class Calendario extends App {
                     }
                 })
                 .catch(function (e) {
+
                     Calendario.loader = false;
                     Calendario.citas = {
                         status: null,
                         message: e
                     };
+
                 });
 
 
@@ -1459,15 +2146,50 @@ class Calendario extends App {
 
     }
 
+
+
+    static showAlertCalendar(type, message) {
+        Calendario.typeAlert = type;
+        Calendario.messageAlert = message;
+        $('.toast').toast('show');
+        m.redraw();
+    }
+
+    static validarAgendamiento() {
+
+        let _track = true;
+        let _timeInicio = '';
+        let _timeFin = '';
+
+        Calendario.citas.data.events.map((_val, _index) => {
+            if (moment(_val.start).format('DD-MM-YYYY HH:mm') == moment(Cita.data.start, 'dddd, DD-MM-YYYY HH:mm').format('DD-MM-YYYY HH:mm')) {
+                _track = false;
+                _timeInicio = moment(_val.start).format('DD-MM-YYYY HH:mm');
+                _timeFin = moment(_val.end).format('DD-MM-YYYY HH:mm');
+            }
+
+            if (moment(_val.end).format('DD-MM-YYYY HH:mm') == moment(Cita.data.end, 'dddd, DD-MM-YYYY HH:mm').format('DD-MM-YYYY HH:mm')) {
+                _track = false;
+                _timeInicio = moment(_val.start).format('DD-MM-YYYY HH:mm');
+                _timeFin = moment(_val.end).format('DD-MM-YYYY HH:mm');
+            }
+        })
+
+        if (!_track) {
+            $('#modalCreateEvent').modal('hide');
+            Calendario.showAlertCalendar('bg-danger', 'No se puede reagendar. Ya existe una cita agendada desde: ' + _timeInicio + ' hasta: ' + _timeFin)
+            throw 'custom error'
+        }
+
+    }
+
+
     oninit(_data) {
 
         if (_data.attrs.idCalendar !== undefined) {
             Calendario.idCalendar = decodeURIComponent(_data.attrs.idCalendar);
-            Calendario.fetchAgendas();
-        } else {
-            Calendario.fetchPerfilAgenda();
         }
-
+        Calendario.fetchPerfilAgenda();
 
     }
 
@@ -1475,10 +2197,22 @@ class Calendario extends App {
         document.body.classList.add('app-calendar');
     }
 
+    onupdate(_data) {
+        if (_data.attrs.idCalendar == undefined) {
+            Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Un momento por favor.');
+            setTimeout(() => {
+                window.location.reload();
+            }, 2500);
+        }
+    }
+
+
+
     static page() {
         return [
             Calendario.vHeader(),
-            Calendario.vMain()
+            Calendario.vMain(),
+            m(AlertCalendar)
         ];
     }
 
