@@ -14,26 +14,24 @@ class AlertCalendar {
                 m("div.pos-absolute.t-70.r-10", {
                     style: { "z-index": "999999;" }
                 },
-                    m(".toast.animated.bounceInRight[role='alert'][aria-live='assertive'][aria-atomic='true'][data-delay='8000']",
-                        [
-                            m("div.toast-header.tx-white." + Calendario.typeAlert,
+                    m(".toast.animated.bounceInRight[role='alert'][aria-live='assertive'][aria-atomic='true'][data-delay='8000']", [
+                        m("div.toast-header.tx-white." + Calendario.typeAlert,
 
-                                [
-                                    m("h6.tx-white.tx-14.mg-b-0.mg-r-auto.",
-                                        " Anuncio "
-                                    ),
-                                    m("button.ml-2.mb-1.close[type='button'][data-dismiss='toast'][aria-label='Cerrar']",
-                                        m("span..tx-white[aria-hidden='true']",
-                                            m.trust("&times;")
-                                        )
+                            [
+                                m("h6.tx-white.tx-14.mg-b-0.mg-r-auto.",
+                                    " Anuncio "
+                                ),
+                                m("button.ml-2.mb-1.close[type='button'][data-dismiss='toast'][aria-label='Cerrar']",
+                                    m("span..tx-white[aria-hidden='true']",
+                                        m.trust("&times;")
                                     )
-                                ]
-                            ),
-                            m("div.toast-body.tx-semibold",
-                                Calendario.messageAlert
-                            )
-                        ]
-                    )
+                                )
+                            ]
+                        ),
+                        m("div.toast-body.tx-semibold",
+                            Calendario.messageAlert
+                        )
+                    ])
                 )
             ]
         }
@@ -197,7 +195,7 @@ class BuscadorItems {
                                         let _suma = fecha1.add(_duracion, 'minutes');
 
                                         Cita.data.end = moment(_suma).format('dddd, DD-MM-YYYY HH:mm');
-                                        Cita.data.pn_fin = moment(_suma).format('YYYY-MM-DD HH:mm');
+                                        Cita.data.pn_fin = moment(_suma).format('DD/MM/YYYY HH:mm');
                                         Cita.data.hashCita = moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm') + '.' + moment(_suma).format('YYYY-MM-DD HH:mm');
 
                                         Cita.data.codItem = _i._aData.CD_ITEM_AGENDAMENTO;
@@ -530,7 +528,7 @@ class Cita {
 
         let modal = $('#modalUpdateEvent');
         modal.modal('show');
-        modal.find('.modal-header').css('backgroundColor', (calEvent.source.borderColor) ? calEvent.source.borderColor : calEvent.borderColor);
+        modal.find('.modal-header').css('backgroundColor', (calEvent.borderColor) ? calEvent.borderColor : calEvent.borderColor);
         m.redraw();
 
     }
@@ -547,6 +545,34 @@ class Cita {
         $('#eventStartTime').val(moment(startDate).format('LT')).trigger('change');
         $('#eventEndTime').val(moment(endDate).format('LT')).trigger('change');
         m.redraw();
+    }
+
+    static agendarCitaHttp() {
+
+        Cita.loader = true;
+        Cita.data.idCalendar = Calendario.idCalendar;
+        Cita.data.calendarios = Calendario.calendarios;
+
+        m.request({
+            method: "POST",
+            url: "https://api.hospitalmetropolitano.org/v2/date/citas/call",
+            body: Cita.data,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+            .then(function (res) {
+                Cita.loader = false;
+                if (res.status) {
+                    Cita.agendarCita();
+                } else {
+                    Calendario.showAlertCalendar('bg-danger', res.message);
+                }
+            })
+            .catch(function (e) {
+                Calendario.showAlertCalendar('bg-danger', e);
+            });
+
     }
 
     static trackReAgendar() {
@@ -615,13 +641,6 @@ class Cita {
     static agendarCita() {
 
         Cita.loader = true;
-        Cita.data.idCalendar = Calendario.idCalendar;
-        Cita.data.calendarios = Calendario.calendarios;
-
-        Cita.codMedico = 1173;
-        Cita.prestador = "ABARCA RUIZ JAYSOOM WILLEEM";
-        Cita.pn_prestador = 1173;
-
         m.request({
             method: "POST",
             url: "https://api.hospitalmetropolitano.org/v2/date/citas/nueva",
@@ -631,18 +650,12 @@ class Cita {
             },
         })
             .then(function (res) {
-
                 Cita.loader = false;
-
-                console.log(res)
-
                 if (res.status) {
-
                     Calendario.showAlertCalendar('bg-success', res.message);
                     $('#modalCreateEvent').modal('hide');
                     Calendario.reloadFetchAgenda();
                     Cita.data = {};
-
                 } else {
                     Calendario.showAlertCalendar('bg-danger', res.message);
                 }
@@ -650,13 +663,12 @@ class Cita {
             })
             .catch(function (e) {
                 Calendario.showAlertCalendar('bg-danger', e);
-
-
             });
 
     }
 
     static reAgendarCita() {
+
 
         Calendario.validarAgendamiento();
 
@@ -849,13 +861,13 @@ class Calendario extends App {
             },
             navLinks: true,
             selectable: true,
-            defaultDate: "2023-10-10",
+            defaultDate: moment().format('YYYY-MM-DD'),
             selectLongPressDelay: 100,
             nowIndicator: true,
             editable: false,
             defaultView: 'listWeek',
-            minTime: '06:00:00',
-            maxTime: '21:00:00',
+            minTime: '07:00:00',
+            maxTime: '17:55:00',
             slotDuration: '00:10:00',
             slotLabelInterval: 10,
             slotLabelFormat: 'HH:mma',
@@ -905,7 +917,7 @@ class Calendario extends App {
                     element.find('.fc-content').append('<span class="fc-desc">' + event.description + '</span>');
                 }
 
-                var eBorderColor = (event.source.borderColor) ? event.source.borderColor : event.borderColor;
+                var eBorderColor = (event.borderColor) ? event.borderColor : event.borderColor;
 
                 if (event.editable) {
 
@@ -1097,9 +1109,7 @@ class Calendario extends App {
                                                     m.route.set("/endoscopia/agendas/calendario")
                                                 }
 
-
                                                 Calendario.reloadFetchAgenda();
-
 
                                             });
                                         }, 1000);
@@ -1362,7 +1372,8 @@ class Calendario extends App {
                                             ]),
 
 
-                                        ])] : []),
+                                        ])
+                                    ] : []),
 
                                     m("div.form-group", {
                                         class: (Cita.data.tipo == 2 ? '' : 'd-none')
@@ -1548,63 +1559,53 @@ class Calendario extends App {
                                     m("div.form-group",
 
                                         [
-                                            m("ul.nav.nav-tabs[id='myTab'][role='tablist']",
-                                                [
-                                                    m("li.nav-item",
-                                                        m("a.nav-link.active[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']",
-                                                            "Comentarios"
-                                                        )
-                                                    ),
-                                                    m("li.nav-item.d-none",
-                                                        m("a.nav-link[id='profile-tab'][data-toggle='tab'][href='#profile'][role='tab'][aria-controls='profile'][aria-selected='false']",
-                                                            "Notificación al Correo"
-                                                        )
-                                                    ),
-                                                    m("li.nav-item.d-none",
-                                                        m("a.nav-link[id='contact-tab'][data-toggle='tab'][href='#contact'][role='tab'][aria-controls='contact'][aria-selected='false']",
-                                                            "Archivos Adjuntos"
-                                                        )
+                                            m("ul.nav.nav-tabs[id='myTab'][role='tablist']", [
+                                                m("li.nav-item",
+                                                    m("a.nav-link.active[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']",
+                                                        "Comentarios"
                                                     )
-                                                ]
-                                            ),
-                                            m(".tab-content.bd.bd-gray-300.bd-t-0.pd-20[id='myTabContent']",
-                                                [
-                                                    m(".tab-pane.fade.show.active[id='home'][role='tabpanel'][aria-labelledby='home-tab']",
-                                                        [
-
-                                                            m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
-
-
-                                                                oninput: (e) => {
-                                                                    Cita.data.comentarios = e.target.value;
-
-
-                                                                }
-                                                            })
-                                                        ]
-                                                    ),
-                                                    m(".tab-pane.fade[id='profile'][role='tabpanel'][aria-labelledby='profile-tab']",
-                                                        [
-                                                            m("h6",
-                                                                "Profile"
-                                                            ),
-                                                            m("p",
-                                                                "..."
-                                                            )
-                                                        ]
-                                                    ),
-                                                    m(".tab-pane.fade[id='contact'][role='tabpanel'][aria-labelledby='contact-tab']",
-                                                        [
-                                                            m("h6",
-                                                                "Contact"
-                                                            ),
-                                                            m("p",
-                                                                "..."
-                                                            )
-                                                        ]
+                                                ),
+                                                m("li.nav-item.d-none",
+                                                    m("a.nav-link[id='profile-tab'][data-toggle='tab'][href='#profile'][role='tab'][aria-controls='profile'][aria-selected='false']",
+                                                        "Notificación al Correo"
                                                     )
-                                                ]
-                                            )
+                                                ),
+                                                m("li.nav-item.d-none",
+                                                    m("a.nav-link[id='contact-tab'][data-toggle='tab'][href='#contact'][role='tab'][aria-controls='contact'][aria-selected='false']",
+                                                        "Archivos Adjuntos"
+                                                    )
+                                                )
+                                            ]),
+                                            m(".tab-content.bd.bd-gray-300.bd-t-0.pd-20[id='myTabContent']", [
+                                                m(".tab-pane.fade.show.active[id='home'][role='tabpanel'][aria-labelledby='home-tab']", [
+
+                                                    m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
+
+
+                                                        oninput: (e) => {
+                                                            Cita.data.comentarios = e.target.value;
+
+
+                                                        }
+                                                    })
+                                                ]),
+                                                m(".tab-pane.fade[id='profile'][role='tabpanel'][aria-labelledby='profile-tab']", [
+                                                    m("h6",
+                                                        "Profile"
+                                                    ),
+                                                    m("p",
+                                                        "..."
+                                                    )
+                                                ]),
+                                                m(".tab-pane.fade[id='contact'][role='tabpanel'][aria-labelledby='contact-tab']", [
+                                                    m("h6",
+                                                        "Contact"
+                                                    ),
+                                                    m("p",
+                                                        "..."
+                                                    )
+                                                ])
+                                            ])
                                         ],
 
                                     )
@@ -1619,7 +1620,7 @@ class Calendario extends App {
                             m("button.btn.btn-primary.mg-r-5", {
                                 onclick: () => {
 
-                                    Cita.agendarCita();
+                                    Cita.agendarCitaHttp();
                                 }
                             },
                                 "Agendar Cita"
@@ -2021,7 +2022,7 @@ class Calendario extends App {
 
     static fetchAgendas() {
 
-        if (Calendario.idCalendar !== undefined) {
+        if (Calendario.idCalendar !== null) {
 
             Calendario.loader = true;
             m.request({
@@ -2109,13 +2110,17 @@ class Calendario extends App {
                     if (res.status) {
 
                         Calendario.calendarios = res.data.calendarios;
+
                         if (Calendario.idCalendar == null) {
                             Calendario.idCalendar = res.data.agendas
-                            m.route.set('/endoscopia/agendas/calendario/', {
-                                idCalendar: encodeURIComponent(Calendario.idCalendar)
-                            });
                         }
+
+                        m.route.set('/endoscopia/agendas/calendario/', {
+                            idCalendar: encodeURIComponent(Calendario.idCalendar)
+                        });
                         Calendario.fetchAgendas();
+
+
                     } else {
                         Calendario.loader = false;
                         Calendario.citas = {
@@ -2188,8 +2193,12 @@ class Calendario extends App {
 
         if (_data.attrs.idCalendar !== undefined) {
             Calendario.idCalendar = decodeURIComponent(_data.attrs.idCalendar);
+            Calendario.fetchPerfilAgenda();
+        } else {
+            Calendario.idCalendar = null;
+            Calendario.fetchPerfilAgenda();
         }
-        Calendario.fetchPerfilAgenda();
+
 
     }
 
