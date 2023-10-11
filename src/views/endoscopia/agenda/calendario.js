@@ -520,6 +520,8 @@ class Cita {
         modal.find('.event-title').text(Cita.data.paciente);
         modal.find('.event-start-date').text(moment(calEvent.start).format('LLL'));
         modal.find('.event-end-date').text(moment(calEvent.end).format('LLL'));
+        modal.find('.modal-header').css('backgroundColor', (calEvent.borderColor) ? calEvent.borderColor : calEvent.borderColor);
+
         m.redraw();
 
     }
@@ -775,6 +777,11 @@ class Calendario extends App {
         $('#calendarInline').datepicker({
             showOtherMonths: true,
             selectOtherMonths: true,
+            dateFormat: "yy-mm-dd",
+            onSelect: function (dateText, inst) {
+                console.log(dateText)
+                $('#calendar').fullCalendar('gotoDate', dateText);
+            },
             beforeShowDay: function (date) {
 
                 // add leading zero to single digit date
@@ -1051,6 +1058,16 @@ class Calendario extends App {
 
     }
 
+    static setColor(id) {
+
+        id = Number(id);
+        let _obj = null;
+        _obj = Calendario.citas.colorsCalendar[id];
+        return (_obj !== undefined ? _obj.borderColor : 'bg-light');
+
+
+    }
+
     static vMain() {
         return [
 
@@ -1083,9 +1100,19 @@ class Calendario extends App {
                             ),
                             m("div.schedule-group",
                                 m("select.tx-5.form-control.select2-limit[multiple='multiple'][id='agendas']", {
+
                                     oncreate: (el) => {
+
+                                        console.log(el)
+
                                         setTimeout(() => {
                                             $('.select2-limit').select2({
+                                                templateSelection: function (data, container) {
+
+                                                    container[0].style.backgroundColor = Calendario.setColor(data.id);
+                                                    return data.text;
+                                                },
+
                                                 placeholder: 'Seleccione...',
                                                 searchInputPlaceholder: 'Buscar',
                                             }).on("change", function (e) {
@@ -1105,14 +1132,23 @@ class Calendario extends App {
                                                     m.route.set("/endoscopia/agendas/calendario/", {
                                                         idCalendar: encodeURIComponent(Calendario.idCalendar)
                                                     })
+
                                                 } else {
-                                                    m.route.set("/endoscopia/agendas/calendario")
+
+                                                    m.route.set("/endoscopia/agendas/calendario");
+
                                                 }
 
-                                                Calendario.reloadFetchAgenda();
+                                                window.location.reload();
+
+
+
+
+
+
 
                                             });
-                                        }, 1000);
+                                        }, 1500);
 
 
                                     }
@@ -1342,6 +1378,18 @@ class Calendario extends App {
                                                 }),
                                                 m("label.custom-control-label[for='tipoCita2']",
                                                     "Evento"
+                                                )
+                                            ]),
+                                            m("div.custom-control.custom-radio.mg-l-20", [
+                                                m("input.custom-control-input[type='radio'][id='tipoCita3'][name='tipoCita']", {
+                                                    onclick: (e) => {
+                                                        Cita.data.tipo = 3;
+                                                        console.log(Cita.data)
+
+                                                    }
+                                                }),
+                                                m("label.custom-control-label[for='tipoCita3']",
+                                                    "Nota"
                                                 )
                                             ])
 
@@ -1635,7 +1683,7 @@ class Calendario extends App {
             m(".modal.calendar-modal-event[id='modalCalendarEvent'][role='dialog'][aria-hidden='true']",
                 m(".modal-dialog.modal-dialog-centered.modal-xl[role='document']",
                     m("div.modal-content", [
-                        m("div.modal-header.bg-success", [
+                        m("div.modal-header", [
                             m("h6.event-title"),
                             m("nav.nav.nav-modal-event", [
                                 m(".tx-14.d-inline.mg-0.tx-white",
@@ -2040,7 +2088,8 @@ class Calendario extends App {
                     Calendario.loader = false;
                     Calendario.citas = {
                         status: res.status,
-                        data: res.citasAgendadas
+                        data: res.citasAgendadas,
+                        colorsCalendar: res.colorsCalendar
                     };
                     setTimeout(function () {
                         Calendario.setCalendar();
@@ -2079,7 +2128,8 @@ class Calendario extends App {
             .then(function (res) {
                 Calendario.citas = {
                     status: res.status,
-                    data: res.citasAgendadas
+                    data: res.citasAgendadas,
+                    colorsCalendar: res.colorsCalendar
                 };
                 $('#calendar').fullCalendar('removeEvents');
                 $('#calendar').fullCalendar('addEventSource', Calendario.citas.data);
