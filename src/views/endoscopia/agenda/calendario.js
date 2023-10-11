@@ -418,7 +418,7 @@ class BuscadorPacientes {
                                         Cita.data.phoneNumber = '0998785402';
                                         Cita.data.sexType = _i._aData.TP_SEXO;
                                         Cita.data.dateBirth = moment(_i._aData.DT_NASCIMENTO, 'DD-MM-YYYY').format('DD/MM/YYYY');
-                                        Cita.data.email = 'mchangcnt@gmail.com';
+                                        Cita.data.email = _i._aData.EMAIL;
 
                                         // Cita HTTP
                                         Cita.data.pn_paciente = Cita.data.nhc;
@@ -779,7 +779,6 @@ class Calendario extends App {
             selectOtherMonths: true,
             dateFormat: "yy-mm-dd",
             onSelect: function (dateText, inst) {
-                console.log(dateText)
                 $('#calendar').fullCalendar('gotoDate', dateText);
             },
             beforeShowDay: function (date) {
@@ -1017,7 +1016,7 @@ class Calendario extends App {
         calendar.option('windowResize', function (view) {
             if (view.name === 'listWeek') {
                 if (window.matchMedia('(min-width: 992px)').matches) {
-                    calendar.changeView('month');
+                    calendar.changeView('agendaWeek');
                 } else {
                     calendar.changeView('listWeek');
                 }
@@ -1161,11 +1160,40 @@ class Calendario extends App {
                         ]),
                         m("div.pd-t-20.pd-l-20.pd-r-20", [
                             m("label.tx-uppercase.tx-sans.tx-10.tx-medium.tx-spacing-1.tx-color-03.mg-b-15",
-                                "Ultimos agendamientos:"
+                                "Próximas Citas:"
                             ),
-                            m("div.schedule-group", [
+                            m("div.schedule-group.mg-b-40", [
+
+                                (!Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0 ? [
+                                    Calendario.citas.data.events.map((_v, _i) => {
+
+                                        if (_i <= 5) {
+
+                                            return [
+                                                m("a.schedule-item.bd-l.bd-2[href='#']", {
+                                                    onclick: (e) => {
+                                                        e.preventDefault();
+                                                        let dateText = moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD');
+                                                        $('#calendar').fullCalendar('gotoDate', dateText);
+                                                    }
+                                                }, [
+                                                    m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
+                                                        style: { "background-color": _v.borderColor, "color": "#fff" }
+                                                    }, ' Cita Médica '),
+                                                    m("h6.tx-10",
+                                                        _v.paciente
+                                                    ),
+                                                    m("span.tx-5",
+                                                        moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' el ' + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY')
+                                                    )
+                                                ]),
+                                            ]
+
+                                        }
 
 
+                                    })
+                                ] : [])
 
                             ])
                         ]),
@@ -1372,8 +1400,6 @@ class Calendario extends App {
                                                 m("input.custom-control-input[type='radio'][id='tipoCita2'][name='tipoCita']", {
                                                     onclick: (e) => {
                                                         Cita.data.tipo = 2;
-                                                        console.log(Cita.data)
-
                                                     }
                                                 }),
                                                 m("label.custom-control-label[for='tipoCita2']",
@@ -1384,7 +1410,6 @@ class Calendario extends App {
                                                 m("input.custom-control-input[type='radio'][id='tipoCita3'][name='tipoCita']", {
                                                     onclick: (e) => {
                                                         Cita.data.tipo = 3;
-                                                        console.log(Cita.data)
 
                                                     }
                                                 }),
@@ -1396,7 +1421,7 @@ class Calendario extends App {
                                         ])
                                     ),
 
-                                    (Cita.data.tipo == 2 || Cita.data.codItem !== undefined ? [
+                                    (Cita.data.tipo == 1 && Cita.data.codItem !== undefined ? [
                                         m("div.form-group", [
                                             m("div.row.row-xs", [
                                                 m("div.col-6",
@@ -1417,9 +1442,86 @@ class Calendario extends App {
                                                     })
                                                 ),
 
-                                            ]),
+                                            ])
+                                        ])
+                                    ] : Cita.data.tipo > 1 ? [
+                                        m("div.form-group", [
+                                            m("div.row.row-xs", [
+                                                m("div.col-3",
+                                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                        "Fecha de Inicio:"
+                                                    ),
+                                                    m("input.form-control[id='eventStartDate'][type='text'][placeholder='DD/MM/YYYY']", {
+                                                        oncreate: (e) => {
+                                                            setTimeout(() => {
+                                                                new Cleave('#eventStartDate', {
+                                                                    date: true,
+                                                                    datePattern: ['d', 'm', 'Y']
+                                                                });
+                                                            }, 100);
 
+                                                        },
+                                                        value: moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')
+                                                    })
+                                                ),
+                                                m("div.col-3",
+                                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                        "Hora de Inicio:"
+                                                    ),
+                                                    m("input.form-control[id='eventStartHourDate'][type='text'][placeholder='hh:mm']", {
+                                                        oncreate: (e) => {
+                                                            setTimeout(() => {
+                                                                new Cleave('#eventStartHourDate', {
+                                                                    time: true,
+                                                                    timePattern: ['h', 'm']
+                                                                });
+                                                            }, 100);
+                                                        },
+                                                        value: moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm')
+                                                    })
+                                                ),
+                                                m("div.col-3",
+                                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                        "Fecha de Fin"
+                                                    ),
+                                                    m("input.form-control[id='eventEndDate'][type='text'][placeholder='DD/MM/YYYY']", {
+                                                        oncreate: (e) => {
 
+                                                            setTimeout(() => {
+                                                                new Cleave('#eventEndDate', {
+                                                                    date: true,
+                                                                    datePattern: ['d', 'm', 'Y']
+                                                                });
+                                                            }, 100);
+
+                                                        },
+                                                        value: moment(Cita.data.pn_fin, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')
+
+                                                    })
+
+                                                ),
+                                                m("div.col-3",
+                                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                        "Hora de Fin"
+                                                    ),
+                                                    m("input.form-control[id='eventEndHourDate'][type='text'][placeholder='hh:mm']", {
+                                                        oncreate: (e) => {
+
+                                                            setTimeout(() => {
+                                                                new Cleave('#eventEndHourDate', {
+                                                                    time: true,
+                                                                    timePattern: ['h', 'm']
+                                                                });
+                                                            }, 100);
+
+                                                        },
+                                                        value: moment(Cita.data.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm')
+
+                                                    })
+
+                                                ),
+
+                                            ])
                                         ])
                                     ] : []),
 
@@ -1431,6 +1533,21 @@ class Calendario extends App {
                                         ),
                                         m("div.input-group", [
                                             m("input.form-control[type='text'][placeholder='Nombre Evento']", {
+
+
+                                            }),
+                                        ]),
+
+                                    ),
+
+                                    m("div.form-group", {
+                                        class: (Cita.data.tipo == 3 ? '' : 'd-none')
+                                    },
+                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                            "Nota:"
+                                        ),
+                                        m("div.input-group", [
+                                            m("input.form-control[type='text'][placeholder='Nota']", {
 
 
                                             }),
@@ -1613,46 +1730,62 @@ class Calendario extends App {
                                                         "Comentarios"
                                                     )
                                                 ),
-                                                m("li.nav-item.d-none",
+                                                m("li.nav-item", {
+                                                    class: (Cita.data.tipo == 1 && Cita.data.email !== undefined ? '' : 'd-none')
+                                                },
                                                     m("a.nav-link[id='profile-tab'][data-toggle='tab'][href='#profile'][role='tab'][aria-controls='profile'][aria-selected='false']",
                                                         "Notificación al Correo"
                                                     )
                                                 ),
-                                                m("li.nav-item.d-none",
-                                                    m("a.nav-link[id='contact-tab'][data-toggle='tab'][href='#contact'][role='tab'][aria-controls='contact'][aria-selected='false']",
-                                                        "Archivos Adjuntos"
-                                                    )
-                                                )
+
                                             ]),
                                             m(".tab-content.bd.bd-gray-300.bd-t-0.pd-20[id='myTabContent']", [
                                                 m(".tab-pane.fade.show.active[id='home'][role='tabpanel'][aria-labelledby='home-tab']", [
+                                                    m('div.form-group', [
+                                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                            "Comentarios: ",
+                                                        ),
+                                                        m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
+                                                            oninput: (e) => {
+                                                                Cita.data.comentarios = e.target.value;
+                                                            }
+                                                        })
+                                                    ])
 
-                                                    m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
 
-
-                                                        oninput: (e) => {
-                                                            Cita.data.comentarios = e.target.value;
-
-
-                                                        }
-                                                    })
                                                 ]),
-                                                m(".tab-pane.fade[id='profile'][role='tabpanel'][aria-labelledby='profile-tab']", [
-                                                    m("h6",
-                                                        "Profile"
-                                                    ),
-                                                    m("p",
-                                                        "..."
-                                                    )
-                                                ]),
-                                                m(".tab-pane.fade[id='contact'][role='tabpanel'][aria-labelledby='contact-tab']", [
-                                                    m("h6",
-                                                        "Contact"
-                                                    ),
-                                                    m("p",
-                                                        "..."
-                                                    )
+                                                m(".tab-pane.fade[id='profile'][role='tabpanel'][aria-labelledby='profile-tab']", {
+                                                    class: (Cita.data.tipo == 1 && Cita.data.email !== undefined ? '' : 'd-none')
+                                                }, [
+                                                    (Cita.data.tipo == 1 && Cita.data.email !== undefined ? [
+                                                        m("div.form-group",
+                                                            m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                                "Correo electrónico: ",
+                                                                m('br'),
+                                                                m('span.tx-light.tx-5', "*Se enviará una notificación de correo a la(s) siguiente(s) direccione(s).")
+                                                            ),
+                                                            m("div",
+                                                                m("input.form-control[id='correoCita'][type='text'][data-role='tagsinput']", {
+                                                                    oncreate: (el) => {
+                                                                        let elt = $('#correoCita');
+                                                                        elt.tagsinput({
+                                                                            itemValue: 'value',
+                                                                            itemText: 'text',
+                                                                            typeaheadjs: {
+                                                                                name: 'correoCita',
+                                                                                displayKey: 'text',
+                                                                                source: []
+                                                                            }
+                                                                        });
+
+                                                                        elt.tagsinput('add', { "value": Cita.data.email, "text": Cita.data.email });
+                                                                    }
+                                                                })
+                                                            )
+                                                        )
+                                                    ] : [])
                                                 ])
+
                                             ])
                                         ],
 
@@ -1693,7 +1826,7 @@ class Calendario extends App {
                             ])
                         ]),
                         m("div.modal-body", [
-                            m("div.row.row-sm", [
+                            m("div.row", [
                                 m("div.col-sm-6", [
                                     m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
                                         "Fecha Inicio"
@@ -1707,18 +1840,38 @@ class Calendario extends App {
                                     m("p.event-end-date")
                                 ])
                             ]),
-                            m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
-                                "Descripción:"
-                            ),
-                            m("p.mg-b-40", [
-                                Cita.data.paciente,
-                                m('br'),
-                                Cita.data.estudio,
-                                m('br'),
-                                Cita.data.prestador,
-                                m('br'),
+                            m("div.row.mg-b-50", [
+                                m("div.col-12", [
+                                    m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
+                                        "Paciente:"
+                                    ),
+                                    m("p", [
+                                        Cita.data.paciente,
+                                    ]),
+                                ]),
+                                m("div.col-6", [
+                                    m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
+                                        "Estudio:"
+                                    ),
+                                    m("p", [
+
+                                        Cita.data.estudio,
+
+                                    ]),
+                                ]),
+                                m("div.col-6", [
+                                    m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
+                                        "Comentarios:"
+                                    ),
+                                    m("p", [
+                                        (Cita.data.comentarios !== undefined && Cita.data.comentarios.length > 0 ? Cita.data.comentarios : 'N/D')
+                                    ]),
+                                ]),
+
+
                             ]),
-                            m("p.event-desc.tx-gray-900.mg-b-40"),
+                            m('hr'),
+
                             (!Cita.data.editable ? [
                                 m("button.btn.btn-primary.mg-r-5[data-dismiss='modal']", {
                                     onclick: () => {
@@ -2261,7 +2414,7 @@ class Calendario extends App {
             Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Un momento por favor.');
             setTimeout(() => {
                 window.location.reload();
-            }, 2500);
+            }, 2000);
         }
     }
 
