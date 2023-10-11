@@ -2114,9 +2114,6 @@ class Calendario extends App {
 
 
                                     ]),
-
-
-
                                     m("div.form-group",
                                         m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                             "Historia Clínica Paciente:"
@@ -2142,9 +2139,6 @@ class Calendario extends App {
                                             )
                                         ])
                                     ),
-
-
-
                                     m("div.form-group",
                                         m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                             "Estudio:"
@@ -2174,19 +2168,72 @@ class Calendario extends App {
                                         ]),
 
                                     ),
-
-
                                     m("div.form-group",
-                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
-                                            "Comentarios:"
-                                        ),
-                                        m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
-                                            value: Cita.data.comentarios,
-                                            oninput: (e) => {
-                                                Cita.data.comentarios = e.target.value;
-                                            }
-                                        })
+                                        m("ul.nav.nav-tabs[id='myTab'][role='tablist']", [
+                                            m("li.nav-item",
+                                                m("a.nav-link.active[id='home-tab'][data-toggle='tab'][href='#home'][role='tab'][aria-controls='home'][aria-selected='true']",
+                                                    "Comentarios"
+                                                )
+                                            ),
+                                            m("li.nav-item", {
+                                                class: (Cita.data.tipo == 1 && Cita.data.email !== undefined ? '' : 'd-none')
+                                            },
+                                                m("a.nav-link[id='profile-tab'][data-toggle='tab'][href='#profile'][role='tab'][aria-controls='profile'][aria-selected='false']",
+                                                    "Notificación al Correo"
+                                                )
+                                            ),
+
+                                        ]),
+                                        m(".tab-content.bd.bd-gray-300.bd-t-0.pd-20[id='myTabContent']", [
+                                            m(".tab-pane.fade.show.active[id='home'][role='tabpanel'][aria-labelledby='home-tab']", [
+                                                m('div.form-group', [
+                                                    m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                        "Comentarios: ",
+                                                    ),
+                                                    m("textarea.form-control[rows='2'][placeholder='Comentarios']", {
+                                                        oninput: (e) => {
+                                                            Cita.data.comentarios = e.target.value;
+                                                        }
+                                                    })
+                                                ])
+
+
+                                            ]),
+                                            m(".tab-pane.fade[id='profile'][role='tabpanel'][aria-labelledby='profile-tab']", {
+                                                class: (Cita.data.tipo == 1 && Cita.data.email !== undefined ? '' : 'd-none')
+                                            }, [
+                                                (Cita.data.tipo == 1 && Cita.data.email !== undefined ? [
+                                                    m("div.form-group",
+                                                        m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
+                                                            "Correo electrónico: ",
+                                                            m('br'),
+                                                            m('span.tx-light.tx-5', "*Se enviará una notificación de correo a la(s) siguiente(s) direccione(s).")
+                                                        ),
+                                                        m("div",
+                                                            m("input.form-control[id='correoCita'][type='text'][data-role='tagsinput']", {
+                                                                oncreate: (el) => {
+                                                                    let elt = $('#correoCita');
+                                                                    elt.tagsinput({
+                                                                        itemValue: 'value',
+                                                                        itemText: 'text',
+                                                                        typeaheadjs: {
+                                                                            name: 'correoCita',
+                                                                            displayKey: 'text',
+                                                                            source: []
+                                                                        }
+                                                                    });
+
+                                                                    elt.tagsinput('add', { "value": Cita.data.email, "text": Cita.data.email });
+                                                                }
+                                                            })
+                                                        )
+                                                    )
+                                                ] : [])
+                                            ])
+
+                                        ])
                                     )
+
                                 ])
 
                             ])
