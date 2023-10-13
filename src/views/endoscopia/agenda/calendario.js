@@ -39,37 +39,136 @@ class AlertCalendar {
     }
 }
 
+
 class OptionSelect {
 
+    static idFilter = '';
+
+    static selectDestroy() {
+        $("#agendas").select2('destroy');
+        OptionSelect.idFilter = '';
+        m.redraw();
+        setTimeout(() => {
+            OptionSelect.idFilter = Calendario.idCalendar;
+            m.redraw();
+        }, 1000);
+    }
+
+    static selectInit() {
+        $('#agendas').select2({
+            templateSelection: function (data, container) {
+                container[0].style.backgroundColor = Calendario.setColor(data.id);
+                return data.text;
+            },
+            placeholder: 'Seleccione...',
+            searchInputPlaceholder: 'Buscar',
+        }).on("change", function (e) {
+
+            let idCalendar = '';
+            let tree = $(this).val();
+            // Using the each() method
+            $.each(tree, function (index, value) {
+                idCalendar += value + ",";
+            });
+
+            idCalendar = idCalendar.substring(0, idCalendar.length - 1);
+            Calendario.idCalendar = idCalendar;
+            if (tree.length > 0) {
+                m.route.set("/endoscopia/agendas/calendario/", {
+                    idCalendar: encodeURIComponent(Calendario.idCalendar)
+                })
+            } else {
+                m.route.set("/endoscopia/agendas/calendario");
+            }
+            Calendario.reloadFetchAgenda();
+        });
+    }
+
+    oncreate() {
+        setTimeout(() => {
+            OptionSelect.idFilter = Calendario.idCalendar;
+            m.redraw();
+        }, 500);
+    }
+
     view() {
-        if (Calendario.calendarios.length !== 0) {
-            return Calendario.calendarios.map(function (_v, _i, _contentData) {
+        if (OptionSelect.idFilter !== '') {
+            return m("select.tx-5.form-control.select2-limit[multiple='multiple'][id='agendas']", {
+                oncreate: (el) => {
+                    setTimeout(() => {
+                        OptionSelect.selectInit();
+                    }, 900);
+                }
+            }, [
+                Calendario.calendarios.map(function (_v, _i, _contentData) {
 
-                return [
+                    return [
 
-                    m("option.tx-10[value='" + _v.IDCALENDAR + "']", {
-                        oncreate: (el) => {
+                        m("option.tx-10[value='" + _v.IDCALENDAR + "']", {
+                            oncreate: (el) => {
 
-                            if (Calendario.idCalendar.search(_v.IDCALENDAR) != -1) {
-                                el.dom.selected = true;
+                                if (Calendario.idCalendar.search(_v.IDCALENDAR) != -1) {
+                                    el.dom.selected = true;
+                                }
+
                             }
+                        },
 
-                        }
-                    },
-
-                        _v.CALENDAR
-                    ),
+                            _v.CALENDAR
+                        ),
 
 
 
-                ]
+                    ]
 
-            })
+                })
+            ])
+        } else {
+            return m(Loader)
         }
-
 
     }
 }
+
+class ProximasCitas {
+
+    view() {
+        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0) {
+
+            return Calendario.citas.data.events.map((_v, _i) => {
+                if (_i <= 4) {
+                    return [
+                        m("a.schedule-item.bd-l.bd-2[href='#']", {
+                            onclick: (e) => {
+                                e.preventDefault();
+                                let dateText = moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD');
+                                $('#calendar').fullCalendar('gotoDate', dateText);
+                            }
+                        }, [
+                            m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
+                                style: { "background-color": _v.borderColor, "color": "#fff" }
+                            }, (_v.tipo == 1) ? ' Cita Médica ' : (_v.tipo == 2) ? ' Evento' : ' Nota'),
+                            m("h6.tx-10",
+                                _v.paciente
+                            ),
+                            m("span.tx-5.text-capitalize",
+                                moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' ' + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY')
+                            )
+                        ]),
+                    ]
+
+                }
+
+
+            })
+
+        } else {
+            return m(Loader)
+        }
+
+    }
+}
+
 
 class BuscadorItems {
     static searchField = '';
@@ -643,6 +742,8 @@ class Cita {
     static agendarCita() {
 
         Cita.loader = true;
+        Cita.data.idCalendar = Calendario.idCalendar;
+        Cita.data.calendarios = Calendario.calendarios;
         m.request({
             method: "POST",
             url: "https://api.hospitalmetropolitano.org/v2/date/citas/nueva",
@@ -838,7 +939,13 @@ class Calendario extends App {
         });
 
         // Initialize tooltip
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip({
+            template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                '<div class= "arrow" ></div>' +
+                '<div class="tooltip-inner"></div>' +
+                '</div > ',
+
+        });
 
 
 
@@ -918,31 +1025,65 @@ class Calendario extends App {
             },
             eventRender: function (event, element) {
 
-                if (event.description) {
+                /*
+                    if (event.description) {
                     element.find('.fc-list-item-title').append('<span class="fc-desc">' + event.description + '</span>');
                     element.find('.fc-content').append('<span class="fc-desc">' + event.description + '</span>');
                 }
+                */
 
-                var eBorderColor = (event.borderColor) ? event.borderColor : event.borderColor;
+                let nacimiento = moment(event.pc_fecha_nacimiento);
+                let hoy = moment();
+                let anios = hoy.diff(nacimiento, "years");
+
+                let eBorderColor = (event.borderColor) ? event.borderColor : event.borderColor;
+
+                let _calendarios = '';
+
+                if (event.calendarios !== undefined && event.calendarios.length !== 0) {
+                    event.calendarios.map((_v, _i) => {
+                        _calendarios += (_i + 1) + '.- ' + _v.CALENDAR + ' <br> ';
+                    });
+
+                }
+
+
+                element.find('.fc-title').attr("data-toggle", "tooltip");
+                element.find('.fc-title').attr("data-html", "true");
+                element.find('.fc-title').attr("data-placement", "left");
+
+                if (event.tipo == 1) {
+                    element.find('.fc-title').attr("title", "<div class='wd-50px text-left'>Cita Médica:</div> <br> <div class='wd-50px text-left'>Paciente:</div> <div class='wd-50px text-left'>" + event.paciente + "  </div> <div class='wd-50px text-left'>" + anios + " Años - " + (event.sexType == 'M' ? 'Masculino' : 'Femenino') + "  </div> <br> <div class='wd-50px text-left'>Fecha Y Hora:</div> <div class='wd-50px text-right text-capitalize'>" + moment(event.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(event.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' <br> ' + moment(event.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY') + "  </div> <br>  " +
+                        "<div class='wd-50px text-left'>Agendas:</div> <div class='wd-50px text-left'>" + _calendarios + "</div>  "
+                    );
+
+                }
 
                 if (event.editable) {
 
                     element.find('.fc-content').css({
                         'background-color': '#dc3545',
-                        'color': '#fff'
+                        'color': '#fff',
                     });
+
 
                     element.find('.fc-title').css({
                         'background-color': '#dc3545',
-                        'color': '#fff'
+                        'color': '#fff',
+                        'font-size': '10px'
                     });
 
 
                 } else {
 
+                    element.find('.fc-title').css({
+                        'font-size': '10px'
+                    });
+
                     element.find('.fc-list-item-time').css({
                         color: eBorderColor,
-                        borderColor: eBorderColor
+                        borderColor: eBorderColor,
+
                     });
 
                     element.find('.fc-list-item-title').css({
@@ -1026,11 +1167,12 @@ class Calendario extends App {
         // Display calendar event modal
         calendar.on('eventClick', function (calEvent, jsEvent, view) {
 
-            Cita.verCita(calEvent);
-
-
-
-
+            if (calEvent.tipo == 1) {
+                Cita.verCita(calEvent);
+            } else if (calEvent.tipo == 3) {
+                Cita.data.tipo = 1;
+                Cita.crearCita(calEvent.start, calEvent.end);
+            }
 
         });
 
@@ -1095,68 +1237,14 @@ class Calendario extends App {
                         ]),
                         m("div.pd-t-0.pd-l-20.pd-r-20", [
                             m("label.tx-uppercase.tx-sans.tx-10.tx-medium.tx-spacing-1.tx-color-03.mg-b-15",
-                                "Filtro Calendarios: "
+                                "Filtro Agendas/Calendarios: "
                             ),
-                            m("div.schedule-group",
-                                m("select.tx-5.form-control.select2-limit[multiple='multiple'][id='agendas']", {
-
-                                    oncreate: (el) => {
-
-                                        console.log(el)
-
-                                        setTimeout(() => {
-                                            $('.select2-limit').select2({
-                                                templateSelection: function (data, container) {
-
-                                                    container[0].style.backgroundColor = Calendario.setColor(data.id);
-                                                    return data.text;
-                                                },
-
-                                                placeholder: 'Seleccione...',
-                                                searchInputPlaceholder: 'Buscar',
-                                            }).on("change", function (e) {
-
-                                                let idCalendar = '';
-                                                let tree = $(this).val();
-                                                // Using the each() method
-                                                $.each(tree, function (index, value) {
-                                                    idCalendar += value + ",";
-                                                });
-
-                                                idCalendar = idCalendar.substring(0, idCalendar.length - 1);
-
-                                                Calendario.idCalendar = idCalendar;
-
-                                                if (tree.length > 0) {
-                                                    m.route.set("/endoscopia/agendas/calendario/", {
-                                                        idCalendar: encodeURIComponent(Calendario.idCalendar)
-                                                    })
-
-                                                } else {
-
-                                                    m.route.set("/endoscopia/agendas/calendario");
-
-                                                }
-
-                                                window.location.reload();
-
-
-
-
-
-
-
-                                            });
-                                        }, 1500);
-
-
-                                    }
-                                }, [
+                            (!Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0 ? [
+                                m("div.schedule-group",
                                     m(OptionSelect)
+                                )
+                            ] : [])
 
-                                ])
-
-                            )
                         ]),
                         m("div.pd-t-20.pd-l-20.pd-r-20", [
                             m("label.tx-uppercase.tx-sans.tx-10.tx-medium.tx-spacing-1.tx-color-03.mg-b-15",
@@ -1165,35 +1253,9 @@ class Calendario extends App {
                             m("div.schedule-group.mg-b-40", [
 
                                 (!Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0 ? [
-                                    Calendario.citas.data.events.map((_v, _i) => {
-
-                                        if (_i <= 5) {
-
-                                            return [
-                                                m("a.schedule-item.bd-l.bd-2[href='#']", {
-                                                    onclick: (e) => {
-                                                        e.preventDefault();
-                                                        let dateText = moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD');
-                                                        $('#calendar').fullCalendar('gotoDate', dateText);
-                                                    }
-                                                }, [
-                                                    m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
-                                                        style: { "background-color": _v.borderColor, "color": "#fff" }
-                                                    }, ' Cita Médica '),
-                                                    m("h6.tx-10",
-                                                        _v.paciente
-                                                    ),
-                                                    m("span.tx-5",
-                                                        moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' el ' + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY')
-                                                    )
-                                                ]),
-                                            ]
-
-                                        }
-
-
-                                    })
+                                    m(ProximasCitas)
                                 ] : [])
+
 
                             ])
                         ]),
@@ -1533,7 +1595,10 @@ class Calendario extends App {
                                         ),
                                         m("div.input-group", [
                                             m("input.form-control[type='text'][placeholder='Nombre Evento']", {
-
+                                                value: (Cita.data.evento !== undefined ? Cita.data.evento : ''),
+                                                oninput: (e) => {
+                                                    Cita.data.evento = e.target.value;
+                                                },
 
                                             }),
                                         ]),
@@ -1548,7 +1613,10 @@ class Calendario extends App {
                                         ),
                                         m("div.input-group", [
                                             m("input.form-control[type='text'][placeholder='Nota']", {
-
+                                                value: (Cita.data.nota !== undefined ? Cita.data.evento : ''),
+                                                oninput: (e) => {
+                                                    Cita.data.nota = e.target.value;
+                                                },
 
                                             }),
                                         ]),
@@ -1648,10 +1716,19 @@ class Calendario extends App {
                                                 m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                                     "Fecha de Nacimiento:"
                                                 ),
-                                                m("input.form-control[type='date'][placeholder='Fecha Nacimiento']", {
+                                                m("input.form-control[type='text'][id='dateBirth'][placeholder='DD/MM/YYYY']", {
                                                     oninput: (e) => {
                                                         Cita.data.dateBirth = e.target.value;
                                                         console.log(Cita.dateBirth)
+                                                    },
+                                                    oncreate: (e) => {
+                                                        setTimeout(() => {
+                                                            new Cleave('#dateBirth', {
+                                                                date: true,
+                                                                datePattern: ['d', 'm', 'Y']
+                                                            });
+                                                        }, 100);
+
                                                     },
                                                 }),
                                             ])
@@ -1800,8 +1877,12 @@ class Calendario extends App {
                         m("div.modal-footer", [
                             m("button.btn.btn-primary.mg-r-5", {
                                 onclick: () => {
+                                    if (Cita.data.tipo == 1) {
+                                        Cita.agendarCitaHttp();
+                                    } else {
+                                        Cita.agendarCita();
+                                    }
 
-                                    Cita.agendarCitaHttp();
                                 }
                             },
                                 "Agendar Cita"
@@ -2334,6 +2415,16 @@ class Calendario extends App {
                 $('#calendar').fullCalendar('removeEvents');
                 $('#calendar').fullCalendar('addEventSource', Calendario.citas.data);
                 $('#calendar').fullCalendar('rerenderEvents');
+                OptionSelect.selectDestroy();
+
+                $('[data-toggle="tooltip"]').tooltip({
+                    template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                        '<div class= "arrow" ></div>' +
+                        '<div class="tooltip-inner"></div>' +
+                        '</div > ',
+
+                });
+
 
 
             })
