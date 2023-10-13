@@ -1,5 +1,5 @@
 class ApiHTTP {
-    static apiUrl = '/api';
+    static apiUrl = 'https://api.hospitalmetropolitano.org';
 }
 
 export default ApiHTTP;
