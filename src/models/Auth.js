@@ -27,7 +27,7 @@ class AuthManager {
         try {
 
             App.messageError = null;
-            // Hacer la petición al servidor con las credenciales
+            // Hacer la petición al servidor con las credenciales para aplicación.
             let response = await fetch(ApiHTTP.apiUrl + "/v2/sso/auth", {
                 method: "POST",
                 headers: {
