@@ -1,15 +1,5 @@
 {
-  "navigationFallback": {
-    "rewrite": "index.html",
-    "exclude": [
-      "/assets/*.{png,jpg,gif,ico}",
-      "/*.{png,jpg,gif,ico}",
-      "/pdfjs/*.{js}"
-    ],
-    "mimeTypes": {
-      ".json": "text/json",
-      ".js": "application/javascript",
-      ".css": "text/css"
+    "navigationFallback": {
+        "rewrite": "/index.html"
     }
-  }
 }
