@@ -6,10 +6,6 @@
             "/css/*"
         ]
     },
-    "globalHeaders": {
-        "Content-Type": "charset=UTF-8",
-        "X-Content-Type-Options": "nosniff"
-    },
     "mimeTypes": {
         ".html": "text/html",
         "custom": "text/html",
