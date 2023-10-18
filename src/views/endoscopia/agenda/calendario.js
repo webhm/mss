@@ -86,10 +86,11 @@ class OptionSelect {
             } else {
 
                 m.route.set("/endoscopia/agendas/calendario");
+                ProximasCitas.citas = [];
                 Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Ud. serà redirigido.');
                 setTimeout(() => {
                     window.location.reload();
-                }, 3500);
+                }, 2500);
 
             }
 
