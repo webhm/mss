@@ -3,7 +3,8 @@
         "rewrite": "/index.html",
         "exclude": [
             "/images/*.{png,jpg,gif}",
-            "*.js"
+            "/assets/*",
+            "/assets/dashforge/lib/jquery/*"
         ]
     },
     "mimeTypes": {
