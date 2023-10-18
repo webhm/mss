@@ -3,8 +3,12 @@
         "rewrite": "index.html",
         "exclude": [
             "/images/*.{png,jpg,gif}",
-            "/css/*"
+            "/assets/*"
         ]
+    },
+    "globalHeaders": {
+        "Content-Type": "charset=UTF-8",
+        "X-Content-Type-Options": "nosniff"
     },
     "mimeTypes": {
         ".html": "text/html",
