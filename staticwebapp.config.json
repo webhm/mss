@@ -2,10 +2,34 @@
     "navigationFallback": {
         "rewrite": "index.html",
         "exclude": [
-            "/assets/*.{png,jpg,gif,ico}",
-            "/*.{png,jpg,gif,ico}",
-            "/assets/*.{css,scss,js}",
-            "/pdfjs/*.{js}"
+            "/images/*.{png,jpg,gif}",
+            "/css/*"
         ]
+    },
+    "responseOverrides": {
+        "400": {
+            "rewrite": "/"
+        },
+        "401": {
+            "redirect": "/login",
+            "statusCode": 302
+        },
+        "403": {
+            "rewrite": "/"
+        },
+        "404": {
+            "rewrite": "/index.html"
+        }
+    },
+    "globalHeaders": {
+        "Content-Type": "charset=UTF-8",
+        "content-security-policy": "default-src https: 'self'; object-src 'none'; frame-src 'self'; img-src 'self'"
+    },
+    "mimeTypes": {
+        ".html": "text/html",
+        "custom": "text/html",
+        ".json": "text/json",
+        ".css": "text/css",
+        ".js": "text/javascript"
     }
 }
