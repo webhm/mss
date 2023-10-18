@@ -73,14 +73,18 @@ class OptionSelect {
 
             idCalendar = idCalendar.substring(0, idCalendar.length - 1);
             Calendario.idCalendar = idCalendar;
+
             if (tree.length > 0) {
                 m.route.set("/endoscopia/agendas/calendario/", {
                     idCalendar: encodeURIComponent(Calendario.idCalendar)
                 })
+
+                Calendario.reloadFetchAgenda();
+
             } else {
                 m.route.set("/endoscopia/agendas/calendario");
             }
-            Calendario.reloadFetchAgenda();
+
         });
     }
 
@@ -132,41 +136,48 @@ class OptionSelect {
 
 class ProximasCitas {
 
-    view() {
-        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length > 0) {
+    static citas = [];
 
+    oninit() {
+        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length > 0 && Calendario.citas.data.events.length > 0) {
             return Calendario.citas.data.events.map((_v, _i) => {
-
-
                 if (_v.tipo == 1 && _i <= 4) {
-                    return [
-                        m("a.schedule-item.bd-l.bd-2[href='#']", {
-                            onclick: (e) => {
-                                e.preventDefault();
-                                let dateText = moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD');
-                                $('#calendar').fullCalendar('gotoDate', dateText);
-                            }
-                        }, [
-                            m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
-                                style: { "background-color": _v.borderColor, "color": "#fff" }
-                            }, (_v.tipo == 1) ? ' Cita Médica ' : (_v.tipo == 2) ? ' Evento' : ' Nota'),
-                            m("h6.tx-10",
-                                _v.paciente
-                            ),
-                            m("span.tx-5.text-capitalize",
-                                moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' ' + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY')
-                            )
-                        ]),
-                    ]
-
+                    ProximasCitas.citas.push(_v);
                 }
+            })
+        }
+    }
+
+    view() {
+        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length > 0 && ProximasCitas.citas.length > 0) {
+
+            return ProximasCitas.citas.map((_v, _i) => {
+
+                return [
+                    m("a.schedule-item.bd-l.bd-2[href='#']", {
+                        onclick: (e) => {
+                            e.preventDefault();
+                            let dateText = moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD');
+                            $('#calendar').fullCalendar('gotoDate', dateText);
+                        }
+                    }, [
+                        m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
+                            style: { "background-color": _v.borderColor, "color": "#fff" }
+                        }, (_v.tipo == 1) ? ' Cita Médica ' : (_v.tipo == 2) ? ' Evento' : ' Nota'),
+                        m("h6.tx-10",
+                            _v.paciente
+                        ),
+                        m("span.tx-5.text-capitalize",
+                            moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' ' + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY')
+                        )
+                    ]),
+                ]
 
 
             })
 
-        } else if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length == 0) {
-            return m('p', 'No exi')
-
+        } else if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && ProximasCitas.citas.length == 0) {
+            return m(".alert.alert-secondary[role='alert']", "No existen próximas citas.");
         } else {
             return m(Loader)
         }
