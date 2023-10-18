@@ -6,21 +6,6 @@
             "/css/*"
         ]
     },
-    "responseOverrides": {
-        "400": {
-            "rewrite": "/"
-        },
-        "401": {
-            "redirect": "/login",
-            "statusCode": 302
-        },
-        "403": {
-            "rewrite": "/"
-        },
-        "404": {
-            "rewrite": "/index.html"
-        }
-    },
     "globalHeaders": {
         "Content-Type": "charset=UTF-8"
     },

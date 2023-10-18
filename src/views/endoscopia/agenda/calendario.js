@@ -133,10 +133,12 @@ class OptionSelect {
 class ProximasCitas {
 
     view() {
-        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0) {
+        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length > 0) {
 
             return Calendario.citas.data.events.map((_v, _i) => {
-                if (_i <= 4) {
+
+
+                if (_v.tipo == 1 && _i <= 4) {
                     return [
                         m("a.schedule-item.bd-l.bd-2[href='#']", {
                             onclick: (e) => {
@@ -161,6 +163,9 @@ class ProximasCitas {
 
 
             })
+
+        } else if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length == 0) {
+            return m('p', 'No exi')
 
         } else {
             return m(Loader)
@@ -1188,10 +1193,6 @@ class Calendario extends App {
             dropdownCssClass: 'select2-dropdown-modal',
         });
 
-        $('.calendar-add').on('click', function (e) {
-            e.preventDefault()
-            $('#modalCreateEvent').modal('show');
-        });
 
 
 
@@ -1221,7 +1222,13 @@ class Calendario extends App {
                         m("div.search-form", [
                             m("input.form-control[type='search'][placeholder='Buscar por NHC o Apellidos y Nombres'][title='Buscar por NHC o Apellidos y Nombres']")
                         ]),
-                        m("a.btn btn-sm btn-primary btn-icon calendar-add", [
+                        m("a.btn btn-sm btn-primary btn-icon calendar-add", {
+                            onclick: (e) => {
+                                e.preventDefault();
+                                Cita.data.tipo = 1;
+                                $('#modalCreateEvent').modal('show');
+                            }
+                        }, [
                             m("div[data-toggle='tooltip']", [
                                 m("i.tx-white[data-feather='plus']")
                             ])
@@ -2459,8 +2466,8 @@ class Calendario extends App {
                         m.route.set('/endoscopia/agendas/calendario/', {
                             idCalendar: encodeURIComponent(Calendario.idCalendar)
                         });
-                        Calendario.fetchAgendas();
 
+                        Calendario.fetchAgendas();
 
                     } else {
                         Calendario.loader = false;
@@ -2549,10 +2556,10 @@ class Calendario extends App {
 
     onupdate(_data) {
         if (_data.attrs.idCalendar == undefined) {
-            Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Un momento por favor.');
+            Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Ud. serà redirigido.');
             setTimeout(() => {
-                window.location.reload();
-            }, 2000);
+                m.route.set('/endoscopia/agendas');
+            }, 3000);
         }
     }
 
