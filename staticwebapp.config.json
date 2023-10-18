@@ -1,9 +1,15 @@
 {
+    "routes": [
+        {
+            "route": "/*",
+            "rewrite": "/index.html"
+        }
+    ],
     "navigationFallback": {
         "rewrite": "/index.html",
         "exclude": [
             "/images/*.{png,jpg,gif}",
-            "/assets/*.{css,js}"
+            "/assets/dashforge/lib/jquery/*"
         ]
     },
     "mimeTypes": {
