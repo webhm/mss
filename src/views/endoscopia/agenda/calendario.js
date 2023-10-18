@@ -57,7 +57,8 @@ class OptionSelect {
     static selectInit() {
         $('#agendas').select2({
             templateSelection: function (data, container) {
-                container[0].style.backgroundColor = Calendario.setColor(data.id);
+                container[0].style['font-size'] = '10px';
+                //container[0].style.backgroundColor = Calendario.setColor(data.id);
                 return data.text;
             },
             placeholder: 'Seleccione...',
@@ -66,7 +67,7 @@ class OptionSelect {
 
             let idCalendar = '';
             let tree = $(this).val();
-            // Using the each() method
+
             $.each(tree, function (index, value) {
                 idCalendar += value + ",";
             });
@@ -75,6 +76,7 @@ class OptionSelect {
             Calendario.idCalendar = idCalendar;
 
             if (tree.length > 0) {
+
                 m.route.set("/endoscopia/agendas/calendario/", {
                     idCalendar: encodeURIComponent(Calendario.idCalendar)
                 })
@@ -82,7 +84,13 @@ class OptionSelect {
                 Calendario.reloadFetchAgenda();
 
             } else {
+
                 m.route.set("/endoscopia/agendas/calendario");
+                Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Ud. serà redirigido.');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3500);
+
             }
 
         });
@@ -136,20 +144,14 @@ class OptionSelect {
 
 class ProximasCitas {
 
-    static citas = [];
+    static citas = null;
 
     oninit() {
-        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length > 0 && Calendario.citas.data.events.length > 0) {
-            return Calendario.citas.data.events.map((_v, _i) => {
-                if (_v.tipo == 1 && _i <= 4) {
-                    ProximasCitas.citas.push(_v);
-                }
-            })
-        }
+        ProximasCitas.citas = Calendario.citas.data.events;
     }
 
     view() {
-        if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && Calendario.citas.data.length > 0 && ProximasCitas.citas.length > 0) {
+        if (ProximasCitas.citas !== null && ProximasCitas.citas.length > 0) {
 
             return ProximasCitas.citas.map((_v, _i) => {
 
@@ -176,7 +178,7 @@ class ProximasCitas {
 
             })
 
-        } else if (OptionSelect.idFilter !== '' && !Calendario.loader && Calendario.citas.status && ProximasCitas.citas.length == 0) {
+        } else if (ProximasCitas.citas !== null && ProximasCitas.citas.length == 0) {
             return m(".alert.alert-secondary[role='alert']", "No existen próximas citas.");
         } else {
             return m(Loader)
@@ -1056,10 +1058,12 @@ class Calendario extends App {
 
                 let _calendarios = '';
 
-                if (event.calendarios !== undefined && event.calendarios.length !== 0) {
-                    event.calendarios.map((_v, _i) => {
-                        _calendarios += (_i + 1) + '.- ' + _v.CALENDAR + ' <br> ';
-                    });
+                if (event.calendarios !== undefined && Object.keys(event.calendarios).length !== 0) {
+
+                    for (let i = 0; i < Object.keys(event.calendarios).length; i++) {
+                        let key = Object.keys(event.calendarios)[i];
+                        _calendarios += (i + 1) + '.- ' + event.calendarios[key].CALENDAR + ' <br> ';
+                    }
 
                 }
 
@@ -1270,7 +1274,7 @@ class Calendario extends App {
                             ),
                             m("div.schedule-group.mg-b-40", [
 
-                                (!Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0 ? [
+                                (!Calendario.loader && Calendario.citas.status && Object.keys(Calendario.citas.data).length !== 0 ? [
                                     m(ProximasCitas)
                                 ] : [])
 
@@ -1650,6 +1654,7 @@ class Calendario extends App {
                                         ),
                                         m("div.input-group", [
                                             m("input.form-control[type='text'][placeholder='Items/Estudio']", {
+                                                class: (Cita.data.codItem !== undefined ? '' : 'd-none'),
                                                 value: (Cita.data.codItem !== undefined ? Cita.data.codItem + ' - ' + Cita.data.estudio : ''),
                                                 oninput: (e) => {
                                                     e.preventDefault();
@@ -1691,6 +1696,7 @@ class Calendario extends App {
                                             class: (Cita.data.sinDatos ? 'd-none' : '')
                                         }, [
                                             m("input.form-control[type='text'][placeholder='Numero de Historia Clínica'][autofocus]", {
+                                                class: (Cita.data.paciente !== undefined ? '' : 'd-none'),
                                                 value: (Cita.data.paciente !== undefined ? Cita.data.nhc + ' - ' + Cita.data.paciente : ''),
                                                 oninput: (e) => {
                                                     e.preventDefault();
@@ -2542,7 +2548,7 @@ class Calendario extends App {
         if (!_track) {
             $('#modalCreateEvent').modal('hide');
             Calendario.showAlertCalendar('bg-danger', 'No se puede reagendar. Ya existe una cita agendada desde: ' + _timeInicio + ' hasta: ' + _timeFin)
-            throw 'custom error'
+            throw 'Error de Validación';
         }
 
     }
@@ -2563,15 +2569,6 @@ class Calendario extends App {
 
     oncreate() {
         document.body.classList.add('app-calendar');
-    }
-
-    onupdate(_data) {
-        if (_data.attrs.idCalendar == undefined) {
-            Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Ud. serà redirigido.');
-            setTimeout(() => {
-                m.route.set('/endoscopia/agendas');
-            }, 3000);
-        }
     }
 
 
