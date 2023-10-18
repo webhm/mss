@@ -8,9 +8,7 @@
     },
     "globalHeaders": {
         "Content-Type": "charset=UTF-8",
-        "X-Content-Type-Options": "nosniff",
-        "x-xss-protection": "1; mode=block",
-        "referrer-policy": "same-origin"
+        "X-Content-Type-Options": "nosniff"
     },
     "mimeTypes": {
         ".html": "text/html",
