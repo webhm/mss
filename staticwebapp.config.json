@@ -1,8 +1,11 @@
 {
     "navigationFallback": {
-        "rewrite": "/index.html",
+        "rewrite": "index.html",
         "exclude": [
-            "*.{css,scss,js,min.js,png,gif,ico,jpg,svg}"
+            "/assets/*.{png,jpg,gif,ico,min.js,js}",
+            "/*.{png,jpg,gif,ico}",
+            "/*.{css,scss,js}",
+            "/pdfjs/*.{js}"
         ]
     }
 }
