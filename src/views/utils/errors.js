@@ -36,6 +36,19 @@ class Errors {
         ]
     }
 
+    setCustomError(_data) {
+        return [
+            m("p.tx-danger.pd-0.mg-b-2", [
+                m('i.fas.fa-exclamation-triangle'),
+                " Error:"
+            ]),
+            m("p.tx-danger.tx-color-03.mg-b-30",
+                _data.message
+            )
+        ]
+    }
+
+
     view() {
         if (this.type == 0) {
             return [
@@ -45,6 +58,11 @@ class Errors {
         if (this.type == 1) {
             return [
                 this.setFethError(this.error)
+            ];
+        }
+        if (this.type == 2) {
+            return [
+                this.setCustomError(this.error)
             ];
         }
 
