@@ -163,25 +163,26 @@ class ProximasCitas {
         if (OptionSelect.idFilter !== '' && !Calendario.loader && ProximasCitas.citas !== null && ProximasCitas.citas.length > 0) {
 
             return ProximasCitas.citas.map((_v, _i) => {
-
-                return [
-                    m("a.schedule-item.bd-l.bd-2", {
-                        onclick: (e) => {
-                            e.preventDefault();
-                            $('#calendar').fullCalendar('gotoDate', moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD'));
-                        }
-                    }, [
-                        m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
-                            style: { "background-color": _v.borderColor, "color": "#fff" }
-                        }, (_v.tipo == 1) ? ' Cita Médica ' : (_v.tipo == 2) ? ' Evento' : ' Nota'),
-                        m("h6.tx-10",
-                            _v.paciente
-                        ),
-                        m("span.tx-5.text-capitalize",
-                            moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' ' + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY')
-                        )
-                    ]),
-                ]
+                if (_v.tipo == 1 && _i <= 4) {
+                    return [
+                        m("a.schedule-item.bd-l.bd-2", {
+                            onclick: (e) => {
+                                e.preventDefault();
+                                $('#calendar').fullCalendar('gotoDate', moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD'));
+                            }
+                        }, [
+                            m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
+                                style: { "background-color": _v.borderColor, "color": "#fff" }
+                            }, (_v.tipo == 1) ? ' Cita Médica ' : (_v.tipo == 2) ? ' Evento' : ' Nota'),
+                            m("h6.tx-10",
+                                _v.paciente
+                            ),
+                            m("span.tx-5.text-capitalize",
+                                moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' ' + moment(_v.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY')
+                            )
+                        ]),
+                    ]
+                }
 
 
             })
@@ -922,6 +923,7 @@ class Calendario extends App {
     static calendarios = [];
     static typeAlert = null;
     static messageAlert = null;
+    static searchPaciente = null;
 
     constructor() {
         super();
@@ -1083,9 +1085,7 @@ class Calendario extends App {
                 let nacimiento = moment(event.pc_fecha_nacimiento);
                 let hoy = moment();
                 let anios = hoy.diff(nacimiento, "years");
-
                 let eBorderColor = (event.borderColor) ? event.borderColor : event.borderColor;
-
                 let _calendarios = '';
 
                 if (event.calendarios !== undefined && Object.keys(event.calendarios).length !== 0) {
@@ -1109,6 +1109,18 @@ class Calendario extends App {
 
                 }
 
+                if (event.tipo == 2) {
+                    element.find('.fc-title').attr("title", "<div class='wd-50px text-left'>" + event.title + "  </div> <br>" + "<div class='wd-50px text-left'>Agendas:</div> <div class='wd-50px text-left'>" + _calendarios + "</div>  ");
+                }
+
+                if (event.tipo == 3) {
+
+                    element.find('.fc-title').parent().parent().css("width", "35%");
+                    element.find('.fc-title').attr("title", "<div class='wd-50px text-left'>" + event.title + "  </div> " +
+                        "<br> <div class='wd-50px text-left'>Fecha Y Hora:</div> <div class='wd-50px text-right text-capitalize'>" + moment(event.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm') + " - " + moment(event.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm') + ' <br> ' + moment(event.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY') + "  </div> <br> " +
+                        "<div class='wd-50px text-left'>Agendas:</div> <div class='wd-50px text-left'>" + _calendarios + "</div>  ");
+
+                }
 
                 if (event.editable) {
 
@@ -1239,7 +1251,7 @@ class Calendario extends App {
 
             console.log(1111, dias)
 
-            if (dias <= 1) {
+            if (dias < 1) {
                 Cita.data = {};
                 Cita.data.tipo = 1;
                 Cita.crearCita(startDate, endDate);
@@ -1277,11 +1289,50 @@ class Calendario extends App {
 
                         m("i[data-feather='search']"),
                         m("div.search-form", [
-                            m("input.form-control[type='search'][placeholder='Buscar por NHC o Apellidos y Nombres'][title='Buscar por NHC o Apellidos y Nombres']")
+                            m("input.form-control[type='search'][placeholder='Buscar por NHC o Apellidos y Nombres'][title='Buscar por NHC o Apellidos y Nombres']", {
+                                onkeypress: (e) => {
+                                    if (Calendario.searchPaciente.length !== 0) {
+                                        if (e.keyCode == 13) {
+                                            m.route.set('/endoscopia/agendas/calendario/', {
+                                                idCalendar: encodeURIComponent(Calendario.idCalendar),
+                                                searchPaciente: encodeURIComponent(Calendario.searchPaciente)
+                                            });
+                                            setTimeout(() => {
+                                                Calendario.reloadFetchAgenda();
+
+                                            }, 1000);
+                                        }
+                                    } else {
+                                        m.route.set('/endoscopia/agendas/calendario/', {
+                                            idCalendar: encodeURIComponent(Calendario.idCalendar),
+                                        });
+                                        setTimeout(() => {
+                                            Calendario.reloadFetchAgenda();
+
+                                        }, 1000);
+
+                                    }
+
+
+                                },
+                                oninput: (e) => {
+                                    Calendario.searchPaciente = e.target.value;
+                                    if (Calendario.searchPaciente.length == 0) {
+                                        m.route.set('/endoscopia/agendas/calendario/', {
+                                            idCalendar: encodeURIComponent(Calendario.idCalendar),
+                                        });
+                                        setTimeout(() => {
+                                            Calendario.reloadFetchAgenda();
+
+                                        }, 1000);
+                                    }
+                                }
+                            })
                         ]),
                         m("a.btn btn-sm btn-primary btn-icon calendar-add", {
                             onclick: (e) => {
                                 e.preventDefault();
+                                Cita.data = {};
                                 Cita.data.tipo = 1;
                                 Cita.crearCita(moment(moment().format('YYYY-MM-DD 07:00:00')), moment(moment().format('YYYY-MM-DD 07:10:00')));
                                 $('#modalCreateEvent').modal('show');
@@ -1615,7 +1666,9 @@ class Calendario extends App {
                                                         "Fecha de Inicio:"
                                                     ),
                                                     m("input.form-control[id='eventStartDate'][type='text'][placeholder='DD/MM/YYYY']", {
-                                                        oncreate: (e) => {
+                                                        oncreate: (el) => {
+                                                            el.dom.value = moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY');
+
                                                             setTimeout(() => {
                                                                 new Cleave('#eventStartDate', {
                                                                     date: true,
@@ -1624,7 +1677,6 @@ class Calendario extends App {
                                                             }, 100);
 
                                                         },
-                                                        value: moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY')
                                                     })
                                                 ),
                                                 m("div.col-3",
@@ -1632,7 +1684,12 @@ class Calendario extends App {
                                                         "Hora de Inicio:"
                                                     ),
                                                     m("input.form-control[id='eventStartHourDate'][type='text'][placeholder='hh:mm']", {
-                                                        oncreate: (e) => {
+                                                        oninput: (e) => {
+                                                            Cita.data.pn_inicio = moment(Cita.pn_inicio, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY') + " " + e.target.value;
+                                                        },
+                                                        oncreate: (el) => {
+                                                            el.dom.value = moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm');
+
                                                             setTimeout(() => {
                                                                 new Cleave('#eventStartHourDate', {
                                                                     time: true,
@@ -1640,7 +1697,6 @@ class Calendario extends App {
                                                                 });
                                                             }, 100);
                                                         },
-                                                        value: moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('HH:mm')
                                                     })
                                                 ),
                                                 m("div.col-3",
@@ -1648,6 +1704,7 @@ class Calendario extends App {
                                                         "Fecha de Fin"
                                                     ),
                                                     m("input.form-control[id='eventEndDate'][type='text'][placeholder='DD/MM/YYYY']", {
+
                                                         oncreate: (e) => {
 
                                                             setTimeout(() => {
@@ -1668,8 +1725,12 @@ class Calendario extends App {
                                                         "Hora de Fin"
                                                     ),
                                                     m("input.form-control[id='eventEndHourDate'][type='text'][placeholder='hh:mm']", {
-                                                        oncreate: (e) => {
+                                                        oninput: (e) => {
+                                                            Cita.data.pn_fin = moment(Cita.data.pn_fin, 'DD/MM/YYYY HH:mm').format('DD/MM/YYYY') + " " + e.target.value;
+                                                        },
+                                                        oncreate: (el) => {
 
+                                                            el.dom.value = moment(Cita.data.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm');
                                                             setTimeout(() => {
                                                                 new Cleave('#eventEndHourDate', {
                                                                     time: true,
@@ -1678,7 +1739,6 @@ class Calendario extends App {
                                                             }, 100);
 
                                                         },
-                                                        value: moment(Cita.data.pn_fin, 'DD/MM/YYYY HH:mm').format('HH:mm')
 
                                                     })
 
@@ -2495,10 +2555,6 @@ class Calendario extends App {
         return m(Sidebar);
     }
 
-    static initTooltip() {
-
-    }
-
     static fetchAgendas() {
 
         if (Calendario.idCalendar !== null) {
@@ -2528,7 +2584,6 @@ class Calendario extends App {
                     }, 80);
                     setTimeout(function () {
                         Calendario.setSidebar();
-                        Calendario.initTooltip();
                     }, 160);
 
 
@@ -2556,7 +2611,8 @@ class Calendario extends App {
             method: "GET",
             url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
             params: {
-                idCalendar: Calendario.idCalendar
+                idCalendar: Calendario.idCalendar,
+                searchPaciente: Calendario.searchPaciente
             },
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
@@ -2573,7 +2629,6 @@ class Calendario extends App {
                 $('#calendar').fullCalendar('addEventSource', Calendario.citas.data);
                 $('#calendar').fullCalendar('rerenderEvents');
                 OptionSelect.selectDestroy();
-                Calendario.initTooltip();
 
 
             })
@@ -2609,6 +2664,7 @@ class Calendario extends App {
                             idCalendar: encodeURIComponent(Calendario.idCalendar)
                         });
 
+
                         Calendario.fetchAgendas();
 
                     } else {
@@ -2641,8 +2697,6 @@ class Calendario extends App {
 
     }
 
-
-
     static showAlertCalendar(type, message) {
         Calendario.typeAlert = type;
         Calendario.messageAlert = message;
@@ -2657,17 +2711,23 @@ class Calendario extends App {
         let _timeFin = '';
 
         Calendario.citas.data.events.map((_val, _index) => {
-            if (moment(_val.start).format('DD-MM-YYYY HH:mm') == moment(Cita.data.start, 'dddd, DD-MM-YYYY HH:mm').format('DD-MM-YYYY HH:mm')) {
-                _track = false;
-                _timeInicio = moment(_val.start).format('DD-MM-YYYY HH:mm');
-                _timeFin = moment(_val.end).format('DD-MM-YYYY HH:mm');
+
+            if (_val.tipo == 1) {
+                if (moment(_val.start).format('DD-MM-YYYY HH:mm') == moment(Cita.data.start, 'dddd, DD-MM-YYYY HH:mm').format('DD-MM-YYYY HH:mm')) {
+                    _track = false;
+                    _timeInicio = moment(_val.start).format('DD-MM-YYYY HH:mm');
+                    _timeFin = moment(_val.end).format('DD-MM-YYYY HH:mm');
+                }
+
+                if (moment(_val.end).format('DD-MM-YYYY HH:mm') == moment(Cita.data.end, 'dddd, DD-MM-YYYY HH:mm').format('DD-MM-YYYY HH:mm')) {
+                    _track = false;
+                    _timeInicio = moment(_val.start).format('DD-MM-YYYY HH:mm');
+                    _timeFin = moment(_val.end).format('DD-MM-YYYY HH:mm');
+                }
             }
 
-            if (moment(_val.end).format('DD-MM-YYYY HH:mm') == moment(Cita.data.end, 'dddd, DD-MM-YYYY HH:mm').format('DD-MM-YYYY HH:mm')) {
-                _track = false;
-                _timeInicio = moment(_val.start).format('DD-MM-YYYY HH:mm');
-                _timeFin = moment(_val.end).format('DD-MM-YYYY HH:mm');
-            }
+
+
         })
 
         if (!_track) {
@@ -2680,6 +2740,10 @@ class Calendario extends App {
 
 
     oninit(_data) {
+
+        if (_data.attrs.searchPaciente !== undefined) {
+            Calendario.searchPaciente = decodeURIComponent(_data.attrs.searchPaciente);
+        }
 
         if (_data.attrs.idCalendar !== undefined) {
             Calendario.idCalendar = decodeURIComponent(_data.attrs.idCalendar);
