@@ -74,6 +74,7 @@ class OptionSelect {
 
             idCalendar = idCalendar.substring(0, idCalendar.length - 1);
             Calendario.idCalendar = idCalendar;
+            ProximasCitas.citas = [];
 
             if (tree.length > 0) {
 
@@ -86,7 +87,7 @@ class OptionSelect {
             } else {
 
                 m.route.set("/endoscopia/agendas/calendario");
-                ProximasCitas.citas = [];
+
                 Calendario.showAlertCalendar('bg-danger', 'Es necesario un perfil de agendamiento válido. Ud. serà redirigido.');
                 setTimeout(() => {
                     window.location.reload();
@@ -147,21 +148,26 @@ class ProximasCitas {
 
     static citas = null;
 
+    onupdate() {
+        ProximasCitas.citas = Calendario.citas.data.events;
+
+        m.redraw();
+    }
+
     oninit() {
         ProximasCitas.citas = Calendario.citas.data.events;
     }
 
     view() {
-        if (ProximasCitas.citas !== null && ProximasCitas.citas.length > 0) {
+        if (OptionSelect.idFilter !== '' && !Calendario.loader && ProximasCitas.citas !== null && ProximasCitas.citas.length > 0) {
 
             return ProximasCitas.citas.map((_v, _i) => {
 
                 return [
-                    m("a.schedule-item.bd-l.bd-2[href='#']", {
+                    m("a.schedule-item.bd-l.bd-2", {
                         onclick: (e) => {
                             e.preventDefault();
-                            let dateText = moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD');
-                            $('#calendar').fullCalendar('gotoDate', dateText);
+                            $('#calendar').fullCalendar('gotoDate', moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD'));
                         }
                     }, [
                         m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
@@ -957,14 +963,6 @@ class Calendario extends App {
             }
         });
 
-        // Initialize tooltip
-        $('[data-toggle="tooltip"]').tooltip({
-            template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
-                '<div class= "arrow" ></div>' +
-                '<div class="tooltip-inner"></div>' +
-                '</div > ',
-
-        });
 
 
 
@@ -1208,9 +1206,6 @@ class Calendario extends App {
             minimumResultsForSearch: Infinity,
             dropdownCssClass: 'select2-dropdown-modal',
         });
-
-
-
 
 
 
@@ -2374,6 +2369,10 @@ class Calendario extends App {
         return m(Sidebar);
     }
 
+    static initTooltip() {
+
+    }
+
     static fetchAgendas() {
 
         if (Calendario.idCalendar !== null) {
@@ -2399,10 +2398,15 @@ class Calendario extends App {
                     };
                     setTimeout(function () {
                         Calendario.setCalendar();
+
                     }, 80);
                     setTimeout(function () {
                         Calendario.setSidebar();
+                        Calendario.initTooltip();
                     }, 160);
+
+
+
 
 
                 })
@@ -2421,6 +2425,7 @@ class Calendario extends App {
 
     static reloadFetchAgenda() {
 
+
         m.request({
             method: "GET",
             url: "https://api.hospitalmetropolitano.org/v2/date/citas/agendadas",
@@ -2432,6 +2437,7 @@ class Calendario extends App {
             },
         })
             .then(function (res) {
+
                 Calendario.citas = {
                     status: res.status,
                     data: res.citasAgendadas,
@@ -2441,15 +2447,7 @@ class Calendario extends App {
                 $('#calendar').fullCalendar('addEventSource', Calendario.citas.data);
                 $('#calendar').fullCalendar('rerenderEvents');
                 OptionSelect.selectDestroy();
-
-                $('[data-toggle="tooltip"]').tooltip({
-                    template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
-                        '<div class= "arrow" ></div>' +
-                        '<div class="tooltip-inner"></div>' +
-                        '</div > ',
-
-                });
-
+                Calendario.initTooltip();
 
 
             })
@@ -2570,6 +2568,17 @@ class Calendario extends App {
 
     oncreate() {
         document.body.classList.add('app-calendar');
+    }
+
+    onupdate() {
+        // Initialize tooltip
+        $('[data-toggle="tooltip"]').tooltip({
+            template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                '<div class= "arrow" ></div>' +
+                '<div class="tooltip-inner"></div>' +
+                '</div > ',
+
+        });
     }
 
 
