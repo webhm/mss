@@ -5,39 +5,7 @@ import Loader from "../../utils/loader";
 import HeaderCalendar from "../../layout/headerCalendar";
 import Errors from "../../utils/errors";
 
-class AlertCalendar {
 
-    view() {
-
-        if (Calendario.typeAlert !== null) {
-            return [
-                m("div.pos-absolute.t-70.r-10", {
-                    style: { "z-index": "999999;" }
-                },
-                    m(".toast.animated.bounceInRight[role='alert'][aria-live='assertive'][aria-atomic='true'][data-delay='8000']", [
-                        m("div.toast-header.tx-white." + Calendario.typeAlert,
-
-                            [
-                                m("h6.tx-white.tx-14.mg-b-0.mg-r-auto.",
-                                    " Anuncio "
-                                ),
-                                m("button.ml-2.mb-1.close[type='button'][data-dismiss='toast'][aria-label='Cerrar']",
-                                    m("span..tx-white[aria-hidden='true']",
-                                        m.trust("&times;")
-                                    )
-                                )
-                            ]
-                        ),
-                        m("div.toast-body.tx-semibold",
-                            Calendario.messageAlert
-                        )
-                    ])
-                )
-            ]
-        }
-
-    }
-}
 
 
 class OptionSelect {
@@ -87,9 +55,7 @@ class OptionSelect {
             } else {
 
                 m.route.set("/endoscopia/agendas/calendario");
-
                 Calendario.error = 'Es necesario un perfil de agendamiento válido. Ud. serà redirigido.';
-
                 setTimeout(() => {
                     window.location.reload();
                 }, 3000);
@@ -169,6 +135,15 @@ class ProximasCitas {
                             onclick: (e) => {
                                 e.preventDefault();
                                 $('#calendar').fullCalendar('gotoDate', moment(_v.pn_inicio, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD'));
+
+                                // Initialize tooltip
+                                $('[data-toggle="tooltip"]').tooltip({
+                                    template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                                        '<div class= "arrow" ></div>' +
+                                        '<div class="tooltip-inner"></div>' +
+                                        '</div > ',
+
+                                });
                             }
                         }, [
                             m("span.tx-5.wd-100p.pd-1.pd-r-2.pd-l-5.mg-b-5.tx-semibold", {
@@ -735,11 +710,15 @@ class Cita {
                 if (res.status) {
                     Cita.agendarCita();
                 } else {
-                    Calendario.showAlertCalendar('bg-danger', res.message);
+                    $('#modalCreateEvent').animate({ scrollTop: 0 }, 'slow');
+                    Cita.data.error = res.message;
+                    throw res.message;
                 }
             })
             .catch(function (e) {
-                Calendario.showAlertCalendar('bg-danger', e);
+                $('#modalCreateEvent').animate({ scrollTop: 0 }, 'slow');
+                Cita.data.error = e;
+                throw e;
             });
 
     }
@@ -763,14 +742,15 @@ class Cita {
 
                 if (res.status) {
                     Calendario.reloadFetchAgenda();
-                    Calendario.showAlertCalendar('bg-primary', 'Ahora puede reagendar este Cita.');
+                    Calendario.success = 'Ahora puede reagendar este Cita.';
+                    Calendario.clearAlertCalendar();
                 } else {
-                    Calendario.showAlertCalendar('bg-primary', res.message);
+                    Calendario.error = res.message;
                 }
 
             })
             .catch(function (e) {
-                Calendario.showAlertCalendar('bg-danger', e);
+                Calendario.error = e;
 
 
             });
@@ -794,14 +774,16 @@ class Cita {
                 Cita.loader = false;
                 if (res.status) {
                     Calendario.reloadFetchAgenda();
-                    Calendario.showAlertCalendar('bg-danger', 'El reagendamiento se canceló.');
+                    Calendario.success = 'El reagendamiento se canceló.';
+                    Calendario.clearAlertCalendar();
                 } else {
-                    Calendario.showAlertCalendar('bg-danger', res.message);
+                    Calendario.error = res.message;
+
                 }
 
             })
             .catch(function (e) {
-                Calendario.showAlertCalendar('bg-danger', e);
+                Calendario.error = e;
 
             });
 
@@ -823,17 +805,18 @@ class Cita {
             .then(function (res) {
                 Cita.loader = false;
                 if (res.status) {
-                    Calendario.showAlertCalendar('bg-success', res.message);
+                    Calendario.success = res.message;
+                    Calendario.clearAlertCalendar();
                     $('#modalCreateEvent').modal('hide');
                     Calendario.reloadFetchAgenda();
                     Cita.data = {};
                 } else {
-                    Calendario.showAlertCalendar('bg-danger', res.message);
+                    Calendario.error = res.message;
                 }
 
             })
             .catch(function (e) {
-                Calendario.showAlertCalendar('bg-danger', e);
+                Calendario.error = e;
             });
 
     }
@@ -859,18 +842,18 @@ class Cita {
                 console.log(res)
 
                 if (res.status) {
-
-                    Calendario.showAlertCalendar('bg-success', res.message);
+                    Calendario.success = res.message;
+                    Calendario.clearAlertCalendar();
                     $('#modalUpdateEvent').modal('hide');
                     Calendario.reloadFetchAgenda();
 
                 } else {
-                    Calendario.showAlertCalendar('bg-danger', res.message);
+                    Calendario.error = res.message;
                 }
 
             })
             .catch(function (e) {
-                Calendario.showAlertCalendar('bg-danger', e);
+                Calendario.error = e;
 
             });
 
@@ -894,17 +877,18 @@ class Cita {
                 console.log(res)
 
                 if (res.status) {
-                    Calendario.showAlertCalendar('bg-success', res.message);
+                    Calendario.success = res.message;
+                    Calendario.clearAlertCalendar();
                     $('#modalCalendarEvent').modal('hide');
                     Calendario.reloadFetchAgenda();
                     Cita.data = {};
                 } else {
-                    Calendario.showAlertCalendar('bg-danger', res.message);
+                    Calendario.error = res.message;
                 }
 
             })
             .catch(function (e) {
-                Calendario.showAlertCalendar('bg-danger', e);
+                Calendario.error = res.message;
             });
 
     }
@@ -917,12 +901,14 @@ class Calendario extends App {
 
     static loader = false;
     static error = null;
+    static success = null;
     static cita = null;
     static citas = null;
     static idCalendar = null;
     static calendarios = [];
     static typeAlert = null;
     static messageAlert = null;
+
     static searchPaciente = null;
 
     constructor() {
@@ -951,6 +937,15 @@ class Calendario extends App {
             dateFormat: "yy-mm-dd",
             onSelect: function (dateText, inst) {
                 $('#calendar').fullCalendar('gotoDate', dateText);
+
+                // Initialize tooltip
+                $('[data-toggle="tooltip"]').tooltip({
+                    template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                        '<div class= "arrow" ></div>' +
+                        '<div class="tooltip-inner"></div>' +
+                        '</div > ',
+
+                });
             },
             beforeShowDay: function (date) {
 
@@ -1227,23 +1222,45 @@ class Calendario extends App {
 
         // change view to week when in tablet
         if (window.matchMedia('(min-width: 576px)').matches) {
-            calendar.changeView('agendaWeek');
+            try {
+                calendar.changeView('agendaWeek');
+            } catch (error) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+
         }
 
         // change view to month when in desktop
         if (window.matchMedia('(min-width: 992px)').matches) {
-            calendar.changeView('agendaWeek');
+            try {
+                calendar.changeView('agendaWeek');
+
+            } catch (error) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
         }
 
         // change view based in viewport width when resize is detected
         calendar.option('windowResize', function (view) {
-            if (view.name === 'listWeek') {
-                if (window.matchMedia('(min-width: 992px)').matches) {
-                    calendar.changeView('agendaWeek');
-                } else {
-                    calendar.changeView('listWeek');
+            try {
+                if (view.name === 'listWeek') {
+                    if (window.matchMedia('(min-width: 992px)').matches) {
+                        calendar.changeView('agendaWeek');
+                    } else {
+                        calendar.changeView('listWeek');
+                    }
                 }
+            } catch (error) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
+
+
         });
 
         // Display calendar event modal
@@ -1269,7 +1286,6 @@ class Calendario extends App {
             let dias = hoy.diff(fecha, "days");
 
             console.log(1111, dias)
-
             if (dias < 1) {
                 Cita.data = {};
                 Cita.data.tipo = 1;
@@ -1337,7 +1353,7 @@ class Calendario extends App {
                                         setTimeout(() => {
                                             Calendario.reloadFetchAgenda();
 
-                                        }, 1000);
+                                        }, 500);
 
                                     }
 
@@ -1410,21 +1426,55 @@ class Calendario extends App {
                 m("div.calendar-content", [
 
                     (!Calendario.loader && Calendario.citas.status && Calendario.citas.data.length !== 0) ? [
-                        m('div.pd-20', {
+                        m('div.pd-20.mg-b-0', {
                             class: (Calendario.error != null ? '' : 'd-none')
                         }, [
-                            m("p.tx-danger.pd-0.mg-b-2", [
-                                m('i.fas.fa-exclamation-triangle'),
-                                " Error:"
-                            ]),
-                            m("p.tx-danger.tx-color-03.mg-b-30",
-                                Calendario.error
-                            )
-                        ]),
-                        m("div.calendar-content-body[id='calendar']", {
-                            class: (Calendario.error == null ? '' : 'd-none')
 
-                        }),
+                            m(".alert.alert-danger.fade.show.mg-b-0[role='alert']",
+                                [
+                                    m("strong",
+                                        m('i.fas.fa-exclamation-triangle.mg-r-2'),
+                                        "Error: "
+                                    ),
+                                    Calendario.error,
+                                    m("button.close[type='button'][aria-label='Close']", {
+                                        onclick: () => {
+                                            Calendario.error = null;
+                                        }
+                                    },
+                                        m("span[aria-hidden='true']",
+                                            "×"
+                                        )
+                                    )
+                                ]
+                            )
+
+                        ]),
+                        m('div.pd-20', {
+                            class: (Calendario.success != null ? '' : 'd-none')
+                        }, [
+                            m(".alert.alert-success.fade.show.mg-b-0[role='alert']",
+                                [
+                                    m("strong",
+                                        m('i.fas.fa-check-circle.mg-r-2'),
+                                        "Anuncio: "
+                                    ),
+                                    Calendario.success,
+                                    m("button.close[type='button'][aria-label='Close']", {
+                                        onclick: () => {
+                                            Calendario.success = null;
+                                        }
+                                    },
+                                        m("span[aria-hidden='true']",
+                                            "×"
+                                        )
+                                    )
+                                ]
+                            )
+
+                        ]),
+
+                        m("div.calendar-content-body[id='calendar']"),
                     ] : (!Calendario.loader && Calendario.citas !== null && (!Calendario.citas.status || Calendario.citas.status == null)) ? [
                         m('div.pd-20', [
                             m(Errors, { type: (!Calendario.citas.status ? 1 : 0), error: Calendario.citas })
@@ -1598,7 +1648,6 @@ class Calendario extends App {
                                             [
                                                 m("strong",
                                                     m('i.fas.fa-exclamation-triangle.mg-r-2'),
-
                                                     "Error: "
                                                 ),
                                                 Cita.data.error,
@@ -2036,6 +2085,10 @@ class Calendario extends App {
                                                             ),
                                                             m("div",
                                                                 m("input.form-control[id='correoCita'][type='text'][data-role='tagsinput']", {
+                                                                    onchange: (e) => {
+                                                                        console.log(e)
+
+                                                                    },
                                                                     oncreate: (el) => {
                                                                         let elt = $('#correoCita');
                                                                         elt.tagsinput({
@@ -2186,7 +2239,7 @@ class Calendario extends App {
                             m('hr'),
                             m("div.text-right", [
                                 (!Cita.data.editable ? [
-                                    m("button.btn.btn-primary.mg-r-5[data-dismiss='modal']", {
+                                    m("button.btn.btn-xs.btn-primary.mg-r-5[data-dismiss='modal']", {
                                         onclick: () => {
                                             Cita.trackReAgendar();
                                         }
@@ -2194,7 +2247,7 @@ class Calendario extends App {
                                         "Reagendar Cita"
                                     ),
                                 ] : [
-                                    m("button.btn.btn-primary.mg-r-5[data-dismiss='modal']", {
+                                    m("button.btn.btn-xs.btn-secondary.mg-r-5[data-dismiss='modal']", {
                                         onclick: () => {
                                             Cita.trackCancelReAgendar();
                                         }
@@ -2203,14 +2256,14 @@ class Calendario extends App {
                                     ),
                                 ]),
 
-                                m("button.btn.btn-danger.mg-r-5", {
+                                m("button.btn.btn-xs.btn-danger.mg-r-5", {
                                     onclick: () => {
                                         Cita.cancelarCita();
                                     }
                                 },
                                     "Cancelar Cita"
                                 ),
-                                m("a.btn.btn-secondary.pd-x-20[href=''][data-dismiss='modal']",
+                                m("a.btn.btn-xs.btn-secondary.pd-x-20[href=''][data-dismiss='modal']",
                                     "Cerrar"
                                 )
 
@@ -2528,7 +2581,13 @@ class Calendario extends App {
                                                         ),
                                                         m("div",
                                                             m("input.form-control[id='correoCita'][type='text'][data-role='tagsinput']", {
+                                                                onchange: (e) => {
+                                                                    console.log(e)
+
+                                                                },
+
                                                                 oncreate: (el) => {
+
                                                                     let elt = $('#correoCita');
                                                                     elt.tagsinput({
                                                                         itemValue: 'value',
@@ -2541,6 +2600,9 @@ class Calendario extends App {
                                                                     });
 
                                                                     elt.tagsinput('add', { "value": Cita.data.email, "text": Cita.data.email });
+
+
+
                                                                 }
                                                             })
                                                         )
@@ -2735,11 +2797,12 @@ class Calendario extends App {
 
     }
 
-    static showAlertCalendar(type, message) {
-        Calendario.typeAlert = type;
-        Calendario.messageAlert = message;
-        $('.toast').toast('show');
-        m.redraw();
+    static clearAlertCalendar() {
+        $('html, body').animate({ scrollTop: 0 }, 'slow');
+        setTimeout(() => {
+            Calendario.error = null;
+            Calendario.success = null;
+        }, 2000);
     }
 
     static validarAgendamiento() {
@@ -2770,7 +2833,7 @@ class Calendario extends App {
 
         if (!_track) {
             $('#modalCreateEvent').modal('hide');
-            Calendario.showAlertCalendar('bg-danger', 'No se puede reagendar. Ya existe una cita agendada desde: ' + _timeInicio + ' hasta: ' + _timeFin)
+            Calendario.error = 'No se puede reagendar. Ya existe una cita agendada desde: ' + _timeInicio + ' hasta: ' + _timeFin;
             throw 'Error de Validación';
         }
 
@@ -2801,9 +2864,6 @@ class Calendario extends App {
 
     onupdate(_data) {
 
-        if (Calendario.idCalendar !== _data.attrs.idCalendar) {
-
-        }
 
     }
 
@@ -2812,8 +2872,7 @@ class Calendario extends App {
     static page() {
         return [
             Calendario.vHeader(),
-            Calendario.vMain(),
-            m(AlertCalendar)
+            Calendario.vMain()
         ];
     }
 
