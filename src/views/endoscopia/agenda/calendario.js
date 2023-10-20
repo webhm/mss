@@ -92,7 +92,7 @@ class OptionSelect {
 
                 setTimeout(() => {
                     window.location.reload();
-                }, 3500);
+                }, 3000);
 
             }
 
@@ -1159,6 +1159,16 @@ class Calendario extends App {
             },
             eventDrop: function (calEvent) {
 
+                // Initialize tooltip
+                $('[data-toggle="tooltip"]').tooltip({
+                    template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                        '<div class= "arrow" ></div>' +
+                        '<div class="tooltip-inner"></div>' +
+                        '</div > ',
+
+                });
+
+
                 Cita.data.id = calEvent.id;
                 Cita.data.start = calEvent.start.format('dddd, DD-MM-YYYY HH:mm');
                 Cita.data.end = calEvent.end.format('dddd, DD-MM-YYYY HH:mm');
@@ -1179,6 +1189,15 @@ class Calendario extends App {
 
             },
             eventResize: function (calEvent) {
+
+                // Initialize tooltip
+                $('[data-toggle="tooltip"]').tooltip({
+                    template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                        '<div class= "arrow" ></div>' +
+                        '<div class="tooltip-inner"></div>' +
+                        '</div > ',
+
+                });
 
 
                 Cita.data.id = calEvent.id;
@@ -1265,6 +1284,15 @@ class Calendario extends App {
             dropdownCssClass: 'select2-dropdown-modal',
         });
 
+        // Initialize tooltip
+        $('[data-toggle="tooltip"]').tooltip({
+            template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                '<div class= "arrow" ></div>' +
+                '<div class="tooltip-inner"></div>' +
+                '</div > ',
+
+        });
+
 
 
     }
@@ -1300,7 +1328,7 @@ class Calendario extends App {
                                             setTimeout(() => {
                                                 Calendario.reloadFetchAgenda();
 
-                                            }, 1000);
+                                            }, 500);
                                         }
                                     } else {
                                         m.route.set('/endoscopia/agendas/calendario/', {
@@ -1324,7 +1352,7 @@ class Calendario extends App {
                                         setTimeout(() => {
                                             Calendario.reloadFetchAgenda();
 
-                                        }, 1000);
+                                        }, 500);
                                     }
                                 }
                             })
@@ -1569,6 +1597,8 @@ class Calendario extends App {
                                         m(".alert.alert-danger.fade.show[role='alert']",
                                             [
                                                 m("strong",
+                                                    m('i.fas.fa-exclamation-triangle.mg-r-2'),
+
                                                     "Error: "
                                                 ),
                                                 Cita.data.error,
@@ -1650,7 +1680,7 @@ class Calendario extends App {
                                                     m("label.tx-semibold.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1",
                                                         "Fecha y Hora de Fin"
                                                     ),
-                                                    m("input.form-control[type='text'][id='eventEndDate'][disabled='disabled']", {
+                                                    m("input.form-control.text-capitalize[type='text'][id='eventEndDate'][disabled='disabled']", {
                                                         value: Cita.data.end
 
                                                     })
@@ -2075,7 +2105,7 @@ class Calendario extends App {
 
                                 m("div.col-12", [
                                     m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
-                                        "Agenda(s)"
+                                        "Agenda(s):"
                                     ),
                                     m("p", [
                                         (Cita.data.calendarios !== undefined ? [m(BadgeAgendas)] : [])
@@ -2088,7 +2118,7 @@ class Calendario extends App {
                             m("div.row", [
                                 m("div.col-sm-6", [
                                     m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
-                                        "Fecha Inicio"
+                                        "Fecha y Hora de Inicio:"
                                     ),
                                     m("p.event-start-date.text-capitalize",
                                         moment(Cita.data.pn_inicio, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY HH:mm')
@@ -2096,7 +2126,7 @@ class Calendario extends App {
                                 ]),
                                 m("div.col-sm-6", [
                                     m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
-                                        "Fecha Final"
+                                        "Fecha y Hora de Fin:"
                                     ),
                                     m("p.event-end-date.text-capitalize",
                                         moment(Cita.data.pn_fin, 'DD/MM/YYYY HH:mm').format('dddd, DD/MM/YYYY HH:mm')
@@ -2122,7 +2152,7 @@ class Calendario extends App {
                                 ]),
                                 m("div.col-6", [
                                     m("label.tx-uppercase.tx-sans.tx-11.tx-medium.tx-spacing-1.tx-color-03",
-                                        "Correos electrónicos:"
+                                        "Correo(s) electrónico(s):"
                                     ),
                                     m("p.mg-b-0", [
 
@@ -2630,6 +2660,14 @@ class Calendario extends App {
                 $('#calendar').fullCalendar('rerenderEvents');
                 OptionSelect.selectDestroy();
 
+                $('[data-toggle="tooltip"]').tooltip({
+                    template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
+                        '<div class= "arrow" ></div>' +
+                        '<div class="tooltip-inner"></div>' +
+                        '</div > ',
+
+                });
+
 
             })
             .catch(function (e) { });
@@ -2758,17 +2796,15 @@ class Calendario extends App {
 
     oncreate() {
         document.body.classList.add('app-calendar');
+
     }
 
-    onupdate() {
-        // Initialize tooltip
-        $('[data-toggle="tooltip"]').tooltip({
-            template: '<div class=" tooltip tooltip-dark " role="tooltip">' +
-                '<div class= "arrow" ></div>' +
-                '<div class="tooltip-inner"></div>' +
-                '</div > ',
+    onupdate(_data) {
 
-        });
+        if (Calendario.idCalendar !== _data.attrs.idCalendar) {
+
+        }
+
     }
 
 
