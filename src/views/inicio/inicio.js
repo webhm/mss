@@ -27,236 +27,70 @@ class ModulesAccess {
 
         return [
 
-            (_data.attrs.profiles.includes('ADMISIONES_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
 
-                    m("a[href='/admisiones']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-folder-open")
-                                ),
 
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Admisiones"
-                                )
-                            ])
+            m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                m("a[href='/bco-sangre']", {
+                    style: { 'color': "#325a98" }
+                }, [
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-15", {
+                                style: { 'color': "#325a98" }
+                            },
+                                m("i.fas.fa-burn.tx-55")
+                            ),
 
+                            m("p.tx-color-03.mg-b-0.tx-semibold",
+                                "Banco de Sangre"
+                            )
                         ])
+
                     ])
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('PERFIL_ENDOSCOPIA_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                ])
 
-                    m("a[href='/endoscopia']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-compact-disc")
-                                ),
+            ),
+            m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                m("a[href='/administracion']", {
+                    style: { 'color': "#325a98" }
+                }, [
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-15", {
+                                style: { 'color': "#325a98" }
+                            },
+                                m("i.fas.fa-cog")
+                            ),
 
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Endoscopía"
-                                )
-                            ])
-
+                            m("p.tx-color-03.mg-b-0.tx-semibold",
+                                "Administraciòn"
+                            )
                         ])
+
                     ])
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('EMERGENCIA_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+                ])
+            ),
+            m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
 
-                    m("a[href='/emergencia']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-first-aid")
-                                ),
+                m("a[href='/terapia-respiratoria']", {
+                    style: { 'color': "#325a98" }
+                }, [
+                    m("div.card.card-help", [
+                        m("div.card-body.tx-13", [
+                            m("div.tx-60.lh-0.mg-b-15", {
+                                style: { 'color': "#325a98" }
+                            },
+                                m("i.fas.fa-user-md")
+                            ),
 
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Emergencia"
-                                )
-                            ])
-
+                            m("p.tx-color-03.mg-b-0.tx-semibold",
+                                "Terapia Respiratoria"
+                            )
                         ])
+
                     ])
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('FARMACIA_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
-
-                    m("a[href='/farmacia']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-pills")
-                                ),
-
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Farmacia"
-                                )
-                            ])
-
-                        ])
-                    ])
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('PERFIL_IMAGEN_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
-
-                    m("a[href='/imagen']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-file-prescription")
-                                ),
-
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Imagen"
-                                )
-                            ])
-
-                        ])
-                    ])
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('LABORATORIO_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
-
-                    m("a[href='/laboratorio']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-microscope")
-                                ),
-
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Laboratorio"
-                                )
-                            ])
-
-                        ])
-                    ])
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('HOSPITALIZACION_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
-
-                    m("a[href='/hospitalizacion']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-procedures")
-                                ),
-
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Hospitalización"
-                                )
-                            ])
-
-                        ])
-                    ])
-                ),
-            ] : []),
-
-            (_data.attrs.profiles.includes('BCO_SANGRE_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
-                    m("a[href='/bco-sangre']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-burn.tx-55")
-                                ),
-
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Banco de Sangre"
-                                )
-                            ])
-
-                        ])
-                    ])
-
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('ADM_USUARIOS_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
-                    m("a[href='/administracion']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-cog")
-                                ),
-
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Administraciòn"
-                                )
-                            ])
-
-                        ])
-                    ])
-                ),
-            ] : []),
-            (_data.attrs.profiles.includes('TR_METROPLUS') ? [
-                m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
-
-                    m("a[href='/terapia-respiratoria']", {
-                        style: { 'color': "#325a98" }
-                    }, [
-                        m("div.card.card-help", [
-                            m("div.card-body.tx-13", [
-                                m("div.tx-60.lh-0.mg-b-15", {
-                                    style: { 'color': "#325a98" }
-                                },
-                                    m("i.fas.fa-user-md")
-                                ),
-
-                                m("p.tx-color-03.mg-b-0.tx-semibold",
-                                    "Terapia Respiratoria"
-                                )
-                            ])
-
-                        ])
-                    ])
-                ),
-            ] : []),
+                ])
+            ),
 
         ];
 
@@ -382,10 +216,8 @@ class iMdodule {
 class Inicio extends App {
     constructor() {
         super();
-        if (App.isAuthenticated()) {
-            App.setTitle("Inicio");
-            this.view = this.page;
-        }
+        App.setTitle("Inicio");
+        this.view = this.page;
     }
 
     page() {
@@ -397,7 +229,7 @@ class Inicio extends App {
                     m(m.route.Link, { href: "/", class: "df-logo" }, [
                         "Metro",
                         m("span",
-                            "Plus+"
+                            "Servicios"
                         ),
 
                     ]),
@@ -409,7 +241,7 @@ class Inicio extends App {
                         m(m.route.Link, { href: "/", class: "df-logo" }, [
                             "Metro",
                             m("span",
-                                "Plus+"
+                                "Servicios"
                             ),
 
                         ]),
@@ -424,9 +256,19 @@ class Inicio extends App {
                         m(MenuInicio),
 
                     ])
+
                 ]),
-                m(SidebarRight, { userName: App.userName })
+                m("div.navbar-right", [
+
+
+                    m('div', [
+                        m("img", { src: "/assets/favicon.ico", width: '80%', height: '80%' })
+
+                    ]),
+                ])
+
             ]),
+
             m("div.content.content-components", {
 
             },
@@ -436,7 +278,7 @@ class Inicio extends App {
                     m("ol.breadcrumb.df-breadcrumbs", [
                         m("li.breadcrumb-item",
                             m(m.route.Link, { href: "/", }, [
-                                "MetroPlus"
+                                "MetroServicios"
 
                             ]),
 
@@ -446,15 +288,263 @@ class Inicio extends App {
                         )
                     ]),
                     m("h1.df-title.mg-t-20.mg-b-10",
-                        App.title + ":"
+                        "Hospital:"
                     ),
-
+                    m('hr'),
                     m("div.row.tx-14", [
-                        m(ModulesAccess, { profiles: App.auth.user.profile }),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='/admisiones']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-user-nurse")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "Triaje (MV SACR)"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='/admisiones']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-hospital")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "HIS (MV SOUL)"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='/admisiones']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-file-alt")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "Historia Clínica (MV PEP)"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='/admisiones']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-flask.mg-r-5"),
+                                            m("i.fas.fa-file-prescription.mg-r-5")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "Resultados de Laboratorio e Imagen"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='/admisiones']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-plus-square")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "MetroPlus v2.0"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='https://lisa.hospitalmetropolitano.org']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-microscope")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "LISA v2.0"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='https://lisa.hospitalmetropolitano.org']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-unlock-alt")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "Cambio de contraseña (MV)"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='https://lisa.hospitalmetropolitano.org']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-file")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "Manual de cambio de contraseña"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+
+
+
                     ]),
+                    m('hr'),
+                    m("h1.df-title.mg-t-20.mg-b-10",
+                        "Administrativo:"
+                    ),
+                    m('hr'),
+                    m("div.row.tx-14", [
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='/admisiones']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-folder-open")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "Admisiones"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        ),
+
+                        m("div.col-sm-6.col-lg-3.mg-t-20.mg-sm-t-30.mg-lg-t-0.mg-b-10",
+
+                            m("a[href='https://lisa.hospitalmetropolitano.org']", {
+                                style: { 'color': "#325a98" }
+                            }, [
+                                m("div.card.card-help", [
+                                    m("div.card-body.tx-13", [
+                                        m("div.tx-60.lh-0.mg-b-15", {
+                                            style: { 'color': "#325a98" }
+                                        },
+                                            m("i.fas.fa-book ")
+                                        ),
+
+                                        m("p.tx-color-03.mg-b-0.tx-semibold",
+                                            "Contabilidad"
+                                        )
+                                    ])
+
+                                ])
+                            ])
+                        )
+
+                    ]),
+                    m('hr'),
 
                 ])
             ),
+            m("footer.footer", [
+                m("div", [
+                    m("span", [
+                        m.trust("&copy;"),
+                        " Hospital Metropolitano - Todos los derechos reservados. "
+                    ]),
+                    m("span", [
+                        "Created by ",
+                        m("a[href='https://www.hospitalmetropolitano.org']",
+                            "HMETRO"
+                        )
+                    ])
+                ]),
+                m("div",
+                    m("nav.nav", [
+                        m("a.nav-link[href='/']",
+                            "MetroServicios v1.0.0"
+                        ),
+
+                        m("a.nav-link.text-danger.tx-semibold[href='https://discordapp.com/invite/RYqkVuw']",
+                            "Ayuda Ext.2020 CONCAS"
+                        )
+                    ])
+                )
+            ])
         ];
 
     }

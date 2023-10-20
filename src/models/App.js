@@ -25,8 +25,8 @@ class App {
     constructor() {
         App.auth = new AuthManager();
         App._msa = new AuthMSA();
-        App.name = "MetroPlus";
-        App.version = " v2.0.0";
+        App.name = "MetroServicios";
+        App.version = " v1.0.0";
         if (App.auth.isAuthenticated()) {
             App.userName = App.auth.user.user;
         }
